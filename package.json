@@ -8,13 +8,22 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "release": "standard-version",
+    "commit": "git-cz",
     "lint": "expo lint"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "expo": "~53.0.11",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.6",
@@ -42,9 +51,13 @@
     "@babel/core": "^7.25.2",
     "@types/react": "~19.0.10",
     "babel-plugin-module-resolver": "^5.0.2",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "eslint-import-resolver-typescript": "^4.4.3",
+    "semantic-release": "^24.2.5",
+    "standard-version": "^9.5.0",
     "typescript": "~5.8.3"
   },
   "private": true
