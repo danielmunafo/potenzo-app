@@ -9,7 +9,10 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'Exo2-Bold': require('../assets/fonts/static/Exo2-Bold.ttf'),
+    'Exo2-Italic': require('../assets/fonts/static/Exo2-Italic.ttf'),
+    'OpenSans-Regular': require('../assets/fonts/static/OpenSans-Regular.ttf'),
+    'OpenSans-Bold': require('../assets/fonts/static/OpenSans-Bold.ttf'),
   });
 
   if (!loaded) {
@@ -20,8 +23,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
