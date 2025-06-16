@@ -1,5 +1,13 @@
 import { Image } from 'expo-image';
+import React from 'react';
 import { StyleSheet, Text } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -7,6 +15,22 @@ import { ThemedView } from '@/components/ThemedView';
 
 export default function SplashScreen() {
   const insets = useSafeAreaInsets();
+  const scale = useSharedValue(1);
+
+  React.useEffect(() => {
+    scale.value = withRepeat(
+      withTiming(1.05, {
+        duration: 2500,
+        easing: Easing.linear,
+      }),
+      -1,
+      true
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <ThemedView style={styles.container}>
@@ -27,11 +51,13 @@ export default function SplashScreen() {
         Train anywhere. Eat smart. Win every day.
       </ThemedText>
 
-      <Image
-        source={require('@/assets/images/splash-icon.png')}
-        style={styles.splashIcon}
-        contentFit="contain"
-      />
+      <Animated.View style={animatedStyle}>
+        <Image
+          source={require('@/assets/images/splash-icon.png')}
+          style={styles.splashIcon}
+          contentFit="contain"
+        />
+      </Animated.View>
 
       <ThemedView style={styles.textContainer}>
         <ThemedText type="default" style={styles.description}>
