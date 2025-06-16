@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/danielmunafo/potenzo-app/compare/v0.1.0...v0.1.2) (2025-06-16)
+
+
+### Features
+
+* **index.tsx:** add breathing animation to logo ([ff3563d](https://github.com/danielmunafo/potenzo-app/commit/ff3563def9a14b2f6ebb99b08f8b2941834ad8ce))
+
 ### [0.1.1](https://github.com/danielmunafo/potenzo-app/compare/v0.1.0...v0.1.1) (2025-06-16)
 
 
