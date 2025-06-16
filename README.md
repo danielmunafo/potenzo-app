@@ -53,6 +53,17 @@ Join our community of developers creating universal apps.
 
 To contribute to this repository, follow these steps:
 
-For commiting: `yarn commit`
+### Commiting
+Checkout a branch from `main`
+For commiting run: `yarn commit`
 
-For releasing a new version `yarn release`
+
+### Releasing to Main
+
+`git checkout main`
+
+`git merge <your-branch>`
+
+`yarn release`
+
+`git push --follow-tags origin main`
