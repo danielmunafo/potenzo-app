@@ -1,0 +1,26 @@
+{
+  "configVersion": 0,
+  "apple": {
+    "info": {
+      "en-US": {
+        "title": "POTENZO",
+        "subtitle": "Train anywhere. Eat smart. Calisthenics and progress — simplified.",
+        "description": "Unlock Your Potential with Potenzo\n\nPotenzo is your no-excuses fitness companion — designed for men who want to win every day. Whether you're training in a park or your apartment, Potenzo simplifies your path to progress with expert calisthenics routines, smart nutrition guidance, and a mindset-first approach.\n\nThis early version gives you a preview of what’s coming:\n• A lightweight fitness system that adapts to your level\n• Nutrition principles that work without obsession\n• A gamified experience to keep you consistent\n• Seamless integration with Apple Health and Google Fit (coming soon)\n\nRight now, Potenzo is in early development. We’re building with intention, testing with real users, and evolving fast.\n\n🚧 This is a beta version\nWhat you see today is just the beginning. Follow our progress on Instagram @potenzo.app and be one of the first to shape the experience.\n\nPotenzo exists because we believe people deserve to:\n• Discover their true physical potential\n• Connect their training with purpose and results\n• Feel great — without wasting time or money\n\n💪 No excuses. No fluff. Just progress.\n\nJoin us early and grow with us.",
+        "keywords": [
+          "fitness",
+          "mission",
+          "personal",
+          "training",
+          "workout",
+          "calisthenics",
+          "nutrition",
+          "self improvement"
+        ],
+        "marketingUrl": "https://potenzo.app/",
+        "supportUrl": "https://potenzo.app/",
+        "privacyPolicyUrl": "https://potenzo.app/",
+        "contactEmail": "contact@potenzo.app"
+      }
+    }
+  }
+}

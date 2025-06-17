@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "app.potenzo",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -55,6 +59,13 @@
         "asset": "./src/assets/fonts/OpenSans-Bold.ttf",
         "family": "OpenSans-Bold"
       }
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "00735ae6-3cdc-4aca-a8f9-f57843391a30"
+      }
+    },
+    "owner": "danielmunafo"
   }
 }
