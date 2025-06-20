@@ -23,6 +23,14 @@ const STACK_SCREEN_CONFIG = {
   },
 } as const;
 
+const SETTINGS_SCREEN_CONFIG = {
+  name: 'settings',
+  options: {
+    headerShown: false,
+    title: 'Settings',
+  },
+} as const;
+
 export default function RootLayout() {
   const userDeviceColorScheme = useColorScheme();
   const [fontsLoaded] = useFonts(FONT_CONFIG);
@@ -41,8 +49,8 @@ export default function RootLayout() {
       <ThemeProvider value={navigationTheme}>
         <Stack>
           <Stack.Screen {...STACK_SCREEN_CONFIG} />
+          <Stack.Screen {...SETTINGS_SCREEN_CONFIG} />
         </Stack>
-        {/* <StatusBar style="auto" /> */}
       </ThemeProvider>
     </AppThemeProvider>
   );

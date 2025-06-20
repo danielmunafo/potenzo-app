@@ -19,7 +19,42 @@
     "subtitle": "Train anywhere. Eat smart. Win every day.",
     "description": "Potenzo is your no-excuses fitness companion.\nCalisthenics, nutrition, and progress — simplified.",
     "termsAndConditions": "I agree to the Terms of Service and Privacy Policy, including data collection for analytics and app improvement.",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
     "checkHere": "Check Here"
+  },
+  "tracking": {
+    "title": "We care about your experience.",
+    "description": "POTENZO uses anonymous usage data to improve app performance and fix bugs. Learn more in our",
+    "privacyPolicy": "Privacy Policy",
+    "allow": "Allow",
+    "dontAllow": "Don't Allow"
+  },
+  "settings": {
+    "notSet": "Not set",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "notAvailable": "Not available",
+    "consent": {
+      "title": "Consent Status",
+      "terms": "Terms & Conditions & Privacy Policy",
+      "tracking": "Analytics Tracking",
+      "acceptedAt": "Accepted at",
+      "status": "Status",
+      "date": "Date",
+      "time": "Time",
+      "timestamp": "Full Timestamp"
+    },
+    "website": {
+      "title": "Website & Legal",
+      "url": "Website",
+      "contact": "Contact",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "termsLink": "View Terms",
+      "privacyLink": "View Policy"
+    }
   },
   "navigation": {
     "home": "Home",
@@ -58,4 +93,4 @@
     "notifications": "Notifications",
     "about": "About"
   }
-} 
+}

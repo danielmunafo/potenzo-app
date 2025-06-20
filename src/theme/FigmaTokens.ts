@@ -862,9 +862,54 @@ export const FigmaDesignTokens = {
 };
 
 // Utility functions to work with Figma tokens
-export function getColorToken(tokenName: keyof typeof FigmaDesignTokens.colors): string {
-  const token = FigmaDesignTokens.colors[tokenName];
+export function getColorToken(tokenName: string, colorScheme?: 'light' | 'dark' | null): string {
+  const theme = colorScheme || 'light';
+  
+  // Check if the token name already includes a theme prefix
+  if (tokenName.startsWith('light-') || tokenName.startsWith('dark-')) {
+    const token = FigmaDesignTokens.colors[tokenName as keyof typeof FigmaDesignTokens.colors];
+    return token?.value || '#000000';
+  }
+  
+  // For core tokens or tokens without theme prefix, try to find the theme-specific variant
+  const themeSpecificTokenName = `${theme}-${tokenName}`;
+  const themeSpecificToken = FigmaDesignTokens.colors[themeSpecificTokenName as keyof typeof FigmaDesignTokens.colors];
+  
+  if (themeSpecificToken) {
+    return themeSpecificToken.value;
+  }
+  
+  // Fallback to the original token name
+  const token = FigmaDesignTokens.colors[tokenName as keyof typeof FigmaDesignTokens.colors];
   return token?.value || '#000000';
+}
+
+// Type-safe version for known tokens
+export function getColorTokenStrict(tokenName: keyof typeof FigmaDesignTokens.colors, colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken(tokenName, colorScheme);
+}
+
+// Legacy theme-aware color getters (keeping for backward compatibility)
+export function getThemeColor(lightToken: keyof typeof FigmaDesignTokens.colors, darkToken: keyof typeof FigmaDesignTokens.colors, colorScheme?: 'light' | 'dark' | null): string {
+  const theme = colorScheme || 'light';
+  const tokenName = theme === 'dark' ? darkToken : lightToken;
+  return getColorToken(tokenName);
+}
+
+export function getOnSurfaceColor(colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken('onSurface', colorScheme);
+}
+
+export function getOnBackgroundColor(colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken('onBackground', colorScheme);
+}
+
+export function getSurfaceColor(colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken('surface', colorScheme);
+}
+
+export function getBackgroundColor(colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken('background', colorScheme);
 }
 
 export function getSpacingToken(tokenName: keyof typeof FigmaDesignTokens.spacing): number {

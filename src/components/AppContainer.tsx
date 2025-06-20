@@ -35,7 +35,7 @@ export function AppContainer({
     <Surface
       style={[containerStyle, style]}
       elevation={elevation}
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel} // used on RUM tracking - otherwise generic names will appear on the view routes.
     >
       {children}
     </Surface>

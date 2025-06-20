@@ -18,7 +18,43 @@
     "mainTitle": "Desbloqueie Seu Potencial.",
     "subtitle": "Treine em qualquer lugar. Coma inteligente. Vença todos os dias.",
     "description": "Potenzo é seu companheiro fitness sem desculpas.\nCalistenia, nutrição e progresso — simplificados.",
-    "termsAndConditions": "Concordo com os Termos de Serviço e Política de Privacidade, incluindo coleta de dados para análises e melhorias do aplicativo."
+    "termsAndConditions": "Concordo com os Termos de Serviço e Política de Privacidade, incluindo coleta de dados para análises e melhorias do aplicativo.",
+    "termsOfService": "Termos de Serviço",
+    "and": "e",
+    "privacyPolicy": "Política de Privacidade",
+    "checkHere": "Ver Aqui"
+  },
+  "tracking": {
+    "title": "Nos importamos com sua experiência.",
+    "description": "O POTENZO usa dados anônimos para melhorar o desempenho e corrigir erros. Saiba mais em nossa",
+    "privacyPolicy": "Política de Privacidade",
+    "allow": "Permitir",
+    "dontAllow": "Não permitir"
+  },
+  "settings": {
+    "notSet": "Não definido",
+    "accepted": "Aceito",
+    "declined": "Recusado",
+    "notAvailable": "Não disponível",
+    "consent": {
+      "title": "Status de Consentimento",
+      "terms": "Termos e Condições e Política de Privacidade",
+      "tracking": "Rastreamento Analítico",
+      "acceptedAt": "Aceito em",
+      "status": "Status",
+      "date": "Data",
+      "time": "Hora",
+      "timestamp": "Timestamp Completo"
+    },
+    "website": {
+      "title": "Website e Legal",
+      "url": "Website",
+      "contact": "Contato",
+      "terms": "Termos de Serviço",
+      "privacy": "Política de Privacidade",
+      "termsLink": "Ver Termos",
+      "privacyLink": "Ver Política"
+    }
   },
   "navigation": {
     "home": "Início",
@@ -57,4 +93,4 @@
     "notifications": "Notificações",
     "about": "Sobre"
   }
-} 
+}
