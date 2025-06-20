@@ -1,0 +1,61 @@
+{
+  "common": {
+    "getStarted": "Get Started",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  },
+  "splash": {
+    "banner": {
+      "title": "🚧 Potenzo in progress",
+      "subtitle": "Follow @potenzo.app for updates"
+    },
+    "mainTitle": "Unlock Your Potential.",
+    "subtitle": "Train anywhere. Eat smart. Win every day.",
+    "description": "Potenzo is your no-excuses fitness companion.\nCalisthenics, nutrition, and progress — simplified.",
+    "termsAndConditions": "I agree to the Terms of Service and Privacy Policy, including data collection for analytics and app improvement.",
+    "checkHere": "Check Here"
+  },
+  "navigation": {
+    "home": "Home",
+    "workouts": "Workouts",
+    "nutrition": "Nutrition",
+    "progress": "Progress",
+    "profile": "Profile"
+  },
+  "workouts": {
+    "title": "Workouts",
+    "startWorkout": "Start Workout",
+    "restDay": "Rest Day",
+    "completed": "Completed",
+    "inProgress": "In Progress"
+  },
+  "nutrition": {
+    "title": "Nutrition",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "water": "Water"
+  },
+  "progress": {
+    "title": "Progress",
+    "weight": "Weight",
+    "strength": "Strength",
+    "endurance": "Endurance",
+    "flexibility": "Flexibility"
+  },
+  "profile": {
+    "title": "Profile",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "about": "About"
+  }
+} 

@@ -1,0 +1,60 @@
+{
+  "common": {
+    "getStarted": "Começar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "retry": "Tentar Novamente",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar"
+  },
+  "splash": {
+    "banner": {
+      "title": "🚧 Potenzo em desenvolvimento",
+      "subtitle": "Siga @potenzo.app para atualizações"
+    },
+    "mainTitle": "Desbloqueie Seu Potencial.",
+    "subtitle": "Treine em qualquer lugar. Coma inteligente. Vença todos os dias.",
+    "description": "Potenzo é seu companheiro fitness sem desculpas.\nCalistenia, nutrição e progresso — simplificados.",
+    "termsAndConditions": "Concordo com os Termos de Serviço e Política de Privacidade, incluindo coleta de dados para análises e melhorias do aplicativo."
+  },
+  "navigation": {
+    "home": "Início",
+    "workouts": "Treinos",
+    "nutrition": "Nutrição",
+    "progress": "Progresso",
+    "profile": "Perfil"
+  },
+  "workouts": {
+    "title": "Treinos",
+    "startWorkout": "Iniciar Treino",
+    "restDay": "Dia de Descanso",
+    "completed": "Concluído",
+    "inProgress": "Em Andamento"
+  },
+  "nutrition": {
+    "title": "Nutrição",
+    "calories": "Calorias",
+    "protein": "Proteína",
+    "carbs": "Carboidratos",
+    "fat": "Gordura",
+    "water": "Água"
+  },
+  "progress": {
+    "title": "Progresso",
+    "weight": "Peso",
+    "strength": "Força",
+    "endurance": "Resistência",
+    "flexibility": "Flexibilidade"
+  },
+  "profile": {
+    "title": "Perfil",
+    "settings": "Configurações",
+    "language": "Idioma",
+    "theme": "Tema",
+    "notifications": "Notificações",
+    "about": "Sobre"
+  }
+} 
