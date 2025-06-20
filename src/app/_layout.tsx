@@ -1,31 +1,49 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { AppThemeProvider } from '@/theme/ThemeProvider';
+
+const FONT_CONFIG = {
+  'Exo2-Bold': require('../assets/fonts/static/Exo2-Bold.ttf'),
+  'Exo2-Italic': require('../assets/fonts/static/Exo2-Italic.ttf'),
+  'OpenSans-Regular': require('../assets/fonts/static/OpenSans-Regular.ttf'),
+  'OpenSans-Bold': require('../assets/fonts/static/OpenSans-Bold.ttf'),
+  'OpenSans-Medium': require('../assets/fonts/static/OpenSans-Medium.ttf'),
+  'OpenSans-SemiBold': require('../assets/fonts/static/OpenSans-SemiBold.ttf'),
+} as const;
+
+const STACK_SCREEN_CONFIG = {
+  name: 'index',
+  options: {
+    headerShown: false,
+    title: 'Splash', // This will be used by Datadog RUM
+  },
+} as const;
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    'Exo2-Bold': require('../assets/fonts/static/Exo2-Bold.ttf'),
-    'Exo2-Italic': require('../assets/fonts/static/Exo2-Italic.ttf'),
-    'OpenSans-Regular': require('../assets/fonts/static/OpenSans-Regular.ttf'),
-    'OpenSans-Bold': require('../assets/fonts/static/OpenSans-Bold.ttf'),
-  });
+  const userDeviceColorScheme = useColorScheme();
+  const [fontsLoaded] = useFonts(FONT_CONFIG);
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
+  // Early return for loading state
+  if (!fontsLoaded) {
     return null;
   }
 
+  const isDark = userDeviceColorScheme === 'dark';
+  const navigationTheme = isDark ? DarkTheme : DefaultTheme;
+  const systemTheme = isDark ? 'dark' : 'light';
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <AppThemeProvider systemTheme={systemTheme}>
+      <ThemeProvider value={navigationTheme}>
+        <Stack>
+          <Stack.Screen {...STACK_SCREEN_CONFIG} />
+        </Stack>
+        {/* <StatusBar style="auto" /> */}
+      </ThemeProvider>
+    </AppThemeProvider>
   );
 }
