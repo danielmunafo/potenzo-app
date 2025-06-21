@@ -1,4 +1,4 @@
-{
+export default {
   "expo": {
     "name": "potenzo-app",
     "slug": "potenzo-app",
@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.potenzo.app",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -33,28 +34,34 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      [
+        "expo-datadog",
+        {
+          "apiKey": process.env.DATADOG_API_KEY,
+          "appKey": process.env.DATADOG_APP_KEY,
+          "site": process.env.DATADOG_SITE || "eu1.datadoghq.com",
+          "service": process.env.DATADOG_SERVICE || "potenzo-app",
+          "env": process.env.DATADOG_ENV || "local",
+          "uploadDsyms": false
+        }
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
     },
-    "fonts": [
-      {
-        "asset": "./src/assets/fonts/Exo2-Regular.ttf",
-        "family": "Exo2"
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "00735ae6-3cdc-4aca-a8f9-f57843391a30"
       },
-      {
-        "asset": "./src/assets/fonts/Exo2-Bold.ttf",
-        "family": "Exo2-Bold"
-      },
-      {
-        "asset": "./src/assets/fonts/OpenSans-Regular.ttf",
-        "family": "OpenSans"
-      },
-      {
-        "asset": "./src/assets/fonts/OpenSans-Bold.ttf",
-        "family": "OpenSans-Bold"
-      }
-    ]
+      "datadogApiKey": process.env.DATADOG_API_KEY,
+      "datadogAppKey": process.env.DATADOG_APP_KEY,
+      "datadogSite": process.env.DATADOG_SITE || "eu1.datadoghq.com",
+      "datadogService": process.env.DATADOG_SERVICE || "potenzo-app",
+      "datadogEnv": process.env.DATADOG_ENV || "local",
+      "nodeEnv": process.env.NODE_ENV || "development"
+    }
   }
 }

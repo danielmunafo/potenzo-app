@@ -67,3 +67,17 @@ For commiting run: `yarn commit`
 `yarn release`
 
 `git push --follow-tags origin main`
+
+### Datadog
+Datadog won't work on Expo Go since it depends on custom native code. To run it make sure to run the local dev build with `yarn android` and `yarn ios` then `yarn start`.
+
+### Environment Variables
+On expo setup development variables are set at terminal level. So update `~/.zshrc`
+```
+DATADOG_API_KEY=value
+DATADOG_APP_KEY=value
+DATADOG_SITE=value
+DATADOG_SERVICE=value
+DATADOG_ENV=value
+NODE_ENV=value
+```
