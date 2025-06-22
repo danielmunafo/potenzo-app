@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.potenzo.app",
+      "bundleIdentifier": "com.potenzo.app"
     },
     "android": {
       "package": "com.potenzo.app",
