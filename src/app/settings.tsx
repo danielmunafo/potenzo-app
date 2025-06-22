@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Text, useTheme } from 'react-native-paper';
+import { Card, Text } from 'react-native-paper';
 
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -25,8 +25,7 @@ interface UserConsent {
 }
 
 export function SettingsScreen() {
-  const { t, currentLanguage } = useTranslation();
-  const theme = useTheme();
+  const { t } = useTranslation();
   const [userConsent, setUserConsent] = React.useState<UserConsent>({
     termsAccepted: false,
     trackingConsent: null
@@ -58,9 +57,12 @@ export function SettingsScreen() {
   };
 
   return (
-    <AppContainer accessibilityLabel="settings-screen-container">
+    <AppContainer
+      dd-action-name="settings-screen-container"
+      accessibilityLabel="settings-screen-container">
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Text
+          dd-action-name="settings-screen-title"
           accessibilityLabel="settings-screen-title"
           variant="headlineMedium"
           style={styles.title}
@@ -75,6 +77,7 @@ export function SettingsScreen() {
         <Card style={styles.consentCard}>
           <Card.Content>
             <Text
+              dd-action-name="settings-screen-consent-title"
               variant="titleMedium"
               style={[styles.cardTitle]}
             >
@@ -83,12 +86,14 @@ export function SettingsScreen() {
 
             <View style={styles.consentItem}>
               <Text
+                dd-action-name="settings-screen-consent-terms"
                 variant="bodyMedium"
                 style={[styles.consentLabel]}
               >
                 {t('settings.consent.terms')}:
               </Text>
               <Text
+                dd-action-name="settings-screen-consent-terms-value"
                 variant="bodyMedium"
                 style={[
                   styles.consentValue,
@@ -100,12 +105,14 @@ export function SettingsScreen() {
 
             <View style={styles.consentItem}>
               <Text
+                dd-action-name="settings-screen-consent-tracking"
                 variant="bodyMedium"
                 style={[styles.consentLabel]}
               >
                 {t('settings.consent.tracking')}:
               </Text>
               <Text
+                dd-action-name="settings-screen-consent-tracking-value"
                 variant="bodyMedium"
                 style={[
                   styles.consentValue,
@@ -120,6 +127,7 @@ export function SettingsScreen() {
         <Card style={styles.websiteCard}>
           <Card.Content>
             <Text
+              dd-action-name="settings-screen-website-title"
               variant="titleMedium"
               style={[styles.cardTitle]}
             >
@@ -128,6 +136,7 @@ export function SettingsScreen() {
 
             <View style={styles.websiteItem}>
               <Text
+                dd-action-name="settings-screen-website-url"
                 variant="bodyMedium"
                 style={[styles.websiteLabel]}
               >
@@ -135,6 +144,7 @@ export function SettingsScreen() {
               </Text>
               <ExternalLink
                 href="https://potenzo.app"
+                dd-action-name="settings-screen-website-url-link"
                 accessibilityLabel="settings-website-link"
               >
                 <Text
@@ -150,6 +160,7 @@ export function SettingsScreen() {
 
             <View style={styles.websiteItem}>
               <Text
+                dd-action-name="settings-screen-website-contact"
                 variant="bodyMedium"
                 style={[styles.websiteLabel]}
               >
@@ -172,6 +183,7 @@ export function SettingsScreen() {
 
             <View style={styles.websiteItem}>
               <Text
+                dd-action-name="settings-screen-website-terms"
                 variant="bodyMedium"
                 style={[styles.websiteLabel]}
               >
@@ -179,6 +191,7 @@ export function SettingsScreen() {
               </Text>
               <ExternalLink
                 href="https://potenzo.app/terms-and-conditions"
+                dd-action-name="settings-screen-website-terms-link"
                 accessibilityLabel="settings-terms-link"
               >
                 <Text
@@ -194,6 +207,7 @@ export function SettingsScreen() {
 
             <View style={styles.websiteItem}>
               <Text
+                dd-action-name="settings-screen-website-privacy"
                 variant="bodyMedium"
                 style={[styles.websiteLabel]}
               >
@@ -201,6 +215,7 @@ export function SettingsScreen() {
               </Text>
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
+                dd-action-name="settings-screen-website-privacy-link"
                 accessibilityLabel="settings-privacy-link"
               >
                 <Text
@@ -217,6 +232,7 @@ export function SettingsScreen() {
         </Card>
 
         <Text
+          dd-action-name="settings-screen-description"
           accessibilityLabel="settings-screen-description"
           variant="bodyMedium"
           style={styles.description}

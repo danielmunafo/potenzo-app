@@ -126,6 +126,7 @@ export function SplashScreen() {
       <View style={styles.contentContainer}>
         <View style={styles.scrollableContent}>
           <Text
+            dd-action-name="splash-screen-main-title"
             accessibilityLabel="splash-screen-main-title"
             variant="headlineLarge"
             style={styles.mainTitle}
@@ -134,6 +135,7 @@ export function SplashScreen() {
           </Text>
 
           <Text
+            dd-action-name="splash-screen-subtitle"
             accessibilityLabel="splash-screen-subtitle"
             variant="titleLarge"
             style={styles.subtitle}
@@ -141,8 +143,13 @@ export function SplashScreen() {
             {t('splash.subtitle')}
           </Text>
 
-          <Animated.View accessibilityLabel="splash-screen-animated-icon" style={animatedStyle}>
+          <Animated.View
+            dd-action-name="splash-screen-animated-icon"
+            accessibilityLabel="splash-screen-animated-icon"
+            style={animatedStyle}
+          >
             <Image
+              dd-action-name="splash-screen-icon"
               accessibilityLabel="splash-screen-icon"
               source={require('@/assets/images/splash-icon.png')}
               style={styles.splashIcon}
@@ -151,6 +158,7 @@ export function SplashScreen() {
           </Animated.View>
 
           <Text
+            dd-action-name="splash-screen-description"
             accessibilityLabel="splash-screen-description"
             variant="bodyLarge"
             style={styles.description}
@@ -164,11 +172,13 @@ export function SplashScreen() {
 
           <View style={styles.termsContainer}>
             <Checkbox
+              dd-action-name="splash-screen-terms-checkbox"
               status={termsAccepted ? 'checked' : 'unchecked'}
               onPress={toggleTerms}
               uncheckedColor={theme.colors.onSurface}
             />
             <Text
+              dd-action-name="splash-screen-terms-text"
               accessibilityLabel="splash-screen-terms-text"
               variant="bodySmall"
               style={[styles.termsText, { color: theme.colors.onSurface }]}
@@ -176,6 +186,7 @@ export function SplashScreen() {
               {t('splash.termsAndConditions')}{' '}
               <ExternalLink
                 href="https://potenzo.app/terms-and-conditions"
+                dd-action-name="splash-screen-terms-link"
                 accessibilityLabel="splash-screen-terms-link"
               >
                 <Text
@@ -192,6 +203,7 @@ export function SplashScreen() {
               </ExternalLink>{', '}
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
+                dd-action-name="splash-screen-privacy-link"
                 accessibilityLabel="splash-screen-privacy-link"
               >
                 <Text
@@ -216,6 +228,7 @@ export function SplashScreen() {
               styles.getStartedButton,
               !termsAccepted && styles.getStartedButtonDisabled
             ]}
+            dd-action-name="splash-screen-get-started-button"
             accessibilityLabel="splash-screen-get-started-button"
             buttonColor={getColorToken('core-primary')}
             disabled={!termsAccepted}
@@ -227,11 +240,13 @@ export function SplashScreen() {
 
       <Portal>
         <Modal
+          dd-action-name="splash-screen-tracking-modal"
           visible={showTrackingModal}
           dismissable={false}
           contentContainerStyle={styles.modalOverlay}
         >
           <BlurView
+            dd-action-name="splash-screen-tracking-modal-blur-view"
             intensity={5}
             tint="light"
             style={StyleSheet.absoluteFill}
@@ -243,6 +258,7 @@ export function SplashScreen() {
             ]}
           >
             <Text
+              dd-action-name="splash-screen-tracking-modal-title"
               variant="titleMedium"
               style={[styles.modalTitle, { color: theme.colors.onSurface }]}
             >
@@ -250,12 +266,14 @@ export function SplashScreen() {
             </Text>
 
             <Text
+              dd-action-name="splash-screen-tracking-modal-description"
               variant="bodyMedium"
               style={[styles.modalText, { color: theme.colors.onSurface }]}
             >
               {t('tracking.description')}{' '}
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
+                dd-action-name="splash-screen-tracking-modal-privacy-link"
                 accessibilityLabel="tracking-privacy-link"
               >
                 <Text
@@ -278,6 +296,7 @@ export function SplashScreen() {
                 mode="outlined"
                 onPress={() => handleTrackingConsent(false)}
                 style={styles.modalButton}
+                dd-action-name="splash-screen-tracking-modal-dont-allow-button"
                 accessibilityLabel="tracking-dont-allow-button"
               >
                 {t('tracking.dontAllow')}
@@ -287,6 +306,7 @@ export function SplashScreen() {
                 onPress={() => handleTrackingConsent(true)}
                 style={styles.modalButton}
                 buttonColor={getColorToken('core-primary')}
+                dd-action-name="splash-screen-tracking-modal-allow-button"
                 accessibilityLabel="tracking-allow-button"
               >
                 {t('tracking.allow')}
