@@ -24,12 +24,18 @@ const STORAGE_KEYS = {
 export function SplashScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { setTrackingConsent: setDatadogTrackingConsent } = useDatadog();
+  const { setTrackingConsent: setDatadogTrackingConsent, trackAction, startTrackingAction, stopTrackingAction } = useDatadog();
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [showTrackingModal, setShowTrackingModal] = React.useState(false);
 
   React.useEffect(() => {
+    startTrackingAction({ action: 'Viewing Splash Screen', type: 'CUSTOM' });
+
     loadStoredPreferences();
+
+    return () => {
+      stopTrackingAction({ action: 'Viewing Splash Screen', type: 'CUSTOM' });
+    };
   }, []);
 
   const loadStoredPreferences = async () => {
@@ -80,8 +86,7 @@ export function SplashScreen() {
 
   const handleGetStarted = () => {
     if (termsAccepted) {
-      console.log('Get Started pressed - Terms accepted');
-      // Navigate to settings screen
+      trackAction({ action: 'Get Started' });
       router.push('/settings');
     } else {
       console.log('Terms must be accepted first');
@@ -93,6 +98,7 @@ export function SplashScreen() {
     const newValue = !termsAccepted;
     setTermsAccepted(newValue);
     saveTermsAccepted(newValue);
+    trackAction({ action: 'Terms Accepted', attributes: { termsAccepted: newValue } });
   };
 
   const handleTrackingConsent = async (consent: boolean) => {
@@ -100,6 +106,7 @@ export function SplashScreen() {
     await saveTrackingConsent(consent);
     // Update Datadog tracking consent
     await setDatadogTrackingConsent(consent);
+    trackAction({ action: 'Tracking Consent', attributes: { consent } });
   };
 
   return (
@@ -163,6 +170,7 @@ export function SplashScreen() {
                 href="https://potenzo.app/terms-and-conditions"
                 dd-action-name="splash-screen-terms-link"
                 accessibilityLabel="splash-screen-terms-link"
+                onPress={() => trackAction({ action: 'Terms of Service' })}
               >
                 <Text
                   style={[
@@ -180,6 +188,7 @@ export function SplashScreen() {
                 href="https://potenzo.app/privacy-policy"
                 dd-action-name="splash-screen-privacy-link"
                 accessibilityLabel="splash-screen-privacy-link"
+                onPress={() => trackAction({ action: 'Privacy Policy' })}
               >
                 <Text
                   style={[
@@ -250,6 +259,7 @@ export function SplashScreen() {
                 href="https://potenzo.app/privacy-policy"
                 dd-action-name="splash-screen-tracking-modal-privacy-link"
                 accessibilityLabel="tracking-privacy-link"
+                onPress={() => trackAction({ action: 'Privacy Policy from Tracking Modal' })}
               >
                 <Text
                   style={[

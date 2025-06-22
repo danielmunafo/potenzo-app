@@ -6,6 +6,7 @@ import { Card, Text } from 'react-native-paper';
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { useDatadog } from '@/hooks/useDatadog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
@@ -26,13 +27,19 @@ interface UserConsent {
 
 export function SettingsScreen() {
   const { t } = useTranslation();
+  const { trackAction, startTrackingAction, stopTrackingAction } = useDatadog();
   const [userConsent, setUserConsent] = React.useState<UserConsent>({
     termsAccepted: false,
     trackingConsent: null
   });
 
   React.useEffect(() => {
+    startTrackingAction({ action: 'Viewing Settings Screen', type: 'CUSTOM' });
     loadUserConsent();
+
+    return () => {
+      stopTrackingAction({ action: 'Viewing Settings Screen', type: 'CUSTOM' });
+    };
   }, []);
 
   const loadUserConsent = async () => {
@@ -146,6 +153,7 @@ export function SettingsScreen() {
                 href="https://potenzo.app"
                 dd-action-name="settings-screen-website-url-link"
                 accessibilityLabel="settings-website-link"
+                onPress={() => trackAction({ action: 'Website Link' })}
               >
                 <Text
                   style={[
@@ -169,6 +177,7 @@ export function SettingsScreen() {
               <ExternalLink
                 href="mailto:support@potenzo.app"
                 accessibilityLabel="settings-contact-link"
+                onPress={() => trackAction({ action: 'Contact Link' })}
               >
                 <Text
                   style={[
@@ -193,6 +202,7 @@ export function SettingsScreen() {
                 href="https://potenzo.app/terms-and-conditions"
                 dd-action-name="settings-screen-website-terms-link"
                 accessibilityLabel="settings-terms-link"
+                onPress={() => trackAction({ action: 'Terms of Service' })}
               >
                 <Text
                   style={[
@@ -217,6 +227,7 @@ export function SettingsScreen() {
                 href="https://potenzo.app/privacy-policy"
                 dd-action-name="settings-screen-website-privacy-link"
                 accessibilityLabel="settings-privacy-link"
+                onPress={() => trackAction({ action: 'Privacy Policy' })}
               >
                 <Text
                   style={[

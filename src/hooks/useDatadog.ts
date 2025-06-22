@@ -5,7 +5,7 @@ import {
   TouchPrivacyLevel,
 } from "@datadog/mobile-react-native-session-replay";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BatchSize, DatadogProviderConfiguration, DdRum, DdSdkReactNative, SdkVerbosity, TrackingConsent, UploadFrequency } from 'expo-datadog';
+import { BatchSize, DatadogProviderConfiguration, DdRum, DdSdkReactNative, RumActionType, SdkVerbosity, TrackingConsent, UploadFrequency } from 'expo-datadog';
 import { usePathname, useSegments } from 'expo-router';
 import { useEffect, useState } from 'react';
 
@@ -21,6 +21,7 @@ const config = new DatadogProviderConfiguration(
   true,
   true,
   TrackingConsent.PENDING,
+  true,
 )
 
 config.site = process.env.EXPO_PUBLIC_DATADOG_SITE
@@ -41,6 +42,12 @@ const onSDKInitialized = async () => {
     imagePrivacyLevel: ImagePrivacyLevel.MASK_NONE,
     touchPrivacyLevel: TouchPrivacyLevel.SHOW,
   });
+}
+
+type ActionType = {
+  action: string;
+  attributes?: Record<string, unknown>;
+  type?: 'TAP' | 'SCROLL' | 'SWIPE' | 'BACK' | 'CUSTOM';
 };
 
 export const useDatadog = () => {
@@ -97,6 +104,33 @@ export const useDatadog = () => {
     }
   };
 
+  const startTrackingAction = async ({ action, attributes = {}, type = RumActionType.TAP }: ActionType) => {
+    try {
+      console.log('Starting action:', action);
+      await DdRum.startAction(type as RumActionType, action, { path: pathname, ...attributes });
+    } catch (error) {
+      console.error('Failed to start action:', error);
+    }
+  };
+
+  const stopTrackingAction = async ({ action, attributes = {}, type = RumActionType.TAP }: ActionType) => {
+    try {
+      console.log('Stopping action:', action);
+      await DdRum.stopAction(type as RumActionType, action, { path: pathname, ...attributes });
+    } catch (error) {
+      console.error('Failed to stop action:', error);
+    }
+  };
+
+  const trackAction = async ({ action, attributes = {}, type = RumActionType.TAP }: ActionType) => {
+    try {
+      console.log('Adding action:', action);
+      await DdRum.addAction(type as RumActionType, action, { path: pathname, ...attributes });
+    } catch (error) {
+      console.error('Failed to add action:', error);
+    }
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -116,5 +150,8 @@ export const useDatadog = () => {
     isInitialized,
     trackingConsent,
     setTrackingConsent,
+    startTrackingAction,
+    stopTrackingAction,
+    trackAction,
   };
 };
