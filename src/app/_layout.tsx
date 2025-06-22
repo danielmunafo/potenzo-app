@@ -5,10 +5,15 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
+import {
+  ImagePrivacyLevel,
+  SessionReplay,
+  TextAndInputPrivacyLevel,
+  TouchPrivacyLevel,
+} from "@datadog/mobile-react-native-session-replay";
 import { BatchSize, DatadogProvider, DatadogProviderConfiguration, DdRum, DdSdkReactNative, SdkVerbosity, UploadFrequency } from 'expo-datadog';
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
-
 
 const config = new DatadogProviderConfiguration(
   "",
@@ -35,6 +40,15 @@ if (__DEV__) {
   // Optional: Enable debug logging
   config.verbosity = SdkVerbosity.DEBUG
 }
+
+const onSDKInitialized = async () => {
+  await SessionReplay.enable({
+    replaySampleRate: 100,
+    textAndInputPrivacyLevel: TextAndInputPrivacyLevel.MASK_SENSITIVE_INPUTS,
+    imagePrivacyLevel: ImagePrivacyLevel.MASK_NONE,
+    touchPrivacyLevel: TouchPrivacyLevel.SHOW,
+  });
+};
 
 const FONT_CONFIG = {
   'Exo2-Bold': require('../assets/fonts/static/Exo2-Bold.ttf'),
@@ -95,7 +109,7 @@ export default function RootLayout() {
   const statusBarStyle = isDark ? 'light-content' : 'dark-content';
 
   return (
-    <DatadogProvider configuration={config}>
+    <DatadogProvider configuration={config} onInitialization={onSDKInitialized}>
       <AppThemeProvider systemTheme={systemTheme}>
         <ThemeProvider value={navigationTheme}>
           <Stack>
