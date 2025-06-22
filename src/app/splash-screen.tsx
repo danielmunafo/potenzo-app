@@ -5,17 +5,11 @@ import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Checkbox, Modal, Portal, Text, useTheme } from 'react-native-paper';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming
-} from 'react-native-reanimated';
 
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { useDatadog } from '@/hooks/useDatadog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
@@ -30,20 +24,9 @@ const STORAGE_KEYS = {
 export function SplashScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const scale = useSharedValue(1);
+  const { setTrackingConsent: setDatadogTrackingConsent } = useDatadog();
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [showTrackingModal, setShowTrackingModal] = React.useState(false);
-
-  React.useEffect(() => {
-    scale.value = withRepeat(
-      withTiming(1.05, {
-        duration: 2500,
-        easing: Easing.linear,
-      }),
-      -1,
-      true
-    );
-  }, []);
 
   React.useEffect(() => {
     loadStoredPreferences();
@@ -95,10 +78,6 @@ export function SplashScreen() {
     }
   };
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
   const handleGetStarted = () => {
     if (termsAccepted) {
       console.log('Get Started pressed - Terms accepted');
@@ -116,9 +95,11 @@ export function SplashScreen() {
     saveTermsAccepted(newValue);
   };
 
-  const handleTrackingConsent = (consent: boolean) => {
+  const handleTrackingConsent = async (consent: boolean) => {
     setShowTrackingModal(false);
-    saveTrackingConsent(consent);
+    await saveTrackingConsent(consent);
+    // Update Datadog tracking consent
+    await setDatadogTrackingConsent(consent);
   };
 
   return (
@@ -143,19 +124,13 @@ export function SplashScreen() {
             {t('splash.subtitle')}
           </Text>
 
-          <Animated.View
-            dd-action-name="splash-screen-animated-icon"
-            accessibilityLabel="splash-screen-animated-icon"
-            style={animatedStyle}
-          >
-            <Image
-              dd-action-name="splash-screen-icon"
-              accessibilityLabel="splash-screen-icon"
-              source={require('@/assets/images/splash-icon.png')}
-              style={styles.splashIcon}
-              contentFit="contain"
-            />
-          </Animated.View>
+          <Image
+            dd-action-name="splash-screen-icon"
+            accessibilityLabel="splash-screen-icon"
+            source={require('@/assets/images/splash-icon.png')}
+            style={styles.splashIcon}
+            contentFit="contain"
+          />
 
           <Text
             dd-action-name="splash-screen-description"

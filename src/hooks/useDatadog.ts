@@ -4,9 +4,14 @@ import {
   TextAndInputPrivacyLevel,
   TouchPrivacyLevel,
 } from "@datadog/mobile-react-native-session-replay";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BatchSize, DatadogProviderConfiguration, DdRum, DdSdkReactNative, SdkVerbosity, TrackingConsent, UploadFrequency } from 'expo-datadog';
 import { usePathname, useSegments } from 'expo-router';
 import { useEffect, useState } from 'react';
+
+const STORAGE_KEYS = {
+  TRACKING_CONSENT: 'tracking_consent',
+} as const;
 
 const config = new DatadogProviderConfiguration(
   process.env.EXPO_PUBLIC_DATADOG_CLIENT_TOKEN,
@@ -15,7 +20,7 @@ const config = new DatadogProviderConfiguration(
   true,
   true,
   true,
-  TrackingConsent.PENDING
+  TrackingConsent.PENDING,
 )
 
 config.site = process.env.EXPO_PUBLIC_DATADOG_SITE
@@ -44,24 +49,72 @@ export const useDatadog = () => {
   const viewKey = segments.join('/');
 
   const [isInitialized, setIsInitialized] = useState(false);
+  const [trackingConsent, setTrackingConsentState] = useState<TrackingConsent>(TrackingConsent.PENDING);
+
+  // Load tracking consent from storage on mount
+  useEffect(() => {
+    loadTrackingConsent();
+  }, []);
+
+  const loadTrackingConsent = async () => {
+    try {
+      const storedConsent = await AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT);
+      if (storedConsent !== null) {
+        const consent = storedConsent === 'true' ? TrackingConsent.GRANTED : TrackingConsent.NOT_GRANTED;
+        setTrackingConsentState(consent);
+        updateDatadogTrackingConsent(consent);
+      }
+    } catch (error) {
+      console.warn('Failed to load tracking consent:', error);
+    }
+  };
+
+  const updateDatadogTrackingConsent = async (consent: TrackingConsent) => {
+    try {
+      await DdSdkReactNative.setTrackingConsent(consent);
+      setTrackingConsentState(consent);
+
+      if (consent === TrackingConsent.GRANTED && !isInitialized) {
+        await DdSdkReactNative.initialize(config);
+        setIsInitialized(true);
+      }
+    } catch (error) {
+      console.error('Failed to update Datadog tracking consent:', error);
+    }
+  };
+
+  const setTrackingConsent = async (consent: boolean) => {
+    try {
+      const trackingConsent = consent ? TrackingConsent.GRANTED : TrackingConsent.NOT_GRANTED;
+
+      // Save to AsyncStorage
+      await AsyncStorage.setItem(STORAGE_KEYS.TRACKING_CONSENT, consent.toString());
+
+      // Update Datadog
+      await updateDatadogTrackingConsent(trackingConsent);
+    } catch (error) {
+      console.error('Failed to set tracking consent:', error);
+    }
+  };
 
   useEffect(() => {
     (async () => {
       try {
-        if (!isInitialized) {
-          await DdSdkReactNative.initialize(config);
-          setIsInitialized(true);
+        // Only start view tracking if consent is granted and SDK is initialized
+        if (trackingConsent === TrackingConsent.GRANTED && isInitialized) {
+          DdRum.startView(viewKey, pathname);
         }
-        DdRum.startView(pathname, viewKey);
       } catch (error) {
-        console.error('Failed to initialize Datadog:', error);
+        console.error('Failed to start Datadog view:', error);
       }
     })();
-  }, [viewKey, pathname, isInitialized]);
+  }, [viewKey, pathname, isInitialized, trackingConsent]);
 
   return {
     config,
     onSDKInitialized,
     isInitialized,
+    trackingConsent,
+    setTrackingConsent,
   };
 };
