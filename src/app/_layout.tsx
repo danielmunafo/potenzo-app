@@ -16,15 +16,15 @@ import { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 
 const config = new DatadogProviderConfiguration(
-  "",
-  "local",
-  "",
+  process.env.EXPO_PUBLIC_DATADOG_CLIENT_TOKEN,
+  process.env.EXPO_PUBLIC_DATADOG_ENV,
+  process.env.EXPO_PUBLIC_DATADOG_APP_KEY,
   true, // track User interactions (e.g.: Tap on buttons. You can use 'accessibilityLabel' element property to give tap action the name, otherwise element type will be reported)
   true, // track XHR Resources
   true, // track Errors,
 )
 
-config.site = "EU1"
+config.site = process.env.EXPO_PUBLIC_DATADOG_SITE
 // Optional: Enable JavaScript long task collection
 config.longTaskThresholdMs = 100
 // Optional: enable or disable native crash reports

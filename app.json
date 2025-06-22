@@ -38,11 +38,11 @@
       [
         "expo-datadog",
         {
-          "apiKey": "pub1c5c867276871a3d0db8813e6a589358",
-          "appKey": "a991226e-227e-4337-8044-f24b89ae36d6",
-          "site": "EU1",
-          "service": "potenzo-app",
-          "env": "local",
+          "apiKey": "EXPO_PUBLIC_DATADOG_CLIENT_TOKEN",
+          "appKey": "EXPO_PUBLIC_DATADOG_APP_KEY",
+          "site": "EXPO_PUBLIC_DATADOG_SITE",
+          "service": "EXPO_PUBLIC_DATADOG_SERVICE",
+          "env": "EXPO_PUBLIC_DATADOG_ENV",
           "uploadDsyms": false
         }
       ],
