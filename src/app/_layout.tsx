@@ -3,26 +3,23 @@ import { useFonts } from 'expo-font';
 import { Stack, usePathname, useSegments } from 'expo-router';
 import 'react-native-reanimated';
 
-import { DATADOG_CONFIG, validateEnv } from '@/config/env';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
-import { BatchSize, DatadogProvider, DatadogProviderConfiguration, DdRum, DdSdkReactNative, SdkVerbosity, TrackingConsent, UploadFrequency } from 'expo-datadog';
-import { useEffect } from 'react';
+import { BatchSize, DatadogProvider, DatadogProviderConfiguration, DdRum, DdSdkReactNative, SdkVerbosity, UploadFrequency } from 'expo-datadog';
+import { useEffect, useState } from 'react';
+import { StatusBar } from 'react-native';
 
-// Validate environment variables on app start
-validateEnv();
 
 const config = new DatadogProviderConfiguration(
-  DATADOG_CONFIG.apiKey || "",
+  "",
   "local",
-  DATADOG_CONFIG.appKey || "",
+  "",
   true, // track User interactions (e.g.: Tap on buttons. You can use 'accessibilityLabel' element property to give tap action the name, otherwise element type will be reported)
   true, // track XHR Resources
   true, // track Errors,
-  TrackingConsent.GRANTED, // for now
 )
 
-config.site = DATADOG_CONFIG.site
+config.site = "EU1"
 // Optional: Enable JavaScript long task collection
 config.longTaskThresholdMs = 100
 // Optional: enable or disable native crash reports
@@ -72,12 +69,20 @@ export default function RootLayout() {
 
   const viewKey = segments.join('/');
 
+  const [isInitialized, setIsInitialized] = useState(false);
   useEffect(() => {
     (async () => {
-      await DdSdkReactNative.initialize(config);
-      DdRum.startView(viewKey, pathname);
+      try {
+        if (!isInitialized) {
+          await DdSdkReactNative.initialize(config);
+          setIsInitialized(true);
+        }
+        DdRum.startView(viewKey, pathname);
+      } catch (error) {
+        console.error('Failed to initialize Datadog:', error);
+      }
     })();
-  }, [viewKey, pathname]);
+  }, [viewKey, pathname, isInitialized]);
 
   // Early return for loading state
   if (!fontsLoaded) {
@@ -87,6 +92,7 @@ export default function RootLayout() {
   const isDark = userDeviceColorScheme === 'dark';
   const navigationTheme = isDark ? DarkTheme : DefaultTheme;
   const systemTheme = isDark ? 'dark' : 'light';
+  const statusBarStyle = isDark ? 'light-content' : 'dark-content';
 
   return (
     <DatadogProvider configuration={config}>
@@ -96,6 +102,7 @@ export default function RootLayout() {
             <Stack.Screen {...STACK_SCREEN_CONFIG} />
             <Stack.Screen {...SETTINGS_SCREEN_CONFIG} />
           </Stack>
+          <StatusBar barStyle={statusBarStyle} />
         </ThemeProvider>
       </AppThemeProvider>
     </DatadogProvider>
