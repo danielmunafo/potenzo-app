@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Menu, Text } from 'react-native-paper';
 
+import { useDatadog } from '@/hooks/useDatadog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
 type LanguageSelectorProps = {
-  showLabel?: boolean;
+  hasLabel?: boolean;
 };
 
-export function LanguageSelector({ showLabel = false }: LanguageSelectorProps) {
+export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
   const { t, changeLanguage, currentLanguage } = useTranslation();
+  const { trackAction } = useDatadog();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const languages = [
@@ -20,17 +22,46 @@ export function LanguageSelector({ showLabel = false }: LanguageSelectorProps) {
 
   const currentLanguageData = languages.find(lang => lang.code === currentLanguage);
 
-  const openMenu = () => setMenuVisible(true);
-  const closeMenu = () => setMenuVisible(false);
+  const openMenu = () => {
+    setMenuVisible(true);
+    trackAction({ 
+      action: 'Language Selector Menu Opened',
+      attributes: { 
+        currentLanguage,
+        hasLabel,
+        availableLanguages: languages.map(lang => lang.code)
+      }
+    });
+  };
+
+  const closeMenu = () => {
+    setMenuVisible(false);
+    trackAction({ 
+      action: 'Language Selector Menu Closed',
+      attributes: { currentLanguage }
+    });
+  };
 
   const handleLanguageSelect = (languageCode: string) => {
+    const selectedLanguage = languages.find(lang => lang.code === languageCode);
+    
+    trackAction({ 
+      action: 'Language Selected',
+      attributes: { 
+        previousLanguage: currentLanguage,
+        newLanguage: languageCode,
+        languageName: selectedLanguage?.name,
+        hasLabel
+      }
+    });
+
     changeLanguage(languageCode as 'en' | 'pt');
     closeMenu();
   };
 
   return (
     <View style={styles.container}>
-      {showLabel && <Text variant="titleMedium" style={styles.title}>
+      {hasLabel && <Text variant="titleMedium" style={styles.title}>
         {t('profile.language')}
       </Text>}
 
@@ -45,6 +76,8 @@ export function LanguageSelector({ showLabel = false }: LanguageSelectorProps) {
             contentStyle={styles.buttonContent}
             labelStyle={styles.buttonLabel}
             icon="chevron-down"
+            dd-action-name="language-selector-button"
+            accessibilityLabel="language-selector-button"
           >
             {currentLanguageData ? `${currentLanguageData.flag} ${currentLanguageData.name}` : 'Select Language'}
           </Button>
@@ -60,6 +93,8 @@ export function LanguageSelector({ showLabel = false }: LanguageSelectorProps) {
               currentLanguage === language.code && styles.selectedMenuItem
             ]}
             leadingIcon={currentLanguage === language.code ? 'check' : undefined}
+            dd-action-name={`language-selector-menu-item-${language.code}`}
+            accessibilityLabel={`language-selector-menu-item-${language.code}`}
           />
         ))}
       </Menu>

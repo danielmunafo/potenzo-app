@@ -45,10 +45,10 @@ describe('<LanguageSelector />', () => {
     });
   });
 
-  test('renders with showLabel prop', async () => {
+  test('renders with hasLabel prop', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <LanguageSelector showLabel={true} />
+        <LanguageSelector hasLabel={true} />
       </TestWrapper>
     );
 
@@ -58,10 +58,10 @@ describe('<LanguageSelector />', () => {
     });
   });
 
-  test('does not render label when showLabel is false', async () => {
+  test('does not render label when hasLabel is false', async () => {
     const { queryByText, getByText } = render(
       <TestWrapper>
-        <LanguageSelector showLabel={false} />
+        <LanguageSelector hasLabel={false} />
       </TestWrapper>
     );
 
