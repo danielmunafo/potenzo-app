@@ -14,9 +14,9 @@ const STORAGE_KEYS = {
 } as const;
 
 const config = new DatadogProviderConfiguration(
-  process.env.EXPO_PUBLIC_DATADOG_CLIENT_TOKEN,
-  process.env.EXPO_PUBLIC_DATADOG_ENV,
-  process.env.EXPO_PUBLIC_DATADOG_APP_KEY,
+  process.env.EXPO_PUBLIC_DATADOG_CLIENT_TOKEN || '',
+  process.env.EXPO_PUBLIC_DATADOG_ENV || '',
+  process.env.EXPO_PUBLIC_DATADOG_APP_KEY || '',
   true,
   true,
   true,
@@ -24,7 +24,7 @@ const config = new DatadogProviderConfiguration(
   true,
 )
 
-config.site = process.env.EXPO_PUBLIC_DATADOG_SITE
+config.site = process.env.EXPO_PUBLIC_DATADOG_SITE || ''
 config.longTaskThresholdMs = 100
 config.nativeCrashReportEnabled = true
 config.sessionSamplingRate = 100
