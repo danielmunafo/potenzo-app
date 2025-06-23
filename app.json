@@ -35,17 +35,6 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      [
-        "expo-datadog",
-        {
-          "apiKey": "EXPO_PUBLIC_DATADOG_CLIENT_TOKEN",
-          "appKey": "EXPO_PUBLIC_DATADOG_APP_KEY",
-          "site": "EXPO_PUBLIC_DATADOG_SITE",
-          "service": "EXPO_PUBLIC_DATADOG_SERVICE",
-          "env": "EXPO_PUBLIC_DATADOG_ENV",
-          "uploadDsyms": false
-        }
-      ],
       "expo-web-browser"
     ],
     "experiments": {

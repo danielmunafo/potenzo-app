@@ -9,7 +9,6 @@ import { Button, Checkbox, Modal, Portal, Text, useTheme } from 'react-native-pa
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
-import { useDatadog } from '@/hooks/useDatadog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
@@ -21,10 +20,19 @@ const STORAGE_KEYS = {
   TERMS_ACCEPTED_AT: 'terms_accepted_at'
 } as const;
 
+const startTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Starting action:', action);
+};
+const stopTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Stopping action:', action);
+};
+const trackAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Adding action:', action);
+};
+
 export function SplashScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { setTrackingConsent: setDatadogTrackingConsent, trackAction, startTrackingAction, stopTrackingAction } = useDatadog();
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [showTrackingModal, setShowTrackingModal] = React.useState(false);
 
@@ -98,15 +106,13 @@ export function SplashScreen() {
     const newValue = !termsAccepted;
     setTermsAccepted(newValue);
     saveTermsAccepted(newValue);
-    trackAction({ action: 'Terms Accepted', attributes: { termsAccepted: newValue } });
+    trackAction({ action: 'Terms Accepted', type: 'CUSTOM' });
   };
 
   const handleTrackingConsent = async (consent: boolean) => {
     setShowTrackingModal(false);
     await saveTrackingConsent(consent);
-    // Update Datadog tracking consent
-    await setDatadogTrackingConsent(consent);
-    trackAction({ action: 'Tracking Consent', attributes: { consent } });
+    trackAction({ action: 'Tracking Consent', type: 'CUSTOM' });
   };
 
   return (
@@ -114,7 +120,6 @@ export function SplashScreen() {
       <View style={styles.contentContainer}>
         <View style={styles.scrollableContent}>
           <Text
-            dd-action-name="splash-screen-main-title"
             accessibilityLabel="splash-screen-main-title"
             variant="headlineLarge"
             style={styles.mainTitle}
@@ -123,7 +128,6 @@ export function SplashScreen() {
           </Text>
 
           <Text
-            dd-action-name="splash-screen-subtitle"
             accessibilityLabel="splash-screen-subtitle"
             variant="titleLarge"
             style={styles.subtitle}
@@ -132,7 +136,6 @@ export function SplashScreen() {
           </Text>
 
           <Image
-            dd-action-name="splash-screen-icon"
             accessibilityLabel="splash-screen-icon"
             source={require('@/assets/images/splash-icon.png')}
             style={styles.splashIcon}
@@ -140,7 +143,6 @@ export function SplashScreen() {
           />
 
           <Text
-            dd-action-name="splash-screen-description"
             accessibilityLabel="splash-screen-description"
             variant="bodyLarge"
             style={styles.description}
@@ -154,13 +156,11 @@ export function SplashScreen() {
 
           <View style={styles.termsContainer}>
             <Checkbox
-              dd-action-name="splash-screen-terms-checkbox"
               status={termsAccepted ? 'checked' : 'unchecked'}
               onPress={toggleTerms}
               uncheckedColor={theme.colors.onSurface}
             />
             <Text
-              dd-action-name="splash-screen-terms-text"
               accessibilityLabel="splash-screen-terms-text"
               variant="bodySmall"
               style={[styles.termsText, { color: theme.colors.onSurface }]}
@@ -168,7 +168,6 @@ export function SplashScreen() {
               {t('splash.termsAndConditions')}{' '}
               <ExternalLink
                 href="https://potenzo.app/terms-and-conditions"
-                dd-action-name="splash-screen-terms-link"
                 accessibilityLabel="splash-screen-terms-link"
                 onPress={() => trackAction({ action: 'Terms of Service' })}
               >
@@ -186,7 +185,6 @@ export function SplashScreen() {
               </ExternalLink>{', '}
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
-                dd-action-name="splash-screen-privacy-link"
                 accessibilityLabel="splash-screen-privacy-link"
                 onPress={() => trackAction({ action: 'Privacy Policy' })}
               >
@@ -212,7 +210,6 @@ export function SplashScreen() {
               styles.getStartedButton,
               !termsAccepted && styles.getStartedButtonDisabled
             ]}
-            dd-action-name="splash-screen-get-started-button"
             accessibilityLabel="splash-screen-get-started-button"
             buttonColor={getColorToken('core-primary')}
             disabled={!termsAccepted}
@@ -224,13 +221,11 @@ export function SplashScreen() {
 
       <Portal>
         <Modal
-          dd-action-name="splash-screen-tracking-modal"
           visible={showTrackingModal}
           dismissable={false}
           contentContainerStyle={styles.modalOverlay}
         >
           <BlurView
-            dd-action-name="splash-screen-tracking-modal-blur-view"
             intensity={5}
             tint="light"
             style={StyleSheet.absoluteFill}
@@ -242,7 +237,6 @@ export function SplashScreen() {
             ]}
           >
             <Text
-              dd-action-name="splash-screen-tracking-modal-title"
               variant="titleMedium"
               style={[styles.modalTitle, { color: theme.colors.onSurface }]}
             >
@@ -250,14 +244,12 @@ export function SplashScreen() {
             </Text>
 
             <Text
-              dd-action-name="splash-screen-tracking-modal-description"
               variant="bodyMedium"
               style={[styles.modalText, { color: theme.colors.onSurface }]}
             >
               {t('tracking.description')}{' '}
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
-                dd-action-name="splash-screen-tracking-modal-privacy-link"
                 accessibilityLabel="tracking-privacy-link"
                 onPress={() => trackAction({ action: 'Privacy Policy from Tracking Modal' })}
               >
@@ -281,7 +273,6 @@ export function SplashScreen() {
                 mode="outlined"
                 onPress={() => handleTrackingConsent(false)}
                 style={styles.modalButton}
-                dd-action-name="splash-screen-tracking-modal-dont-allow-button"
                 accessibilityLabel="tracking-dont-allow-button"
               >
                 {t('tracking.dontAllow')}
@@ -291,7 +282,6 @@ export function SplashScreen() {
                 onPress={() => handleTrackingConsent(true)}
                 style={styles.modalButton}
                 buttonColor={getColorToken('core-primary')}
-                dd-action-name="splash-screen-tracking-modal-allow-button"
                 accessibilityLabel="tracking-allow-button"
               >
                 {t('tracking.allow')}

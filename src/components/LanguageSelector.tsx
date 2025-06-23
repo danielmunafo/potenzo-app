@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Menu, Text } from 'react-native-paper';
 
-import { useDatadog } from '@/hooks/useDatadog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
@@ -10,9 +9,18 @@ type LanguageSelectorProps = {
   hasLabel?: boolean;
 };
 
+const startTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Starting action:', action);
+};
+const stopTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Stopping action:', action);
+};
+const trackAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Adding action:', action);
+};
+
 export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
   const { t, changeLanguage, currentLanguage } = useTranslation();
-  const { trackAction } = useDatadog();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const languages = [
@@ -24,35 +32,23 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
 
   const openMenu = () => {
     setMenuVisible(true);
-    trackAction({ 
+    trackAction({
       action: 'Language Selector Menu Opened',
-      attributes: { 
-        currentLanguage,
-        hasLabel,
-        availableLanguages: languages.map(lang => lang.code)
-      }
+      type: 'CUSTOM'
     });
   };
 
   const closeMenu = () => {
     setMenuVisible(false);
-    trackAction({ 
+    trackAction({
       action: 'Language Selector Menu Closed',
-      attributes: { currentLanguage }
     });
   };
 
   const handleLanguageSelect = (languageCode: string) => {
-    const selectedLanguage = languages.find(lang => lang.code === languageCode);
-    
-    trackAction({ 
+    trackAction({
       action: 'Language Selected',
-      attributes: { 
-        previousLanguage: currentLanguage,
-        newLanguage: languageCode,
-        languageName: selectedLanguage?.name,
-        hasLabel
-      }
+      type: 'CUSTOM'
     });
 
     changeLanguage(languageCode as 'en' | 'pt');
@@ -76,7 +72,6 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
             contentStyle={styles.buttonContent}
             labelStyle={styles.buttonLabel}
             icon="chevron-down"
-            dd-action-name="language-selector-button"
             accessibilityLabel="language-selector-button"
           >
             {currentLanguageData ? `${currentLanguageData.flag} ${currentLanguageData.name}` : 'Select Language'}
@@ -93,7 +88,6 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
               currentLanguage === language.code && styles.selectedMenuItem
             ]}
             leadingIcon={currentLanguage === language.code ? 'check' : undefined}
-            dd-action-name={`language-selector-menu-item-${language.code}`}
             accessibilityLabel={`language-selector-menu-item-${language.code}`}
           />
         ))}

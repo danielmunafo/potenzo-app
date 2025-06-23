@@ -4,9 +4,7 @@ import { Stack } from 'expo-router';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useDatadog } from '@/hooks/useDatadog';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
-import { DatadogProvider } from 'expo-datadog';
 import { StatusBar } from 'react-native';
 
 const FONT_CONFIG = {
@@ -37,7 +35,6 @@ const SETTINGS_SCREEN_CONFIG = {
 export default function RootLayout() {
   const userDeviceColorScheme = useColorScheme();
   const [fontsLoaded] = useFonts(FONT_CONFIG);
-  const { config, onSDKInitialized } = useDatadog();
 
   if (!fontsLoaded) {
     return null;
@@ -49,16 +46,14 @@ export default function RootLayout() {
   const statusBarStyle = isDark ? 'light-content' : 'dark-content';
 
   return (
-    <DatadogProvider configuration={config} onInitialization={onSDKInitialized}>
-      <AppThemeProvider systemTheme={systemTheme}>
-        <ThemeProvider value={navigationTheme}>
-          <Stack>
-            <Stack.Screen {...STACK_SCREEN_CONFIG} />
-            <Stack.Screen {...SETTINGS_SCREEN_CONFIG} />
-          </Stack>
-          <StatusBar barStyle={statusBarStyle} />
-        </ThemeProvider>
-      </AppThemeProvider>
-    </DatadogProvider>
+    <AppThemeProvider systemTheme={systemTheme}>
+      <ThemeProvider value={navigationTheme}>
+        <Stack>
+          <Stack.Screen {...STACK_SCREEN_CONFIG} />
+          <Stack.Screen {...SETTINGS_SCREEN_CONFIG} />
+        </Stack>
+        <StatusBar barStyle={statusBarStyle} />
+      </ThemeProvider>
+    </AppThemeProvider>
   );
 }
