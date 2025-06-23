@@ -34,17 +34,3 @@ jest.mock('expo-localization', () => ({
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock')
 );
-
-// Mock the Datadog hook
-jest.mock('@/hooks/useDatadog', () => ({
-  useDatadog: () => ({
-    config: {},
-    onSDKInitialized: jest.fn(),
-    isInitialized: false,
-    trackingConsent: 'PENDING',
-    setTrackingConsent: jest.fn(),
-    startTrackingAction: jest.fn(),
-    stopTrackingAction: jest.fn(),
-    trackAction: jest.fn(),
-  }),
-}));
