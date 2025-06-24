@@ -1,0 +1,6 @@
+appId: com.potenzo.app
+---
+- launchApp
+- assertVisible: "We care about your experience."
+- tapOn: "Allow"
+- assertNotVisible: "We care about your experience."

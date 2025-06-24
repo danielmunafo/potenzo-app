@@ -24,7 +24,8 @@
     "release": "standard-version",
     "commit": "git-cz",
     "lint": "expo lint",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "maestro test .maestro/"
   },
   "config": {
     "commitizen": {
