@@ -161,25 +161,70 @@ function generateTokensFile(convertedTokens) {
 export const FigmaDesignTokens = ${JSON.stringify(convertedTokens, null, 2)};
 
 // Utility functions to work with Figma tokens
-export function getColorToken(tokenName: string): string {
+export function getColorToken(tokenName: string, colorScheme?: 'light' | 'dark' | null): string {
+  const theme = colorScheme || 'light';
+
+  // Check if the token name already includes a theme prefix
+  if (tokenName.startsWith('light-') || tokenName.startsWith('dark-')) {
+    const token = FigmaDesignTokens.colors[tokenName as keyof typeof FigmaDesignTokens.colors];
+    return token?.value || '#000000';
+  }
+
+  // For core tokens or tokens without theme prefix, try to find the theme-specific variant
+  const themeSpecificTokenName = \`\${theme}-\${tokenName} \`;
+  const themeSpecificToken = FigmaDesignTokens.colors[themeSpecificTokenName as keyof typeof FigmaDesignTokens.colors];
+
+  if (themeSpecificToken) {
+    return themeSpecificToken.value;
+  }
+
+  // Fallback to the original token name
   const token = FigmaDesignTokens.colors[tokenName as keyof typeof FigmaDesignTokens.colors];
   return token?.value || '#000000';
 }
 
-export function getSpacingToken(tokenName: string): number {
-  const token = FigmaDesignTokens.spacing[tokenName as keyof typeof FigmaDesignTokens.spacing];
+// Type-safe version for known tokens
+export function getColorTokenStrict(tokenName: keyof typeof FigmaDesignTokens.colors, colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken(tokenName, colorScheme);
+}
+
+// Legacy theme-aware color getters (keeping for backward compatibility)
+export function getThemeColor(lightToken: keyof typeof FigmaDesignTokens.colors, darkToken: keyof typeof FigmaDesignTokens.colors, colorScheme?: 'light' | 'dark' | null): string {
+  const theme = colorScheme || 'light';
+  const tokenName = theme === 'dark' ? darkToken : lightToken;
+  return getColorToken(tokenName);
+}
+
+export function getOnSurfaceColor(colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken('onSurface', colorScheme);
+}
+
+export function getOnBackgroundColor(colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken('onBackground', colorScheme);
+}
+
+export function getSurfaceColor(colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken('surface', colorScheme);
+}
+
+export function getBackgroundColor(colorScheme?: 'light' | 'dark' | null): string {
+  return getColorToken('background', colorScheme);
+}
+
+export function getSpacingToken(tokenName: keyof typeof FigmaDesignTokens.spacing): number {
+  const token = FigmaDesignTokens.spacing[tokenName];
   return token?.value || 0;
 }
 
-export function getBorderRadiusToken(tokenName: string): number {
-  const token = FigmaDesignTokens.borderRadius[tokenName as keyof typeof FigmaDesignTokens.borderRadius];
+export function getBorderRadiusToken(tokenName: keyof typeof FigmaDesignTokens.borderRadius): number {
+  const token = FigmaDesignTokens.borderRadius[tokenName];
   return token?.value || 0;
 }
 
-export function getShadowToken(tokenName: string) {
-  const token = FigmaDesignTokens.shadows[tokenName as keyof typeof FigmaDesignTokens.shadows];
+export function getShadowToken(tokenName: keyof typeof FigmaDesignTokens.shadows) {
+  const token = FigmaDesignTokens.shadows[tokenName];
   if (!token) return null;
-  
+
   return {
     shadowColor: token.color,
     shadowOffset: { width: token.x, height: token.y },
@@ -236,7 +281,7 @@ export function getMD3Colors() {
     secondary: getColorToken('core-secondary'),
     tertiary: getColorToken('core-tertiary'),
     error: getColorToken('core-error'),
-    
+
     // Light theme
     light: {
       primary: getColorToken('light-primary'),
@@ -264,7 +309,7 @@ export function getMD3Colors() {
       outline: getColorToken('light-outline'),
       outlineVariant: getColorToken('light-outlineVariant'),
     },
-    
+
     // Dark theme
     dark: {
       primary: getColorToken('dark-primary'),
@@ -301,7 +346,7 @@ export function getMD3Colors() {
 
 function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0) {
     console.log('Usage: node scripts/import-figma-tokens.js <path-to-figma-tokens.json>');
     console.log('');
