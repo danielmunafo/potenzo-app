@@ -130,7 +130,8 @@ export function SplashScreen() {
           <LanguageSelector />
 
           <View style={styles.termsContainer}>
-            <Checkbox
+            <Checkbox.Android
+              testID="splash-screen-terms-checkbox"
               status={termsAccepted ? 'checked' : 'unchecked'}
               onPress={toggleTerms}
               uncheckedColor={theme.colors.onSurface}
@@ -140,7 +141,9 @@ export function SplashScreen() {
               variant="bodySmall"
               style={[styles.termsText, { color: theme.colors.onSurface }]}
             >
-              {t('splash.termsAndConditions')}{' '}
+              <Text onPress={toggleTerms}>
+                {t('splash.termsAndConditions')}{' '}
+              </Text>
               <ExternalLink
                 href="https://potenzo.app/terms-and-conditions"
                 accessibilityLabel="splash-screen-terms-link"
@@ -265,7 +268,7 @@ export function SplashScreen() {
           </View>
         </Modal>
       </Portal>
-    </AppContainer>
+    </AppContainer >
   );
 }
 
@@ -320,6 +323,9 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     marginLeft: getSpacingToken('spacing-xs'),
   },
+  termsTextContainer: {
+    flex: 1,
+  },
   getStartedButton: {
     marginTop: getSpacingToken('spacing-md'),
     width: '100%',
@@ -331,6 +337,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    height: '100%',
   },
   modalContainer: {
     margin: getSpacingToken('spacing-lg'),

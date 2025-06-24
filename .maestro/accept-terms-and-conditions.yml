@@ -1,0 +1,10 @@
+appId: com.potenzo.app
+---
+- launchApp
+- assertVisible: "Train anywhere. Eat smart. Win every day."
+- assertVisible: "Terms of Service"
+- assertVisible: "Privacy Policy"
+- tapOn:
+    id: "splash-screen-terms-checkbox"
+- tapOn: "Get Started"
+- assertNotVisible: "Train anywhere. Eat smart. Win every day."

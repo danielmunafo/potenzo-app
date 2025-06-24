@@ -26,7 +26,7 @@ interface UserConsent {
 
 export function SettingsScreen() {
   const { t } = useTranslation();
-  const { trackEvent, startTracking, stopTracking, consentGranted } = useAnalytics();
+  const { trackEvent, startTracking, stopTracking } = useAnalytics();
   const [userConsent, setUserConsent] = React.useState<UserConsent>({
     termsAccepted: false,
     trackingConsent: null
