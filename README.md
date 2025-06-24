@@ -67,3 +67,7 @@ For commiting run: `yarn commit`
 `yarn release`
 
 `git push --follow-tags origin main`
+
+### Sentry Source Maps
+export SENTRY_AUTH_TOKEN="" \
+eas update --branch <branch> && npx sentry-expo-upload-sourcemaps dist

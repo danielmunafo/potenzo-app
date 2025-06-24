@@ -6,6 +6,7 @@ import { Card, Text } from 'react-native-paper';
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
@@ -14,7 +15,6 @@ const STORAGE_KEYS = {
   TERMS_ACCEPTED_AT: 'terms_accepted_at',
   TRACKING_CONSENT: 'tracking_consent',
   TRACKING_CONSENT_AT: 'tracking_consent_at',
-  TRACKING_SHOWN: 'tracking_shown'
 } as const;
 
 interface UserConsent {
@@ -24,42 +24,37 @@ interface UserConsent {
   trackingConsentAt?: string;
 }
 
-const startTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Starting action:', action);
-};
-const stopTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Stopping action:', action);
-};
-const trackAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Adding action:', action);
-};
-
 export function SettingsScreen() {
   const { t } = useTranslation();
+  const { trackEvent, startTracking, stopTracking, consentGranted } = useAnalytics();
   const [userConsent, setUserConsent] = React.useState<UserConsent>({
     termsAccepted: false,
     trackingConsent: null
   });
 
   React.useEffect(() => {
-    startTrackingAction({ action: 'Viewing Settings Screen', type: 'CUSTOM' });
+    startTracking('Viewing Settings Screen', 'CUSTOM');
     loadUserConsent();
 
     return () => {
-      stopTrackingAction({ action: 'Viewing Settings Screen', type: 'CUSTOM' });
+      stopTracking('Viewing Settings Screen', 'CUSTOM');
     };
   }, []);
 
   const loadUserConsent = async () => {
     try {
-      const [termsAccepted, trackingConsent] = await Promise.all([
+      const [termsAccepted, trackingConsent, termsAcceptedAt, trackingConsentAt] = await Promise.all([
         AsyncStorage.getItem(STORAGE_KEYS.TERMS_ACCEPTED),
-        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT)
+        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT),
+        AsyncStorage.getItem(STORAGE_KEYS.TERMS_ACCEPTED_AT),
+        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT_AT)
       ]);
 
       setUserConsent({
         termsAccepted: termsAccepted === 'true',
-        trackingConsent: trackingConsent === 'true' ? true : trackingConsent === 'false' ? false : null
+        termsAcceptedAt: termsAcceptedAt || undefined,
+        trackingConsent: trackingConsent === 'true' ? true : trackingConsent === 'false' ? false : null,
+        trackingConsentAt: trackingConsentAt || undefined
       });
     } catch (error) {
       console.warn('Failed to load user consent:', error);
@@ -151,7 +146,7 @@ export function SettingsScreen() {
               <ExternalLink
                 href="https://potenzo.app"
                 accessibilityLabel="settings-website-link"
-                onPress={() => trackAction({ action: 'Website Link' })}
+                onPress={() => trackEvent({ action: 'Website Link' })}
               >
                 <Text
                   style={[
@@ -174,7 +169,7 @@ export function SettingsScreen() {
               <ExternalLink
                 href="mailto:support@potenzo.app"
                 accessibilityLabel="settings-contact-link"
-                onPress={() => trackAction({ action: 'Contact Link' })}
+                onPress={() => trackEvent({ action: 'Contact Link' })}
               >
                 <Text
                   style={[
@@ -197,7 +192,7 @@ export function SettingsScreen() {
               <ExternalLink
                 href="https://potenzo.app/terms-and-conditions"
                 accessibilityLabel="settings-terms-link"
-                onPress={() => trackAction({ action: 'Terms of Service' })}
+                onPress={() => trackEvent({ action: 'Terms of Service' })}
               >
                 <Text
                   style={[
@@ -220,7 +215,7 @@ export function SettingsScreen() {
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
                 accessibilityLabel="settings-privacy-link"
-                onPress={() => trackAction({ action: 'Privacy Policy' })}
+                onPress={() => trackEvent({ action: 'Privacy Policy' })}
               >
                 <Text
                   style={[

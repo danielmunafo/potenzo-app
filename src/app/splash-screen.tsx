@@ -9,48 +9,36 @@ import { Button, Checkbox, Modal, Portal, Text, useTheme } from 'react-native-pa
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
 const STORAGE_KEYS = {
   TERMS_ACCEPTED: 'terms_accepted',
-  TRACKING_CONSENT: 'tracking_consent',
-  TRACKING_CONSENT_AT: 'tracking_consent_at',
+  TERMS_ACCEPTED_AT: 'terms_accepted_at',
   TRACKING_SHOWN: 'tracking_shown',
-  TERMS_ACCEPTED_AT: 'terms_accepted_at'
 } as const;
-
-const startTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Starting action:', action);
-};
-const stopTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Stopping action:', action);
-};
-const trackAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Adding action:', action);
-};
 
 export function SplashScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
+  const { setConsent, trackEvent, startTracking, stopTracking } = useAnalytics();
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [showTrackingModal, setShowTrackingModal] = React.useState(false);
 
   React.useEffect(() => {
-    startTrackingAction({ action: 'Viewing Splash Screen', type: 'CUSTOM' });
-
+    startTracking('Viewing Splash Screen', 'CUSTOM');
     loadStoredPreferences();
 
     return () => {
-      stopTrackingAction({ action: 'Viewing Splash Screen', type: 'CUSTOM' });
+      stopTracking('Viewing Splash Screen', 'CUSTOM');
     };
   }, []);
 
   const loadStoredPreferences = async () => {
     try {
-      const [storedTerms, storedTracking, trackingShown] = await Promise.all([
+      const [storedTerms, trackingShown] = await Promise.all([
         AsyncStorage.getItem(STORAGE_KEYS.TERMS_ACCEPTED),
-        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT),
         AsyncStorage.getItem(STORAGE_KEYS.TRACKING_SHOWN)
       ]);
 
@@ -58,8 +46,8 @@ export function SplashScreen() {
         setTermsAccepted(true);
       }
 
-      // Show tracking modal if not shown before AND no tracking decision made yet
-      if (trackingShown !== 'true' && storedTracking === null) {
+      // Show tracking modal if not shown before
+      if (trackingShown !== 'true') {
         setShowTrackingModal(true);
       }
     } catch (error) {
@@ -79,26 +67,12 @@ export function SplashScreen() {
     }
   };
 
-  const saveTrackingConsent = async (consent: boolean) => {
-    try {
-      const timestamp = new Date().toISOString();
-      await Promise.all([
-        AsyncStorage.setItem(STORAGE_KEYS.TRACKING_CONSENT, consent.toString()),
-        AsyncStorage.setItem(STORAGE_KEYS.TRACKING_CONSENT_AT, timestamp),
-        AsyncStorage.setItem(STORAGE_KEYS.TRACKING_SHOWN, 'true')
-      ]);
-    } catch (error) {
-      console.warn('Failed to save tracking consent:', error);
-    }
-  };
-
   const handleGetStarted = () => {
     if (termsAccepted) {
-      trackAction({ action: 'Get Started' });
+      trackEvent({ action: 'Get Started' });
       router.push('/settings');
     } else {
       console.log('Terms must be accepted first');
-      // You could show an alert or toast here
     }
   };
 
@@ -106,13 +80,14 @@ export function SplashScreen() {
     const newValue = !termsAccepted;
     setTermsAccepted(newValue);
     saveTermsAccepted(newValue);
-    trackAction({ action: 'Terms Accepted', type: 'CUSTOM' });
+    trackEvent({ action: 'Terms Accepted', type: 'CUSTOM' });
   };
 
   const handleTrackingConsent = async (consent: boolean) => {
     setShowTrackingModal(false);
-    await saveTrackingConsent(consent);
-    trackAction({ action: 'Tracking Consent', type: 'CUSTOM' });
+    await setConsent(consent);
+    await AsyncStorage.setItem(STORAGE_KEYS.TRACKING_SHOWN, 'true');
+    trackEvent({ action: 'Tracking Consent', type: 'CUSTOM' });
   };
 
   return (
@@ -169,7 +144,7 @@ export function SplashScreen() {
               <ExternalLink
                 href="https://potenzo.app/terms-and-conditions"
                 accessibilityLabel="splash-screen-terms-link"
-                onPress={() => trackAction({ action: 'Terms of Service' })}
+                onPress={() => trackEvent({ action: 'Terms of Service' })}
               >
                 <Text
                   style={[
@@ -186,7 +161,7 @@ export function SplashScreen() {
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
                 accessibilityLabel="splash-screen-privacy-link"
-                onPress={() => trackAction({ action: 'Privacy Policy' })}
+                onPress={() => trackEvent({ action: 'Privacy Policy' })}
               >
                 <Text
                   style={[
@@ -251,7 +226,7 @@ export function SplashScreen() {
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
                 accessibilityLabel="tracking-privacy-link"
-                onPress={() => trackAction({ action: 'Privacy Policy from Tracking Modal' })}
+                onPress={() => trackEvent({ action: 'Privacy Policy from Tracking Modal' })}
               >
                 <Text
                   style={[
