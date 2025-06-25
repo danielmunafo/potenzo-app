@@ -1,11 +1,16 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import { StatusBar } from 'react-native';
 import 'react-native-reanimated';
 
+import { ConsentProvider, useConsentContext } from '@/contexts/ConsentContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
-import { StatusBar } from 'react-native';
+
+SplashScreen.preventAutoHideAsync();
 
 const FONT_CONFIG = {
   'Exo2-Bold': require('../assets/fonts/static/Exo2-Bold.ttf'),
@@ -16,11 +21,11 @@ const FONT_CONFIG = {
   'OpenSans-SemiBold': require('../assets/fonts/static/OpenSans-SemiBold.ttf'),
 } as const;
 
-const STACK_SCREEN_CONFIG = {
+const HOME_SCREEN_CONFIG = {
   name: 'index',
   options: {
     headerShown: false,
-    title: 'Splash',
+    title: 'Home',
   },
 } as const;
 
@@ -32,11 +37,22 @@ const SETTINGS_SCREEN_CONFIG = {
   },
 } as const;
 
-export default function RootLayout() {
+export const App = () => {
   const userDeviceColorScheme = useColorScheme();
+  const { isLoading: consentLoading } = useConsentContext();
   const [fontsLoaded] = useFonts(FONT_CONFIG);
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    const hideSplashScreen = async () => {
+      if (fontsLoaded && !consentLoading) {
+        await SplashScreen.hideAsync();
+      }
+    };
+
+    hideSplashScreen();
+  }, [fontsLoaded, consentLoading]);
+
+  if (!fontsLoaded || consentLoading) {
     return null;
   }
 
@@ -46,14 +62,24 @@ export default function RootLayout() {
   const statusBarStyle = isDark ? 'light-content' : 'dark-content';
 
   return (
-    <AppThemeProvider systemTheme={systemTheme}>
-      <ThemeProvider value={navigationTheme}>
-        <Stack>
-          <Stack.Screen {...STACK_SCREEN_CONFIG} />
-          <Stack.Screen {...SETTINGS_SCREEN_CONFIG} />
-        </Stack>
-        <StatusBar barStyle={statusBarStyle} />
-      </ThemeProvider>
-    </AppThemeProvider>
+    <>
+      <StatusBar barStyle={statusBarStyle} animated />
+      <AppThemeProvider systemTheme={systemTheme}>
+        <ThemeProvider value={navigationTheme}>
+          <Stack>
+            <Stack.Screen {...HOME_SCREEN_CONFIG} />
+            <Stack.Screen {...SETTINGS_SCREEN_CONFIG} />
+          </Stack>
+        </ThemeProvider>
+      </AppThemeProvider>
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ConsentProvider>
+      <App />
+    </ConsentProvider>
   );
 }
