@@ -1,126 +1,50 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { StatusBar, StyleSheet, View } from 'react-native';
 import { Button, Checkbox, Modal, Portal, Text, useTheme } from 'react-native-paper';
 
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUserConsents } from '@/hooks/useUserConsents';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
-const STORAGE_KEYS = {
-  TERMS_ACCEPTED: 'terms_accepted',
-  TRACKING_CONSENT: 'tracking_consent',
-  TRACKING_CONSENT_AT: 'tracking_consent_at',
-  TRACKING_SHOWN: 'tracking_shown',
-  TERMS_ACCEPTED_AT: 'terms_accepted_at'
-} as const;
-
-const startTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Starting action:', action);
-};
-const stopTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Stopping action:', action);
-};
-const trackAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Adding action:', action);
-};
-
-export function SplashScreen() {
+export function TermsAndConditionsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [termsAccepted, setTermsAccepted] = React.useState(false);
-  const [showTrackingModal, setShowTrackingModal] = React.useState(false);
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const {
+    shouldShowTrackingModal,
+    updateTermsAccepted,
+    updateTrackingConsent
+  } = useUserConsents();
 
-  React.useEffect(() => {
-    startTrackingAction({ action: 'Viewing Splash Screen', type: 'CUSTOM' });
-
-    loadStoredPreferences();
-
-    return () => {
-      stopTrackingAction({ action: 'Viewing Splash Screen', type: 'CUSTOM' });
-    };
-  }, []);
-
-  const loadStoredPreferences = async () => {
-    try {
-      const [storedTerms, storedTracking, trackingShown] = await Promise.all([
-        AsyncStorage.getItem(STORAGE_KEYS.TERMS_ACCEPTED),
-        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT),
-        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_SHOWN)
-      ]);
-
-      if (storedTerms === 'true') {
-        setTermsAccepted(true);
-      }
-
-      // Show tracking modal if not shown before AND no tracking decision made yet
-      if (trackingShown !== 'true' && storedTracking === null) {
-        setShowTrackingModal(true);
-      }
-    } catch (error) {
-      console.warn('Failed to load stored preferences:', error);
-    }
-  };
-
-  const saveTermsAccepted = async (accepted: boolean) => {
-    try {
-      const timestamp = new Date().toISOString();
-      await Promise.all([
-        AsyncStorage.setItem(STORAGE_KEYS.TERMS_ACCEPTED, accepted.toString()),
-        AsyncStorage.setItem(STORAGE_KEYS.TERMS_ACCEPTED_AT, timestamp)
-      ]);
-    } catch (error) {
-      console.warn('Failed to save terms acceptance:', error);
-    }
-  };
-
-  const saveTrackingConsent = async (consent: boolean) => {
-    try {
-      const timestamp = new Date().toISOString();
-      await Promise.all([
-        AsyncStorage.setItem(STORAGE_KEYS.TRACKING_CONSENT, consent.toString()),
-        AsyncStorage.setItem(STORAGE_KEYS.TRACKING_CONSENT_AT, timestamp),
-        AsyncStorage.setItem(STORAGE_KEYS.TRACKING_SHOWN, 'true')
-      ]);
-    } catch (error) {
-      console.warn('Failed to save tracking consent:', error);
-    }
-  };
-
-  const handleGetStarted = () => {
-    if (termsAccepted) {
-      trackAction({ action: 'Get Started' });
-      router.push('/settings');
+  const handleGetStarted = async () => {
+    if (isTermsAccepted) {
+      await updateTermsAccepted(isTermsAccepted);
     } else {
       console.log('Terms must be accepted first');
       // You could show an alert or toast here
     }
   };
 
-  const toggleTerms = () => {
-    const newValue = !termsAccepted;
-    setTermsAccepted(newValue);
-    saveTermsAccepted(newValue);
-    trackAction({ action: 'Terms Accepted', type: 'CUSTOM' });
-  };
-
   const handleTrackingConsent = async (consent: boolean) => {
-    setShowTrackingModal(false);
-    await saveTrackingConsent(consent);
-    trackAction({ action: 'Tracking Consent', type: 'CUSTOM' });
+    try {
+      await updateTrackingConsent(consent);
+    } catch (error) {
+      console.warn('Failed to update tracking consent:', error);
+    }
   };
 
   return (
-    <AppContainer accessibilityLabel="splash-screen-container">
+    <AppContainer accessibilityLabel="terms-screen-container">
+      <StatusBar hidden animated />
       <View style={styles.contentContainer}>
         <View style={styles.scrollableContent}>
           <Text
-            accessibilityLabel="splash-screen-main-title"
+            accessibilityLabel="terms-screen-main-title"
             variant="headlineLarge"
             style={styles.mainTitle}
           >
@@ -128,7 +52,7 @@ export function SplashScreen() {
           </Text>
 
           <Text
-            accessibilityLabel="splash-screen-subtitle"
+            accessibilityLabel="terms-screen-subtitle"
             variant="titleLarge"
             style={styles.subtitle}
           >
@@ -136,14 +60,14 @@ export function SplashScreen() {
           </Text>
 
           <Image
-            accessibilityLabel="splash-screen-icon"
+            accessibilityLabel="terms-screen-icon"
             source={require('@/assets/images/splash-icon.png')}
             style={styles.splashIcon}
             contentFit="contain"
           />
 
           <Text
-            accessibilityLabel="splash-screen-description"
+            accessibilityLabel="terms-screen-description"
             variant="bodyLarge"
             style={styles.description}
           >
@@ -156,23 +80,22 @@ export function SplashScreen() {
 
           <View style={styles.termsContainer}>
             <Checkbox.Android
-              testID="splash-screen-terms-checkbox"
-              status={termsAccepted ? 'checked' : 'unchecked'}
-              onPress={toggleTerms}
+              testID="terms-screen-terms-checkbox"
+              status={isTermsAccepted ? 'checked' : 'unchecked'}
+              onPress={() => setIsTermsAccepted(!isTermsAccepted)}
               uncheckedColor={theme.colors.onSurface}
             />
             <Text
-              accessibilityLabel="splash-screen-terms-text"
+              accessibilityLabel="terms-screen-terms-text"
               variant="bodySmall"
               style={[styles.termsText, { color: theme.colors.onSurface }]}
             >
-              <Text onPress={toggleTerms}>
+              <Text onPress={() => setIsTermsAccepted(!isTermsAccepted)}>
                 {t('splash.termsAndConditions')}{' '}
               </Text>
               <ExternalLink
                 href="https://potenzo.app/terms-and-conditions"
-                accessibilityLabel="splash-screen-terms-link"
-                onPress={() => trackAction({ action: 'Terms of Service' })}
+                accessibilityLabel="terms-screen-terms-link"
               >
                 <Text
                   style={[
@@ -188,8 +111,7 @@ export function SplashScreen() {
               </ExternalLink>{', '}
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
-                accessibilityLabel="splash-screen-privacy-link"
-                onPress={() => trackAction({ action: 'Privacy Policy' })}
+                accessibilityLabel="terms-screen-privacy-link"
               >
                 <Text
                   style={[
@@ -211,11 +133,11 @@ export function SplashScreen() {
             onPress={handleGetStarted}
             style={[
               styles.getStartedButton,
-              !termsAccepted && styles.getStartedButtonDisabled
+              !isTermsAccepted && styles.getStartedButtonDisabled
             ]}
-            accessibilityLabel="splash-screen-get-started-button"
+            accessibilityLabel="terms-screen-get-started-button"
             buttonColor={getColorToken('core-primary')}
-            disabled={!termsAccepted}
+            disabled={!isTermsAccepted}
           >
             {t('common.getStarted')}
           </Button>
@@ -224,7 +146,7 @@ export function SplashScreen() {
 
       <Portal>
         <Modal
-          visible={showTrackingModal}
+          visible={shouldShowTrackingModal}
           dismissable={false}
           contentContainerStyle={styles.modalOverlay}
         >
@@ -254,7 +176,6 @@ export function SplashScreen() {
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
                 accessibilityLabel="tracking-privacy-link"
-                onPress={() => trackAction({ action: 'Privacy Policy from Tracking Modal' })}
               >
                 <Text
                   style={[
@@ -399,4 +320,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SplashScreen;
+export default TermsAndConditionsScreen;
