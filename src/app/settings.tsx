@@ -1,7 +1,9 @@
+import * as Sentry from '@sentry/react-native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Text } from 'react-native-paper';
+import { Button, Card, Text } from 'react-native-paper';
 
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -75,6 +77,10 @@ export function SettingsScreen() {
     <AppContainer
       accessibilityLabel="settings-screen-container">
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <Button onPress={() => { Sentry.captureException(new Error('First error')) }}>
+          Try!
+        </Button>
+
         <Text
           accessibilityLabel="settings-screen-title"
           variant="headlineMedium"
