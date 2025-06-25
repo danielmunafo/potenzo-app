@@ -1,33 +1,29 @@
 import React from 'react';
 import { ViewStyle } from 'react-native';
 import { Surface, useTheme, type MD3Elevation } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Edge, SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { getSpacingToken } from '@/theme/FigmaTokens';
 
 interface AppContainerProps {
   children: React.ReactNode;
   style?: ViewStyle;
   elevation?: MD3Elevation;
   accessibilityLabel?: string;
+  edges?: Edge[];
 }
 
 export function AppContainer({
   children,
   style,
+  accessibilityLabel,
   elevation = 0,
-  accessibilityLabel
+  edges = ['top', 'bottom']
 }: AppContainerProps) {
-  const insets = useSafeAreaInsets();
+  // const insets = useSafeAreaInsets();
   const theme = useTheme();
 
   const containerStyle: ViewStyle = {
     flex: 1,
-    marginTop: insets.top,
-    paddingTop: getSpacingToken('spacing-2xl'),
-    paddingBottom: getSpacingToken('spacing-2xl'),
-    paddingLeft: getSpacingToken('spacing-md'),
-    paddingRight: getSpacingToken('spacing-md'),
     backgroundColor: theme.colors.background,
   };
 
@@ -37,7 +33,11 @@ export function AppContainer({
       elevation={elevation}
       accessibilityLabel={accessibilityLabel}
     >
-      {children}
+      <SafeAreaProvider>
+        <SafeAreaView edges={edges} style={{ flex: 1, width: '100%', height: '100%' }}>
+          {children}
+        </SafeAreaView>
+      </SafeAreaProvider>
     </Surface>
   );
 }
