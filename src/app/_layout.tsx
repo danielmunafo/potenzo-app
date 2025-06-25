@@ -1,14 +1,11 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, useNavigationContainerRef } from 'expo-router';
-import { useEffect } from 'react';
+import { Stack } from 'expo-router';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
 import { StatusBar } from 'react-native';
-
-import { sentryService } from '@/services/SentryService';
 
 const FONT_CONFIG = {
   'Exo2-Bold': require('../assets/fonts/static/Exo2-Bold.ttf'),
@@ -35,22 +32,9 @@ const SETTINGS_SCREEN_CONFIG = {
   },
 } as const;
 
-// Initialize Sentry service
-sentryService.initialize();
-
-export const RootLayout = () => {
-  const ref = useNavigationContainerRef();
+export default function RootLayout() {
   const userDeviceColorScheme = useColorScheme();
   const [fontsLoaded] = useFonts(FONT_CONFIG);
-
-  useEffect(() => {
-    if (ref) {
-      const navigationIntegration = sentryService.getNavigationIntegration();
-      if (navigationIntegration) {
-        navigationIntegration.registerNavigationContainer(ref);
-      }
-    }
-  }, [ref]);
 
   if (!fontsLoaded) {
     return null;
@@ -73,5 +57,3 @@ export const RootLayout = () => {
     </AppThemeProvider>
   );
 }
-
-export default sentryService.wrap(RootLayout);

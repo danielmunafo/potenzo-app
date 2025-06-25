@@ -35,15 +35,7 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-web-browser",
-      [
-        "@sentry/react-native/expo",
-        {
-          "url": "https://sentry.io/",
-          "project": "react-native",
-          "organization": "potenzo"
-        }
-      ]
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

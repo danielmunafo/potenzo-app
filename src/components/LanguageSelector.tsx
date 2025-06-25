@@ -2,17 +2,25 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Menu, Text } from 'react-native-paper';
 
-import { useAnalytics } from '@/hooks/useAnalytics';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
-interface LanguageSelectorProps {
+type LanguageSelectorProps = {
   hasLabel?: boolean;
-}
+};
+
+const startTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Starting action:', action);
+};
+const stopTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Stopping action:', action);
+};
+const trackAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
+  console.log('Adding action:', action);
+};
 
 export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
   const { t, changeLanguage, currentLanguage } = useTranslation();
-  const { trackEvent } = useAnalytics();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const languages = [
@@ -24,7 +32,7 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
 
   const openMenu = () => {
     setMenuVisible(true);
-    trackEvent({
+    trackAction({
       action: 'Language Selector Menu Opened',
       type: 'CUSTOM'
     });
@@ -32,13 +40,13 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
 
   const closeMenu = () => {
     setMenuVisible(false);
-    trackEvent({
+    trackAction({
       action: 'Language Selector Menu Closed',
     });
   };
 
   const handleLanguageSelect = (languageCode: string) => {
-    trackEvent({
+    trackAction({
       action: 'Language Selected',
       type: 'CUSTOM'
     });
