@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Card, Text } from 'react-native-paper';
 
@@ -9,6 +9,7 @@ import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
+import { SentryService } from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
 const STORAGE_KEYS = {
@@ -26,16 +27,6 @@ interface UserConsent {
   trackingConsentAt?: string;
 }
 
-const startTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Starting action:', action);
-};
-const stopTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Stopping action:', action);
-};
-const trackAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Adding action:', action);
-};
-
 export function SettingsScreen() {
   const { t } = useTranslation();
   const [userConsent, setUserConsent] = React.useState<UserConsent>({
@@ -43,13 +34,8 @@ export function SettingsScreen() {
     trackingConsent: null
   });
 
-  React.useEffect(() => {
-    startTrackingAction({ action: 'Viewing Settings Screen', type: 'CUSTOM' });
+  useEffect(() => {
     loadUserConsent();
-
-    return () => {
-      stopTrackingAction({ action: 'Viewing Settings Screen', type: 'CUSTOM' });
-    };
   }, []);
 
   const loadUserConsent = async () => {
@@ -64,7 +50,11 @@ export function SettingsScreen() {
         trackingConsent: trackingConsent === 'true' ? true : trackingConsent === 'false' ? false : null
       });
     } catch (error) {
-      console.warn('Failed to load user consent:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to load user consent',
+        source: 'SettingsScreen',
+        level: 'error',
+      });
     }
   };
 
@@ -76,8 +66,8 @@ export function SettingsScreen() {
   return (
     <AppContainer
       accessibilityLabel="settings-screen-container">
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <Button onPress={() => { Sentry.captureException(new Error('First error')) }}>
+      <ScrollView accessibilityLabel="settings-screen-scroll-view" style={styles.container} showsVerticalScrollIndicator={false}>
+        <Button accessibilityLabel="settings-screen-button" onPress={() => { Sentry.captureException(new Error('First error')) }}>
           Try!
         </Button>
 
@@ -89,27 +79,30 @@ export function SettingsScreen() {
           {t('profile.settings')}
         </Text>
 
-        <View style={styles.languageSelectorContainer}>
+        <View accessibilityLabel="settings-screen-language-selector-container" style={styles.languageSelectorContainer}>
           <LanguageSelector />
         </View>
 
-        <Card style={styles.consentCard}>
-          <Card.Content>
+        <Card accessibilityLabel="settings-screen-consent-card" style={styles.consentCard}>
+          <Card.Content accessibilityLabel="settings-screen-consent-card-content">
             <Text
+              accessibilityLabel="settings-screen-consent-card-title"
               variant="titleMedium"
               style={[styles.cardTitle]}
             >
               {t('settings.consent.title')}
             </Text>
 
-            <View style={styles.consentItem}>
+            <View accessibilityLabel="settings-screen-consent-card-item" style={styles.consentItem}>
               <Text
+                accessibilityLabel="settings-screen-consent-card-item-label"
                 variant="bodyMedium"
                 style={[styles.consentLabel]}
               >
                 {t('settings.consent.terms')}:
               </Text>
               <Text
+                accessibilityLabel="settings-screen-consent-card-item-value"
                 variant="bodyMedium"
                 style={[
                   styles.consentValue,
@@ -119,14 +112,16 @@ export function SettingsScreen() {
               </Text>
             </View>
 
-            <View style={styles.consentItem}>
+            <View accessibilityLabel="settings-screen-consent-card-item" style={styles.consentItem}>
               <Text
+                accessibilityLabel="settings-screen-consent-card-item-label"
                 variant="bodyMedium"
                 style={[styles.consentLabel]}
               >
                 {t('settings.consent.tracking')}:
               </Text>
               <Text
+                accessibilityLabel="settings-screen-consent-card-item-value"
                 variant="bodyMedium"
                 style={[
                   styles.consentValue,
@@ -138,17 +133,19 @@ export function SettingsScreen() {
           </Card.Content>
         </Card>
 
-        <Card style={styles.websiteCard}>
-          <Card.Content>
+        <Card accessibilityLabel="settings-screen-website-card" style={styles.websiteCard}>
+          <Card.Content accessibilityLabel="settings-screen-website-card-content">
             <Text
+              accessibilityLabel="settings-screen-website-card-title"
               variant="titleMedium"
               style={[styles.cardTitle]}
             >
               {t('settings.website.title')}
             </Text>
 
-            <View style={styles.websiteItem}>
+            <View accessibilityLabel="settings-screen-website-card-item" style={styles.websiteItem}>
               <Text
+                accessibilityLabel="settings-screen-website-card-item-label"
                 variant="bodyMedium"
                 style={[styles.websiteLabel]}
               >
@@ -157,9 +154,9 @@ export function SettingsScreen() {
               <ExternalLink
                 href="https://potenzo.app"
                 accessibilityLabel="settings-website-link"
-                onPress={() => trackAction({ action: 'Website Link' })}
               >
                 <Text
+                  accessibilityLabel="settings-screen-website-card-item-link"
                   style={[
                     styles.websiteLink,
                     { color: getColorToken('core-primary') }
@@ -170,8 +167,9 @@ export function SettingsScreen() {
               </ExternalLink>
             </View>
 
-            <View style={styles.websiteItem}>
+            <View accessibilityLabel="settings-screen-website-card-item" style={styles.websiteItem}>
               <Text
+                accessibilityLabel="settings-screen-website-card-item-label"
                 variant="bodyMedium"
                 style={[styles.websiteLabel]}
               >
@@ -180,9 +178,9 @@ export function SettingsScreen() {
               <ExternalLink
                 href="mailto:support@potenzo.app"
                 accessibilityLabel="settings-contact-link"
-                onPress={() => trackAction({ action: 'Contact Link' })}
               >
                 <Text
+                  accessibilityLabel="settings-screen-website-card-item-link"
                   style={[
                     styles.websiteLink,
                     { color: getColorToken('core-primary') }
@@ -193,8 +191,9 @@ export function SettingsScreen() {
               </ExternalLink>
             </View>
 
-            <View style={styles.websiteItem}>
+            <View accessibilityLabel="settings-screen-website-card-item" style={styles.websiteItem}>
               <Text
+                accessibilityLabel="settings-screen-website-card-item-label"
                 variant="bodyMedium"
                 style={[styles.websiteLabel]}
               >
@@ -203,9 +202,9 @@ export function SettingsScreen() {
               <ExternalLink
                 href="https://potenzo.app/terms-and-conditions"
                 accessibilityLabel="settings-terms-link"
-                onPress={() => trackAction({ action: 'Terms of Service' })}
               >
                 <Text
+                  accessibilityLabel="settings-screen-website-card-item-link"
                   style={[
                     styles.websiteLink,
                     { color: getColorToken('core-primary') }
@@ -216,8 +215,9 @@ export function SettingsScreen() {
               </ExternalLink>
             </View>
 
-            <View style={styles.websiteItem}>
+            <View accessibilityLabel="settings-screen-website-card-item" style={styles.websiteItem}>
               <Text
+                accessibilityLabel="settings-screen-website-card-item-label"
                 variant="bodyMedium"
                 style={[styles.websiteLabel]}
               >
@@ -226,9 +226,9 @@ export function SettingsScreen() {
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
                 accessibilityLabel="settings-privacy-link"
-                onPress={() => trackAction({ action: 'Privacy Policy' })}
               >
                 <Text
+                  accessibilityLabel="settings-screen-website-card-item-link"
                   style={[
                     styles.websiteLink,
                     { color: getColorToken('core-primary') }

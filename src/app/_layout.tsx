@@ -4,14 +4,14 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack, useNavigationContainerRef } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import 'react-native-reanimated';
 
 import { ConsentProvider, useConsentContext } from '@/contexts/ConsentContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { SentryService } from '@/services/sentryService';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
-import { isRunningInExpoGo } from 'expo';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,50 +40,35 @@ const SETTINGS_SCREEN_CONFIG = {
   },
 } as const;
 
-const navigationIntegration = Sentry.reactNavigationIntegration({
-  enableTimeToInitialDisplay: !isRunningInExpoGo(),
-});
-
-Sentry.init({
-  dsn: 'https://a359a1f33b81485a82ec1fcf5dfe12a4@o4509550482817024.ingest.de.sentry.io/4509559563747408',
-  sendDefaultPii: true,
-  replaysSessionSampleRate: 1.0,
-  replaysOnErrorSampleRate: 1.0,
-  tracesSampleRate: 1.0,
-  profilesSampleRate: 1.0,
-  enableAutoPerformanceTracing: true,
-  enableAppHangTracking: true,
-  enableUserInteractionTracing: true,
-  enableAppStartTracking: true,
-  enableAutoSessionTracking: true,
-  enabled: true,
-  enableCaptureFailedRequests: true,
-  enableNativeFramesTracking: !isRunningInExpoGo(),
-  integrations: [navigationIntegration, Sentry.mobileReplayIntegration({
-    maskAllText: false,
-    maskAllImages: false,
-    maskAllVectors: false,
-  }), Sentry.reactNativeTracingIntegration(), Sentry.feedbackIntegration()],
-  spotlight: false,
-  debug: false,
-});
-
 const App = () => {
   const userDeviceColorScheme = useColorScheme();
   const { isLoading: consentLoading } = useConsentContext();
+  const [navigationIntegration, setNavigationIntegration] = useState<ReturnType<typeof Sentry.reactNavigationIntegration> | undefined>(undefined);
   const [fontsLoaded] = useFonts(FONT_CONFIG);
 
   const ref = useNavigationContainerRef();
   useEffect(() => {
-    if (ref) {
+    if (ref && navigationIntegration) {
       navigationIntegration.registerNavigationContainer(ref);
     }
-  }, [ref]);
+  }, [ref, navigationIntegration]);
 
   useEffect(() => {
     const hideSplashScreen = async () => {
       if (fontsLoaded && !consentLoading) {
-        await SplashScreen.hideAsync();
+        try {
+          const [navigationIntegration] = await Promise.all([
+            SentryService.initialize(),
+            SplashScreen.hideAsync(),
+          ])
+          setNavigationIntegration(navigationIntegration);
+        } catch (error) {
+          SentryService.captureException(error, {
+            message: 'Failed to initialize Sentry',
+            source: 'AppLayout',
+            level: 'error',
+          });
+        }
       }
     };
 

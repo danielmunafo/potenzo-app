@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SentryService } from './sentryService';
 
 export const STORAGE_KEYS = {
   TERMS_ACCEPTED: 'terms_accepted',
@@ -41,7 +42,11 @@ export class ConsentService {
         trackingShown: trackingShown === 'true'
       };
     } catch (error) {
-      console.warn('Failed to load consents:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to load consents',
+        source: 'ConsentService',
+        level: 'error',
+      });
       return {
         termsAccepted: false,
         trackingShown: false
@@ -57,7 +62,11 @@ export class ConsentService {
         AsyncStorage.setItem(STORAGE_KEYS.TERMS_ACCEPTED_AT, timestamp)
       ]);
     } catch (error) {
-      console.warn('Failed to save terms acceptance:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to save terms acceptance',
+        source: 'ConsentService',
+        level: 'error',
+      });
       throw error;
     }
   }
@@ -71,7 +80,11 @@ export class ConsentService {
         AsyncStorage.setItem(STORAGE_KEYS.TRACKING_SHOWN, 'true')
       ]);
     } catch (error) {
-      console.warn('Failed to save tracking consent:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to save tracking consent',
+        source: 'ConsentService',
+        level: 'error',
+      });
       throw error;
     }
   }

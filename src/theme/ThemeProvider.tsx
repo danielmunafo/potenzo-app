@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 
+import { SentryService } from '@/services/sentryService';
 import { DarkMaterialTheme, LightMaterialTheme } from './MaterialTheme';
 
 type ThemeMode = 'light' | 'dark' | 'system';
@@ -44,7 +45,11 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
         setThemeMode(savedThemeMode as ThemeMode);
       }
     } catch (error) {
-      console.warn('Failed to load theme mode:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to load theme mode',
+        source: 'ThemeProvider',
+        level: 'error',
+      });
     } finally {
       setIsLoaded(true);
     }
@@ -55,7 +60,11 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
       await AsyncStorage.setItem(THEME_STORAGE_KEY, mode);
       setThemeMode(mode);
     } catch (error) {
-      console.warn('Failed to save theme mode:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to save theme mode',
+        source: 'ThemeProvider',
+        level: 'error',
+      });
     }
   };
 

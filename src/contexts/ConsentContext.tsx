@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { ConsentData, ConsentService } from '@/services/consentService';
+import { SentryService } from '@/services/sentryService';
 
 interface ConsentContextType {
   consentData: ConsentData;
@@ -33,7 +34,11 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
       const data = await ConsentService.loadConsents();
       setConsentData(data);
     } catch (error) {
-      console.warn('Failed to load consents:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to load consents',
+        source: 'ConsentContext',
+        level: 'error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +53,11 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
         termsAcceptedAt: new Date().toISOString()
       }));
     } catch (error) {
-      console.warn('Failed to update terms acceptance:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to update terms acceptance',
+        source: 'ConsentContext',
+        level: 'error',
+      });
       throw error;
     }
   };
@@ -63,7 +72,11 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
         trackingShown: true
       }));
     } catch (error) {
-      console.warn('Failed to update tracking consent:', error);
+      SentryService.captureException(error, {
+        message: 'Failed to update tracking consent',
+        source: 'ConsentContext',
+        level: 'error',
+      });
       throw error;
     }
   };
