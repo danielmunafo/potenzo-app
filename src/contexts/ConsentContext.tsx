@@ -20,7 +20,7 @@ interface ConsentProviderProps {
 export function ConsentProvider({ children }: ConsentProviderProps) {
   const [consentData, setConsentData] = useState<ConsentData>({
     termsAccepted: false,
-    trackingShown: false
+    trackingShown: false,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -50,7 +50,7 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
       setConsentData(prev => ({
         ...prev,
         termsAccepted: accepted,
-        termsAcceptedAt: new Date().toISOString()
+        termsAcceptedAt: new Date().toISOString(),
       }));
     } catch (error) {
       SentryService.captureException(error, {
@@ -69,7 +69,7 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
         ...prev,
         trackingConsent: consent,
         trackingConsentAt: new Date().toISOString(),
-        trackingShown: true
+        trackingShown: true,
       }));
     } catch (error) {
       SentryService.captureException(error, {
@@ -81,20 +81,19 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
     }
   };
 
-  const shouldShowTrackingModal = !consentData.trackingShown && consentData.trackingConsent === undefined;
+  const shouldShowTrackingModal =
+    !consentData.trackingShown && consentData.trackingConsent === undefined;
 
   const value: ConsentContextType = {
     consentData,
     isLoading,
     updateTermsAccepted,
     updateTrackingConsent,
-    shouldShowTrackingModal
+    shouldShowTrackingModal,
   };
 
   return (
-    <ConsentContext.Provider value={value}>
-      {children}
-    </ConsentContext.Provider>
+    <ConsentContext.Provider value={value}>{children}</ConsentContext.Provider>
   );
 }
 
@@ -104,4 +103,4 @@ export function useConsentContext() {
     throw new Error('useConsentContext must be used within a ConsentProvider');
   }
   return context;
-} 
+}

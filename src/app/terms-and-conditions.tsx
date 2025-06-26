@@ -2,7 +2,14 @@ import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
-import { Button, Checkbox, Modal, Portal, Text, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Checkbox,
+  Modal,
+  Portal,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -19,7 +26,7 @@ export function TermsAndConditionsScreen() {
   const {
     shouldShowTrackingModal,
     updateTermsAccepted,
-    updateTrackingConsent
+    updateTrackingConsent,
   } = useUserConsents();
 
   const handleGetStarted = async () => {
@@ -43,8 +50,14 @@ export function TermsAndConditionsScreen() {
   return (
     <AppContainer accessibilityLabel="terms-screen-container">
       <StatusBar hidden animated />
-      <View accessibilityLabel="terms-screen-content-container" style={styles.contentContainer}>
-        <View accessibilityLabel="terms-screen-scrollable-content" style={styles.scrollableContent}>
+      <View
+        accessibilityLabel="terms-screen-content-container"
+        style={styles.contentContainer}
+      >
+        <View
+          accessibilityLabel="terms-screen-scrollable-content"
+          style={styles.scrollableContent}
+        >
           <Text
             accessibilityLabel="terms-screen-main-title"
             variant="headlineLarge"
@@ -77,22 +90,32 @@ export function TermsAndConditionsScreen() {
           </Text>
         </View>
 
-        <View accessibilityLabel="terms-screen-bottom-section" style={styles.bottomSection}>
+        <View
+          accessibilityLabel="terms-screen-bottom-section"
+          style={styles.bottomSection}
+        >
           <LanguageSelector />
 
-          <View accessibilityLabel="terms-screen-terms-container" style={styles.termsContainer}>
+          <View
+            accessibilityLabel="terms-screen-terms-container"
+            style={styles.termsContainer}
+          >
             <Checkbox.Android
               testID="terms-screen-terms-checkbox"
               status={isTermsAccepted ? 'checked' : 'unchecked'}
               onPress={() => setIsTermsAccepted(!isTermsAccepted)}
               uncheckedColor={theme.colors.onSurface}
+              accessibilityLabel="terms-screen-terms-checkbox"
             />
             <Text
               accessibilityLabel="terms-screen-terms-text"
               variant="bodySmall"
               style={[styles.termsText, { color: theme.colors.onSurface }]}
             >
-              <Text accessibilityLabel="terms-screen-terms-text-link" onPress={() => setIsTermsAccepted(!isTermsAccepted)}>
+              <Text
+                accessibilityLabel="terms-screen-terms-text-link"
+                onPress={() => setIsTermsAccepted(!isTermsAccepted)}
+              >
                 {t('splash.termsAndConditions')}{' '}
               </Text>
               <ExternalLink
@@ -105,13 +128,14 @@ export function TermsAndConditionsScreen() {
                     styles.termsText,
                     {
                       color: getColorToken('core-primary'),
-                      textDecorationLine: 'underline'
-                    }
+                      textDecorationLine: 'underline',
+                    },
                   ]}
                 >
                   {t('splash.termsOfService')}
                 </Text>
-              </ExternalLink>{', '}
+              </ExternalLink>
+              {', '}
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
                 accessibilityLabel="terms-screen-privacy-link"
@@ -122,8 +146,8 @@ export function TermsAndConditionsScreen() {
                     styles.termsText,
                     {
                       color: getColorToken('core-primary'),
-                      textDecorationLine: 'underline'
-                    }
+                      textDecorationLine: 'underline',
+                    },
                   ]}
                 >
                   {t('splash.privacyPolicy')}
@@ -138,7 +162,7 @@ export function TermsAndConditionsScreen() {
             accessibilityLabel="terms-screen-get-started-button"
             style={[
               styles.getStartedButton,
-              !isTermsAccepted && styles.getStartedButtonDisabled
+              !isTermsAccepted && styles.getStartedButtonDisabled,
             ]}
             buttonColor={getColorToken('core-primary')}
             disabled={!isTermsAccepted}
@@ -163,7 +187,7 @@ export function TermsAndConditionsScreen() {
             accessibilityLabel="terms-screen-modal-container"
             style={[
               styles.modalContainer,
-              { backgroundColor: theme.colors.surface }
+              { backgroundColor: theme.colors.surface },
             ]}
           >
             <Text
@@ -190,8 +214,8 @@ export function TermsAndConditionsScreen() {
                     styles.modalText,
                     {
                       color: getColorToken('core-primary'),
-                      textDecorationLine: 'underline'
-                    }
+                      textDecorationLine: 'underline',
+                    },
                   ]}
                 >
                   {t('tracking.privacyPolicy')}
@@ -200,7 +224,10 @@ export function TermsAndConditionsScreen() {
               .
             </Text>
 
-            <View accessibilityLabel="terms-screen-modal-buttons" style={styles.modalButtons}>
+            <View
+              accessibilityLabel="terms-screen-modal-buttons"
+              style={styles.modalButtons}
+            >
               <Button
                 mode="outlined"
                 onPress={() => handleTrackingConsent(false)}
@@ -222,7 +249,7 @@ export function TermsAndConditionsScreen() {
           </View>
         </Modal>
       </Portal>
-    </AppContainer >
+    </AppContainer>
   );
 }
 

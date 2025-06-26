@@ -1,13 +1,23 @@
 import type { SeverityLevel } from '@sentry/react-native';
 import * as Sentry from '@sentry/react-native';
 import { isRunningInExpoGo } from 'expo';
-import { ConsentService } from "./consentService";
 import { Logger } from './loggerService';
 
 export class SentryService {
-  static async initialize(): Promise<ReturnType<typeof Sentry.reactNavigationIntegration> | undefined> {
-    const { trackingConsent: hasTrackingConsent } = await ConsentService.loadConsents()
-    if (!hasTrackingConsent) return
+  static initializeBeforeConsent(): void {
+    Sentry.init({
+      dsn: '',
+      defaultIntegrations: false,
+      enabled: false,
+    });
+  }
+
+  static initialize(
+    consent: boolean
+  ): ReturnType<typeof Sentry.reactNavigationIntegration> | undefined {
+    if (!consent) {
+      return undefined;
+    }
 
     const navigationIntegration = Sentry.reactNavigationIntegration({
       enableTimeToInitialDisplay: !isRunningInExpoGo(),
@@ -26,24 +36,22 @@ export class SentryService {
       enableCaptureFailedRequests: true,
       enableNativeFramesTracking: !isRunningInExpoGo(),
       sendDefaultPii: true,
-      enableAutoSessionTracking: true,
-      integrations: [navigationIntegration, Sentry.mobileReplayIntegration({
-        maskAllText: false,
-        maskAllImages: false,
-        maskAllVectors: false,
-      }), Sentry.reactNativeTracingIntegration(), Sentry.feedbackIntegration()],
+      integrations: [
+        navigationIntegration,
+        Sentry.mobileReplayIntegration({
+          maskAllText: false,
+          maskAllImages: false,
+          maskAllVectors: false,
+        }),
+        Sentry.reactNativeTracingIntegration(),
+        Sentry.feedbackIntegration(),
+      ],
       _experiments: {
         enableLogs: true,
-        beforeSendLog: (log: { level?: string }) => {
-          if (!__DEV__ && log?.level === "info") {
-            return null;
-          }
-          return log;
-        },
       },
     });
 
-    return navigationIntegration
+    return navigationIntegration;
   }
 
   /**
@@ -53,7 +61,9 @@ export class SentryService {
     try {
       Sentry.withScope(scope => {
         if (extras) {
-          Object.entries(extras).forEach(([key, value]) => scope.setExtra(key, value));
+          Object.entries(extras).forEach(([key, value]) =>
+            scope.setExtra(key, value)
+          );
         }
         Sentry.captureException(error);
       });
