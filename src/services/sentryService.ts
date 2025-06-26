@@ -7,10 +7,8 @@ class SentryService {
   public readonly navigationIntegration: ReturnType<
     typeof Sentry.reactNavigationIntegration
   >;
-  private isInitialized: boolean;
   private hasTrackingConsent: boolean;
   constructor() {
-    this.isInitialized = false;
     this.hasTrackingConsent = true; // default to true for now.
     this.navigationIntegration = Sentry.reactNavigationIntegration({
       enableTimeToInitialDisplay: !isRunningInExpoGo(),
@@ -18,21 +16,13 @@ class SentryService {
   }
 
   setHasTrackingConsent(hasTrackingConsent: boolean) {
-    Logger.info('sentryService.setHasTrackingConsent', { hasTrackingConsent });
     this.hasTrackingConsent = hasTrackingConsent;
-
-    if (!hasTrackingConsent) {
-      Sentry.flush();
-    }
   }
 
   initialize() {
-    if (this.isInitialized) {
-      // android does not support multiple initializations.
-      return;
-    }
-
     Sentry.init({
+      debug: true,
+      spotlight: true,
       dsn: 'https://a359a1f33b81485a82ec1fcf5dfe12a4@o4509550482817024.ingest.de.sentry.io/4509559563747408',
       enabled: true,
       replaysSessionSampleRate: 1.0,
@@ -114,7 +104,6 @@ class SentryService {
         enableLogs: true,
       },
     });
-    this.isInitialized = true;
   }
 
   /**
