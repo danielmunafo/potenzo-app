@@ -6,7 +6,7 @@ export function useUserConsents() {
     isLoading,
     updateTermsAccepted,
     updateTrackingConsent,
-    shouldShowTrackingModal
+    shouldShowTrackingModal,
   } = useConsentContext();
 
   return {
@@ -16,17 +16,11 @@ export function useUserConsents() {
     trackingConsent: consentData.trackingConsent,
     trackingConsentAt: consentData.trackingConsentAt,
     trackingShown: consentData.trackingShown,
-    
-    // State
     isLoading,
     shouldShowTrackingModal,
-    
-    // Actions
     updateTermsAccepted,
     updateTrackingConsent,
-    
-    // Computed values
     hasCompletedOnboarding: consentData.termsAccepted,
-    needsTrackingDecision: shouldShowTrackingModal
+    needsTrackingDecision: shouldShowTrackingModal,
   };
-} 
+}

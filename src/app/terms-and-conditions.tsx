@@ -1,14 +1,22 @@
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
-import { Button, Checkbox, Modal, Portal, Text, useTheme } from 'react-native-paper';
+import {
+  Button,
+  Checkbox,
+  Modal,
+  Portal,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 
 import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserConsents } from '@/hooks/useUserConsents';
+import sentryService from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
 export function TermsAndConditionsScreen() {
@@ -16,33 +24,47 @@ export function TermsAndConditionsScreen() {
   const theme = useTheme();
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const {
-    shouldShowTrackingModal,
+    shouldShowTrackingModal: isTrackingModalVisible,
     updateTermsAccepted,
-    updateTrackingConsent
+    updateTrackingConsent,
+    trackingConsent,
   } = useUserConsents();
 
   const handleGetStarted = async () => {
     if (isTermsAccepted) {
       await updateTermsAccepted(isTermsAccepted);
-    } else {
-      console.log('Terms must be accepted first');
-      // You could show an alert or toast here
     }
   };
+
+  useEffect(() => {
+    if (!isTrackingModalVisible && trackingConsent !== undefined) {
+      sentryService.setHasTrackingConsent(trackingConsent);
+    }
+  }, [trackingConsent, isTrackingModalVisible]);
 
   const handleTrackingConsent = async (consent: boolean) => {
     try {
       await updateTrackingConsent(consent);
     } catch (error) {
-      console.warn('Failed to update tracking consent:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to update tracking consent',
+        source: 'TermsAndConditionsScreen',
+        level: 'error',
+      });
     }
   };
 
   return (
     <AppContainer accessibilityLabel="terms-screen-container">
       <StatusBar hidden animated />
-      <View style={styles.contentContainer}>
-        <View style={styles.scrollableContent}>
+      <View
+        accessibilityLabel="terms-screen-content-container"
+        style={styles.contentContainer}
+      >
+        <View
+          accessibilityLabel="terms-screen-scrollable-content"
+          style={styles.scrollableContent}
+        >
           <Text
             accessibilityLabel="terms-screen-main-title"
             variant="headlineLarge"
@@ -75,22 +97,32 @@ export function TermsAndConditionsScreen() {
           </Text>
         </View>
 
-        <View style={styles.bottomSection}>
+        <View
+          accessibilityLabel="terms-screen-bottom-section"
+          style={styles.bottomSection}
+        >
           <LanguageSelector />
 
-          <View style={styles.termsContainer}>
+          <View
+            accessibilityLabel="terms-screen-terms-container"
+            style={styles.termsContainer}
+          >
             <Checkbox.Android
               testID="terms-screen-terms-checkbox"
               status={isTermsAccepted ? 'checked' : 'unchecked'}
               onPress={() => setIsTermsAccepted(!isTermsAccepted)}
               uncheckedColor={theme.colors.onSurface}
+              accessibilityLabel="terms-screen-terms-checkbox"
             />
             <Text
               accessibilityLabel="terms-screen-terms-text"
               variant="bodySmall"
               style={[styles.termsText, { color: theme.colors.onSurface }]}
             >
-              <Text onPress={() => setIsTermsAccepted(!isTermsAccepted)}>
+              <Text
+                accessibilityLabel="terms-screen-terms-text-link"
+                onPress={() => setIsTermsAccepted(!isTermsAccepted)}
+              >
                 {t('splash.termsAndConditions')}{' '}
               </Text>
               <ExternalLink
@@ -98,28 +130,31 @@ export function TermsAndConditionsScreen() {
                 accessibilityLabel="terms-screen-terms-link"
               >
                 <Text
+                  accessibilityLabel="terms-screen-terms-text-link-text"
                   style={[
                     styles.termsText,
                     {
                       color: getColorToken('core-primary'),
-                      textDecorationLine: 'underline'
-                    }
+                      textDecorationLine: 'underline',
+                    },
                   ]}
                 >
                   {t('splash.termsOfService')}
                 </Text>
-              </ExternalLink>{', '}
+              </ExternalLink>
+              {', '}
               <ExternalLink
                 href="https://potenzo.app/privacy-policy"
                 accessibilityLabel="terms-screen-privacy-link"
               >
                 <Text
+                  accessibilityLabel="terms-screen-privacy-link-text"
                   style={[
                     styles.termsText,
                     {
                       color: getColorToken('core-primary'),
-                      textDecorationLine: 'underline'
-                    }
+                      textDecorationLine: 'underline',
+                    },
                   ]}
                 >
                   {t('splash.privacyPolicy')}
@@ -131,11 +166,11 @@ export function TermsAndConditionsScreen() {
           <Button
             mode="contained"
             onPress={handleGetStarted}
+            accessibilityLabel="terms-screen-get-started-button"
             style={[
               styles.getStartedButton,
-              !isTermsAccepted && styles.getStartedButtonDisabled
+              !isTermsAccepted && styles.getStartedButtonDisabled,
             ]}
-            accessibilityLabel="terms-screen-get-started-button"
             buttonColor={getColorToken('core-primary')}
             disabled={!isTermsAccepted}
           >
@@ -146,7 +181,7 @@ export function TermsAndConditionsScreen() {
 
       <Portal>
         <Modal
-          visible={shouldShowTrackingModal}
+          visible={isTrackingModalVisible}
           dismissable={false}
           contentContainerStyle={styles.modalOverlay}
         >
@@ -156,12 +191,14 @@ export function TermsAndConditionsScreen() {
             style={StyleSheet.absoluteFill}
           />
           <View
+            accessibilityLabel="terms-screen-modal-container"
             style={[
               styles.modalContainer,
-              { backgroundColor: theme.colors.surface }
+              { backgroundColor: theme.colors.surface },
             ]}
           >
             <Text
+              accessibilityLabel="terms-screen-modal-title"
               variant="titleMedium"
               style={[styles.modalTitle, { color: theme.colors.onSurface }]}
             >
@@ -169,6 +206,7 @@ export function TermsAndConditionsScreen() {
             </Text>
 
             <Text
+              accessibilityLabel="terms-screen-modal-text"
               variant="bodyMedium"
               style={[styles.modalText, { color: theme.colors.onSurface }]}
             >
@@ -178,12 +216,13 @@ export function TermsAndConditionsScreen() {
                 accessibilityLabel="tracking-privacy-link"
               >
                 <Text
+                  accessibilityLabel="terms-screen-modal-text-link"
                   style={[
                     styles.modalText,
                     {
                       color: getColorToken('core-primary'),
-                      textDecorationLine: 'underline'
-                    }
+                      textDecorationLine: 'underline',
+                    },
                   ]}
                 >
                   {t('tracking.privacyPolicy')}
@@ -192,12 +231,15 @@ export function TermsAndConditionsScreen() {
               .
             </Text>
 
-            <View style={styles.modalButtons}>
+            <View
+              accessibilityLabel="terms-screen-modal-buttons"
+              style={styles.modalButtons}
+            >
               <Button
                 mode="outlined"
                 onPress={() => handleTrackingConsent(false)}
+                accessibilityLabel="terms-screen-modal-button-dont-allow"
                 style={styles.modalButton}
-                accessibilityLabel="tracking-dont-allow-button"
               >
                 {t('tracking.dontAllow')}
               </Button>
@@ -214,7 +256,7 @@ export function TermsAndConditionsScreen() {
           </View>
         </Modal>
       </Portal>
-    </AppContainer >
+    </AppContainer>
   );
 }
 

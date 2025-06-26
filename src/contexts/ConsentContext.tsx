@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { ConsentData, ConsentService } from '@/services/consentService';
+import sentryService from '@/services/sentryService';
 
 interface ConsentContextType {
   consentData: ConsentData;
@@ -19,7 +20,7 @@ interface ConsentProviderProps {
 export function ConsentProvider({ children }: ConsentProviderProps) {
   const [consentData, setConsentData] = useState<ConsentData>({
     termsAccepted: false,
-    trackingShown: false
+    trackingShown: false,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,7 +34,11 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
       const data = await ConsentService.loadConsents();
       setConsentData(data);
     } catch (error) {
-      console.warn('Failed to load consents:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to load consents',
+        source: 'ConsentContext',
+        level: 'error',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -45,10 +50,14 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
       setConsentData(prev => ({
         ...prev,
         termsAccepted: accepted,
-        termsAcceptedAt: new Date().toISOString()
+        termsAcceptedAt: new Date().toISOString(),
       }));
     } catch (error) {
-      console.warn('Failed to update terms acceptance:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to update terms acceptance',
+        source: 'ConsentContext',
+        level: 'error',
+      });
       throw error;
     }
   };
@@ -60,28 +69,31 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
         ...prev,
         trackingConsent: consent,
         trackingConsentAt: new Date().toISOString(),
-        trackingShown: true
+        trackingShown: true,
       }));
     } catch (error) {
-      console.warn('Failed to update tracking consent:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to update tracking consent',
+        source: 'ConsentContext',
+        level: 'error',
+      });
       throw error;
     }
   };
 
-  const shouldShowTrackingModal = !consentData.trackingShown && consentData.trackingConsent === undefined;
+  const shouldShowTrackingModal =
+    !consentData.trackingShown && consentData.trackingConsent === undefined;
 
   const value: ConsentContextType = {
     consentData,
     isLoading,
     updateTermsAccepted,
     updateTrackingConsent,
-    shouldShowTrackingModal
+    shouldShowTrackingModal,
   };
 
   return (
-    <ConsentContext.Provider value={value}>
-      {children}
-    </ConsentContext.Provider>
+    <ConsentContext.Provider value={value}>{children}</ConsentContext.Provider>
   );
 }
 
@@ -91,4 +103,4 @@ export function useConsentContext() {
     throw new Error('useConsentContext must be used within a ConsentProvider');
   }
   return context;
-} 
+}

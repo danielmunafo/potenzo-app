@@ -11,8 +11,8 @@ type Props = Omit<ComponentProps<typeof Link>, 'href'> & {
 export function ExternalLink({ href, onPress, ...rest }: Props) {
   return (
     <Link
+      accessibilityLabel={`external-link-${href}`}
       target="_blank"
-      {...rest}
       href={href}
       onPress={async (event) => {
         // Call the custom onPress callback if provided
@@ -25,6 +25,7 @@ export function ExternalLink({ href, onPress, ...rest }: Props) {
           await openBrowserAsync(href);
         }
       }}
+      {...rest}
     />
   );
 }

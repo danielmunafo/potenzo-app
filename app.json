@@ -10,10 +10,13 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.potenzo.app"
+      "bundleIdentifier": "com.potenzo.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "androidStatusBar": {
-      "translucent": false
+      "translucent": false,
     },
     "android": {
       "package": "com.potenzo.app",
@@ -37,7 +40,15 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "app",
+          "organization": "potenzo"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

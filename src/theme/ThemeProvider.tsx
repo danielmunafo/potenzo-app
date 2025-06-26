@@ -29,7 +29,10 @@ interface ThemeProviderProps {
   systemTheme?: 'light' | 'dark';
 }
 
-export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProviderProps) {
+export function AppThemeProvider({
+  children,
+  systemTheme = 'light',
+}: ThemeProviderProps) {
   const [themeMode, setThemeMode] = useState<ThemeMode>('system');
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -44,7 +47,11 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
         setThemeMode(savedThemeMode as ThemeMode);
       }
     } catch (error) {
-      console.warn('Failed to load theme mode:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to load theme mode',
+        source: 'ThemeProvider',
+        level: 'error',
+      });
     } finally {
       setIsLoaded(true);
     }
@@ -55,11 +62,16 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
       await AsyncStorage.setItem(THEME_STORAGE_KEY, mode);
       setThemeMode(mode);
     } catch (error) {
-      console.warn('Failed to save theme mode:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to save theme mode',
+        source: 'ThemeProvider',
+        level: 'error',
+      });
     }
   };
 
-  const isDark = themeMode === 'dark' || (themeMode === 'system' && systemTheme === 'dark');
+  const isDark =
+    themeMode === 'dark' || (themeMode === 'system' && systemTheme === 'dark');
   const theme = isDark ? DarkMaterialTheme : LightMaterialTheme;
 
   if (!isLoaded) {
@@ -68,10 +80,10 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
   }
 
   return (
-    <ThemeContext.Provider value={{ themeMode, setThemeMode: handleSetThemeMode, isDark }}>
-      <PaperProvider theme={theme}>
-        {children}
-      </PaperProvider>
+    <ThemeContext.Provider
+      value={{ themeMode, setThemeMode: handleSetThemeMode, isDark }}
+    >
+      <PaperProvider theme={theme}>{children}</PaperProvider>
     </ThemeContext.Provider>
   );
-} 
+}

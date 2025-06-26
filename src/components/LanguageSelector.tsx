@@ -9,16 +9,6 @@ type LanguageSelectorProps = {
   hasLabel?: boolean;
 };
 
-const startTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Starting action:', action);
-};
-const stopTrackingAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Stopping action:', action);
-};
-const trackAction = async ({ action, type = 'CUSTOM' }: { action: string; type?: 'CUSTOM' }) => {
-  console.log('Adding action:', action);
-};
-
 export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
   const { t, changeLanguage, currentLanguage } = useTranslation();
   const [menuVisible, setMenuVisible] = useState(false);
@@ -32,32 +22,20 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
 
   const openMenu = () => {
     setMenuVisible(true);
-    trackAction({
-      action: 'Language Selector Menu Opened',
-      type: 'CUSTOM'
-    });
   };
 
   const closeMenu = () => {
     setMenuVisible(false);
-    trackAction({
-      action: 'Language Selector Menu Closed',
-    });
   };
 
   const handleLanguageSelect = (languageCode: string) => {
-    trackAction({
-      action: 'Language Selected',
-      type: 'CUSTOM'
-    });
-
     changeLanguage(languageCode as 'en' | 'pt');
     closeMenu();
   };
 
   return (
-    <View style={styles.container}>
-      {hasLabel && <Text variant="titleMedium" style={styles.title}>
+    <View accessibilityLabel="language-selector-container" style={styles.container}>
+      {hasLabel && <Text accessibilityLabel="language-selector-title" variant="titleMedium" style={styles.title}>
         {t('profile.language')}
       </Text>}
 
@@ -68,11 +46,11 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
           <Button
             mode="text"
             onPress={openMenu}
+            accessibilityLabel="language-selector-button"
             style={styles.dropdownButton}
             contentStyle={styles.buttonContent}
             labelStyle={styles.buttonLabel}
             icon="chevron-down"
-            accessibilityLabel="language-selector-button"
           >
             {currentLanguageData ? `${currentLanguageData.flag} ${currentLanguageData.name}` : 'Select Language'}
           </Button>
@@ -82,13 +60,13 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
           <Menu.Item
             key={language.code}
             onPress={() => handleLanguageSelect(language.code)}
+            accessibilityLabel={`language-selector-menu-item-${language.code}`}
             title={`${language.flag} ${language.name}`}
             titleStyle={[
               styles.menuItemTitle,
               currentLanguage === language.code && styles.selectedMenuItem
             ]}
             leadingIcon={currentLanguage === language.code ? 'check' : undefined}
-            accessibilityLabel={`language-selector-menu-item-${language.code}`}
           />
         ))}
       </Menu>

@@ -1,11 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import sentryService from './sentryService';
 
 export const STORAGE_KEYS = {
   TERMS_ACCEPTED: 'terms_accepted',
   TRACKING_CONSENT: 'tracking_consent',
   TRACKING_CONSENT_AT: 'tracking_consent_at',
   TRACKING_SHOWN: 'tracking_shown',
-  TERMS_ACCEPTED_AT: 'terms_accepted_at'
+  TERMS_ACCEPTED_AT: 'terms_accepted_at',
 } as const;
 
 export interface ConsentData {
@@ -24,27 +25,32 @@ export class ConsentService {
         storedTermsAt,
         storedTracking,
         storedTrackingAt,
-        trackingShown
+        trackingShown,
       ] = await Promise.all([
         AsyncStorage.getItem(STORAGE_KEYS.TERMS_ACCEPTED),
         AsyncStorage.getItem(STORAGE_KEYS.TERMS_ACCEPTED_AT),
         AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT),
         AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT_AT),
-        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_SHOWN)
+        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_SHOWN),
       ]);
 
       return {
         termsAccepted: storedTerms === 'true',
         termsAcceptedAt: storedTermsAt || undefined,
-        trackingConsent: storedTracking === null ? undefined : storedTracking === 'true',
+        trackingConsent:
+          storedTracking === null ? undefined : storedTracking === 'true',
         trackingConsentAt: storedTrackingAt || undefined,
-        trackingShown: trackingShown === 'true'
+        trackingShown: trackingShown === 'true',
       };
     } catch (error) {
-      console.warn('Failed to load consents:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to load consents',
+        source: 'ConsentService',
+        level: 'error',
+      });
       return {
         termsAccepted: false,
-        trackingShown: false
+        trackingShown: false,
       };
     }
   }
@@ -54,10 +60,14 @@ export class ConsentService {
       const timestamp = new Date().toISOString();
       await Promise.all([
         AsyncStorage.setItem(STORAGE_KEYS.TERMS_ACCEPTED, accepted.toString()),
-        AsyncStorage.setItem(STORAGE_KEYS.TERMS_ACCEPTED_AT, timestamp)
+        AsyncStorage.setItem(STORAGE_KEYS.TERMS_ACCEPTED_AT, timestamp),
       ]);
     } catch (error) {
-      console.warn('Failed to save terms acceptance:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to save terms acceptance',
+        source: 'ConsentService',
+        level: 'error',
+      });
       throw error;
     }
   }
@@ -68,11 +78,15 @@ export class ConsentService {
       await Promise.all([
         AsyncStorage.setItem(STORAGE_KEYS.TRACKING_CONSENT, consent.toString()),
         AsyncStorage.setItem(STORAGE_KEYS.TRACKING_CONSENT_AT, timestamp),
-        AsyncStorage.setItem(STORAGE_KEYS.TRACKING_SHOWN, 'true')
+        AsyncStorage.setItem(STORAGE_KEYS.TRACKING_SHOWN, 'true'),
       ]);
     } catch (error) {
-      console.warn('Failed to save tracking consent:', error);
+      sentryService.captureException(error, {
+        message: 'Failed to save tracking consent',
+        source: 'ConsentService',
+        level: 'error',
+      });
       throw error;
     }
   }
-} 
+}

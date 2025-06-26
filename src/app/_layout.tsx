@@ -1,15 +1,24 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import * as Sentry from '@sentry/react-native';
+
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useNavigationContainerRef } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import 'react-native-reanimated';
 
-import { ConsentProvider, useConsentContext } from '@/contexts/ConsentContext';
+import { ConsentProvider } from '@/contexts/ConsentContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import sentryService from '@/services/sentryService';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
+import { useUserConsents } from '../hooks/useUserConsents';
 
+sentryService.initialize();
 SplashScreen.preventAutoHideAsync();
 
 const FONT_CONFIG = {
@@ -37,22 +46,54 @@ const SETTINGS_SCREEN_CONFIG = {
   },
 } as const;
 
-export const App = () => {
+/**
+ * Returns true if the app is ready to load (fonts loaded and consent not loading).
+ */
+function isAppReadyToLoad(
+  fontsLoaded: boolean,
+  consentLoading: boolean
+): boolean {
+  return fontsLoaded && !consentLoading;
+}
+
+const App = () => {
   const userDeviceColorScheme = useColorScheme();
-  const { isLoading: consentLoading } = useConsentContext();
+  const {
+    isLoading: consentLoading,
+    needsTrackingDecision,
+    trackingConsent,
+  } = useUserConsents();
   const [fontsLoaded] = useFonts(FONT_CONFIG);
+
+  const ref = useNavigationContainerRef();
+  useEffect(() => {
+    if (ref) {
+      sentryService.navigationIntegration.registerNavigationContainer(ref);
+    }
+  }, [ref]);
 
   useEffect(() => {
     const hideSplashScreen = async () => {
-      if (fontsLoaded && !consentLoading) {
-        await SplashScreen.hideAsync();
+      if (isAppReadyToLoad(fontsLoaded, consentLoading)) {
+        if (trackingConsent !== undefined) {
+          sentryService.setHasTrackingConsent(trackingConsent);
+        }
+        try {
+          await SplashScreen.hideAsync();
+        } catch (error) {
+          sentryService.captureException(error, {
+            message: 'Failed to hide splash screen',
+            source: 'AppLayout',
+            level: 'error',
+          });
+        }
       }
     };
 
     hideSplashScreen();
-  }, [fontsLoaded, consentLoading]);
+  }, [fontsLoaded, consentLoading, trackingConsent, needsTrackingDecision]);
 
-  if (!fontsLoaded || consentLoading) {
+  if (!isAppReadyToLoad(fontsLoaded, consentLoading)) {
     return null;
   }
 
@@ -74,12 +115,16 @@ export const App = () => {
       </AppThemeProvider>
     </>
   );
-}
+};
 
-export default function RootLayout() {
+const RootLayout: React.FC = () => {
   return (
     <ConsentProvider>
       <App />
     </ConsentProvider>
   );
-}
+};
+
+export default Sentry.wrap(RootLayout, {
+  touchEventBoundaryProps: { labelName: 'accessibilityLabel' },
+});
