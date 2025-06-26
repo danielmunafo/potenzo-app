@@ -24,6 +24,9 @@
     "release": "standard-version",
     "commit": "git-cz",
     "lint": "expo lint",
+    "lint:fix": "expo lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "jest",
     "test:e2e": "maestro test .maestro/"
   },
@@ -81,9 +84,12 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
+    "eslint-config-prettier": "^10.1.5",
     "eslint-import-resolver-typescript": "^4.4.3",
+    "eslint-plugin-prettier": "^5.5.1",
     "jest": "~29.7.0",
     "jest-expo": "~53.0.7",
+    "prettier": "^3.6.1",
     "semantic-release": "^24.2.5",
     "standard-version": "^9.5.0",
     "typescript": "~5.8.3"
