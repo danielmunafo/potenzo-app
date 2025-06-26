@@ -1,6 +1,6 @@
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import {
   Button,
@@ -24,9 +24,10 @@ export function TermsAndConditionsScreen() {
   const theme = useTheme();
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const {
-    shouldShowTrackingModal,
+    shouldShowTrackingModal: isTrackingModalVisible,
     updateTermsAccepted,
     updateTrackingConsent,
+    trackingConsent,
   } = useUserConsents();
 
   const handleGetStarted = async () => {
@@ -35,9 +36,14 @@ export function TermsAndConditionsScreen() {
     }
   };
 
+  useEffect(() => {
+    if (!isTrackingModalVisible && trackingConsent !== undefined) {
+      sentryService.setHasTrackingConsent(trackingConsent);
+    }
+  }, [trackingConsent, isTrackingModalVisible]);
+
   const handleTrackingConsent = async (consent: boolean) => {
     try {
-      sentryService.setHasTrackingConsent(consent);
       await updateTrackingConsent(consent);
     } catch (error) {
       sentryService.captureException(error, {
@@ -175,7 +181,7 @@ export function TermsAndConditionsScreen() {
 
       <Portal>
         <Modal
-          visible={shouldShowTrackingModal}
+          visible={isTrackingModalVisible}
           dismissable={false}
           contentContainerStyle={styles.modalOverlay}
         >

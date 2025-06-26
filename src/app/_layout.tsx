@@ -12,13 +12,14 @@ import { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import 'react-native-reanimated';
 
-import { ConsentProvider, useConsentContext } from '@/contexts/ConsentContext';
+import { ConsentProvider } from '@/contexts/ConsentContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import sentryService from '@/services/sentryService';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
+import { useUserConsents } from '../hooks/useUserConsents';
 
+sentryService.initialize();
 SplashScreen.preventAutoHideAsync();
-const navigationTrackingIntegration = sentryService.initialize();
 
 const FONT_CONFIG = {
   'Exo2-Bold': require('../assets/fonts/static/Exo2-Bold.ttf'),
@@ -59,21 +60,24 @@ const App = () => {
   const userDeviceColorScheme = useColorScheme();
   const {
     isLoading: consentLoading,
-    consentData: { trackingConsent },
-  } = useConsentContext();
+    needsTrackingDecision,
+    trackingConsent,
+  } = useUserConsents();
   const [fontsLoaded] = useFonts(FONT_CONFIG);
 
   const ref = useNavigationContainerRef();
   useEffect(() => {
     if (ref) {
-      navigationTrackingIntegration.registerNavigationContainer(ref);
+      sentryService.navigationIntegration.registerNavigationContainer(ref);
     }
   }, [ref]);
 
   useEffect(() => {
     const hideSplashScreen = async () => {
       if (isAppReadyToLoad(fontsLoaded, consentLoading)) {
-        sentryService.setHasTrackingConsent(trackingConsent ?? false);
+        if (trackingConsent !== undefined) {
+          sentryService.setHasTrackingConsent(trackingConsent);
+        }
         try {
           await SplashScreen.hideAsync();
         } catch (error) {
@@ -87,7 +91,7 @@ const App = () => {
     };
 
     hideSplashScreen();
-  }, [fontsLoaded, consentLoading, trackingConsent]);
+  }, [fontsLoaded, consentLoading, trackingConsent, needsTrackingDecision]);
 
   if (!isAppReadyToLoad(fontsLoaded, consentLoading)) {
     return null;

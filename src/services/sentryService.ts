@@ -4,22 +4,37 @@ import { isRunningInExpoGo } from 'expo';
 import { Logger } from './loggerService';
 
 class SentryService {
+  public readonly navigationIntegration: ReturnType<
+    typeof Sentry.reactNavigationIntegration
+  >;
+  private isInitialized: boolean;
   private hasTrackingConsent: boolean;
   constructor() {
-    this.hasTrackingConsent = false;
-  }
-
-  setHasTrackingConsent(consent: boolean) {
-    this.hasTrackingConsent = consent;
-  }
-
-  initialize(): ReturnType<typeof Sentry.reactNavigationIntegration> {
-    const navigationIntegration = Sentry.reactNavigationIntegration({
+    this.isInitialized = false;
+    this.hasTrackingConsent = true; // default to true for now.
+    this.navigationIntegration = Sentry.reactNavigationIntegration({
       enableTimeToInitialDisplay: !isRunningInExpoGo(),
     });
+  }
+
+  setHasTrackingConsent(hasTrackingConsent: boolean) {
+    Logger.info('sentryService.setHasTrackingConsent', { hasTrackingConsent });
+    this.hasTrackingConsent = hasTrackingConsent;
+
+    if (!hasTrackingConsent) {
+      Sentry.flush();
+    }
+  }
+
+  initialize() {
+    if (this.isInitialized) {
+      // android does not support multiple initializations.
+      return;
+    }
 
     Sentry.init({
       dsn: 'https://a359a1f33b81485a82ec1fcf5dfe12a4@o4509550482817024.ingest.de.sentry.io/4509559563747408',
+      enabled: true,
       replaysSessionSampleRate: 1.0,
       replaysOnErrorSampleRate: 1.0,
       tracesSampleRate: 1.0,
@@ -30,7 +45,7 @@ class SentryService {
       enableAppStartTracking: true,
       enableCaptureFailedRequests: true,
       enableNativeFramesTracking: !isRunningInExpoGo(),
-      enableAutoSessionTracking: false,
+      enableAutoSessionTracking: true,
       sendDefaultPii: true,
       beforeSendSpan: span => {
         console.log(
@@ -86,7 +101,7 @@ class SentryService {
         return transaction;
       },
       integrations: [
-        navigationIntegration,
+        this.navigationIntegration,
         Sentry.mobileReplayIntegration({
           maskAllText: false,
           maskAllImages: false,
@@ -99,8 +114,7 @@ class SentryService {
         enableLogs: true,
       },
     });
-
-    return navigationIntegration;
+    this.isInitialized = true;
   }
 
   /**

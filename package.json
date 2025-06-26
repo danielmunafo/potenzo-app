@@ -22,8 +22,10 @@
     "build:clean": "expo prebuild --clean",
     "android": "expo run:android",
     "android:dev-client": "eas build --profile development --platform android --local",
+    "android:clean": "rm -rf android/app/build && expo run:android",
     "ios": "expo run:ios",
     "ios:dev-client": "eas build --profile development --platform ios --local",
+    "ios:clean": "rm -rf ios/build && expo run:ios",
     "web": "expo start --web",
     "release": "standard-version",
     "commit": "git-cz",
@@ -33,7 +35,8 @@
     "format:check": "prettier --check .",
     "test": "jest",
     "test:e2e": "maestro test .maestro/",
-    "spotlight": "spotlight"
+    "spotlight": "spotlight",
+    "clean": "rm -rf android/app/build ios/build"
   },
   "config": {
     "commitizen": {

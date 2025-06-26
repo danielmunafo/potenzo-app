@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { ConsentData, ConsentService } from '@/services/consentService';
+import sentryService from '@/services/sentryService';
 
 interface ConsentContextType {
   consentData: ConsentData;
