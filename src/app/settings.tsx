@@ -9,7 +9,6 @@ import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
-import { SentryService } from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
 const STORAGE_KEYS = {
@@ -17,7 +16,7 @@ const STORAGE_KEYS = {
   TERMS_ACCEPTED_AT: 'terms_accepted_at',
   TRACKING_CONSENT: 'tracking_consent',
   TRACKING_CONSENT_AT: 'tracking_consent_at',
-  TRACKING_SHOWN: 'tracking_shown'
+  TRACKING_SHOWN: 'tracking_shown',
 } as const;
 
 interface UserConsent {
@@ -31,7 +30,7 @@ export function SettingsScreen() {
   const { t } = useTranslation();
   const [userConsent, setUserConsent] = React.useState<UserConsent>({
     termsAccepted: false,
-    trackingConsent: null
+    trackingConsent: null,
   });
 
   useEffect(() => {
@@ -42,15 +41,20 @@ export function SettingsScreen() {
     try {
       const [termsAccepted, trackingConsent] = await Promise.all([
         AsyncStorage.getItem(STORAGE_KEYS.TERMS_ACCEPTED),
-        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT)
+        AsyncStorage.getItem(STORAGE_KEYS.TRACKING_CONSENT),
       ]);
 
       setUserConsent({
         termsAccepted: termsAccepted === 'true',
-        trackingConsent: trackingConsent === 'true' ? true : trackingConsent === 'false' ? false : null
+        trackingConsent:
+          trackingConsent === 'true'
+            ? true
+            : trackingConsent === 'false'
+              ? false
+              : null,
       });
     } catch (error) {
-      SentryService.captureException(error, {
+      sentryService.captureException(error, {
         message: 'Failed to load user consent',
         source: 'SettingsScreen',
         level: 'error',
@@ -64,10 +68,18 @@ export function SettingsScreen() {
   };
 
   return (
-    <AppContainer
-      accessibilityLabel="settings-screen-container">
-      <ScrollView accessibilityLabel="settings-screen-scroll-view" style={styles.container} showsVerticalScrollIndicator={false}>
-        <Button accessibilityLabel="settings-screen-button" onPress={() => { Sentry.captureException(new Error('First error')) }}>
+    <AppContainer accessibilityLabel="settings-screen-container">
+      <ScrollView
+        accessibilityLabel="settings-screen-scroll-view"
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        <Button
+          accessibilityLabel="settings-screen-button"
+          onPress={() => {
+            Sentry.captureException(new Error('First error'));
+          }}
+        >
           Try!
         </Button>
 
@@ -79,11 +91,17 @@ export function SettingsScreen() {
           {t('profile.settings')}
         </Text>
 
-        <View accessibilityLabel="settings-screen-language-selector-container" style={styles.languageSelectorContainer}>
+        <View
+          accessibilityLabel="settings-screen-language-selector-container"
+          style={styles.languageSelectorContainer}
+        >
           <LanguageSelector />
         </View>
 
-        <Card accessibilityLabel="settings-screen-consent-card" style={styles.consentCard}>
+        <Card
+          accessibilityLabel="settings-screen-consent-card"
+          style={styles.consentCard}
+        >
           <Card.Content accessibilityLabel="settings-screen-consent-card-content">
             <Text
               accessibilityLabel="settings-screen-consent-card-title"
@@ -93,7 +111,10 @@ export function SettingsScreen() {
               {t('settings.consent.title')}
             </Text>
 
-            <View accessibilityLabel="settings-screen-consent-card-item" style={styles.consentItem}>
+            <View
+              accessibilityLabel="settings-screen-consent-card-item"
+              style={styles.consentItem}
+            >
               <Text
                 accessibilityLabel="settings-screen-consent-card-item-label"
                 variant="bodyMedium"
@@ -104,15 +125,16 @@ export function SettingsScreen() {
               <Text
                 accessibilityLabel="settings-screen-consent-card-item-value"
                 variant="bodyMedium"
-                style={[
-                  styles.consentValue,
-                ]}
+                style={[styles.consentValue]}
               >
                 {formatConsentStatus(userConsent.termsAccepted)}
               </Text>
             </View>
 
-            <View accessibilityLabel="settings-screen-consent-card-item" style={styles.consentItem}>
+            <View
+              accessibilityLabel="settings-screen-consent-card-item"
+              style={styles.consentItem}
+            >
               <Text
                 accessibilityLabel="settings-screen-consent-card-item-label"
                 variant="bodyMedium"
@@ -123,9 +145,7 @@ export function SettingsScreen() {
               <Text
                 accessibilityLabel="settings-screen-consent-card-item-value"
                 variant="bodyMedium"
-                style={[
-                  styles.consentValue,
-                ]}
+                style={[styles.consentValue]}
               >
                 {formatConsentStatus(userConsent.trackingConsent)}
               </Text>
@@ -133,7 +153,10 @@ export function SettingsScreen() {
           </Card.Content>
         </Card>
 
-        <Card accessibilityLabel="settings-screen-website-card" style={styles.websiteCard}>
+        <Card
+          accessibilityLabel="settings-screen-website-card"
+          style={styles.websiteCard}
+        >
           <Card.Content accessibilityLabel="settings-screen-website-card-content">
             <Text
               accessibilityLabel="settings-screen-website-card-title"
@@ -143,7 +166,10 @@ export function SettingsScreen() {
               {t('settings.website.title')}
             </Text>
 
-            <View accessibilityLabel="settings-screen-website-card-item" style={styles.websiteItem}>
+            <View
+              accessibilityLabel="settings-screen-website-card-item"
+              style={styles.websiteItem}
+            >
               <Text
                 accessibilityLabel="settings-screen-website-card-item-label"
                 variant="bodyMedium"
@@ -159,7 +185,7 @@ export function SettingsScreen() {
                   accessibilityLabel="settings-screen-website-card-item-link"
                   style={[
                     styles.websiteLink,
-                    { color: getColorToken('core-primary') }
+                    { color: getColorToken('core-primary') },
                   ]}
                 >
                   potenzo.app
@@ -167,7 +193,10 @@ export function SettingsScreen() {
               </ExternalLink>
             </View>
 
-            <View accessibilityLabel="settings-screen-website-card-item" style={styles.websiteItem}>
+            <View
+              accessibilityLabel="settings-screen-website-card-item"
+              style={styles.websiteItem}
+            >
               <Text
                 accessibilityLabel="settings-screen-website-card-item-label"
                 variant="bodyMedium"
@@ -183,7 +212,7 @@ export function SettingsScreen() {
                   accessibilityLabel="settings-screen-website-card-item-link"
                   style={[
                     styles.websiteLink,
-                    { color: getColorToken('core-primary') }
+                    { color: getColorToken('core-primary') },
                   ]}
                 >
                   support@potenzo.app
@@ -191,7 +220,10 @@ export function SettingsScreen() {
               </ExternalLink>
             </View>
 
-            <View accessibilityLabel="settings-screen-website-card-item" style={styles.websiteItem}>
+            <View
+              accessibilityLabel="settings-screen-website-card-item"
+              style={styles.websiteItem}
+            >
               <Text
                 accessibilityLabel="settings-screen-website-card-item-label"
                 variant="bodyMedium"
@@ -207,7 +239,7 @@ export function SettingsScreen() {
                   accessibilityLabel="settings-screen-website-card-item-link"
                   style={[
                     styles.websiteLink,
-                    { color: getColorToken('core-primary') }
+                    { color: getColorToken('core-primary') },
                   ]}
                 >
                   {t('settings.website.termsLink')}
@@ -215,7 +247,10 @@ export function SettingsScreen() {
               </ExternalLink>
             </View>
 
-            <View accessibilityLabel="settings-screen-website-card-item" style={styles.websiteItem}>
+            <View
+              accessibilityLabel="settings-screen-website-card-item"
+              style={styles.websiteItem}
+            >
               <Text
                 accessibilityLabel="settings-screen-website-card-item-label"
                 variant="bodyMedium"
@@ -231,7 +266,7 @@ export function SettingsScreen() {
                   accessibilityLabel="settings-screen-website-card-item-link"
                   style={[
                     styles.websiteLink,
-                    { color: getColorToken('core-primary') }
+                    { color: getColorToken('core-primary') },
                   ]}
                 >
                   {t('settings.website.privacyLink')}

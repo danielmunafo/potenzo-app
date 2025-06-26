@@ -8,17 +8,17 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack, useNavigationContainerRef } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import 'react-native-reanimated';
 
 import { ConsentProvider, useConsentContext } from '@/contexts/ConsentContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { SentryService } from '@/services/sentryService';
+import sentryService from '@/services/sentryService';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
 
 SplashScreen.preventAutoHideAsync();
-const navigationTrackingIntegration = SentryService.initializeBeforeConsent();
+const navigationTrackingIntegration = sentryService.initialize();
 
 const FONT_CONFIG = {
   'Exo2-Bold': require('../assets/fonts/static/Exo2-Bold.ttf'),
@@ -45,42 +45,39 @@ const SETTINGS_SCREEN_CONFIG = {
   },
 } as const;
 
+/**
+ * Returns true if the app is ready to load (fonts loaded and consent not loading).
+ */
+function isAppReadyToLoad(
+  fontsLoaded: boolean,
+  consentLoading: boolean
+): boolean {
+  return fontsLoaded && !consentLoading;
+}
+
 const App = () => {
   const userDeviceColorScheme = useColorScheme();
   const {
     isLoading: consentLoading,
     consentData: { trackingConsent },
   } = useConsentContext();
-  const [navigationIntegration, setNavigationIntegration] = useState<
-    ReturnType<typeof Sentry.reactNavigationIntegration> | undefined
-  >(undefined);
   const [fontsLoaded] = useFonts(FONT_CONFIG);
 
   const ref = useNavigationContainerRef();
   useEffect(() => {
-    if (ref && navigationIntegration) {
-      navigationIntegration.registerNavigationContainer(ref);
+    if (ref) {
+      navigationTrackingIntegration.registerNavigationContainer(ref);
     }
-  }, [ref, navigationIntegration]);
+  }, [ref]);
 
   useEffect(() => {
     const hideSplashScreen = async () => {
-      if (fontsLoaded && !consentLoading) {
-        try {
-          setNavigationIntegration(
-            SentryService.initialize(trackingConsent ?? false)
-          );
-        } catch (error) {
-          SentryService.captureException(error, {
-            message: 'Failed to initialize Sentry',
-            source: 'AppLayout',
-            level: 'error',
-          });
-        }
+      if (isAppReadyToLoad(fontsLoaded, consentLoading)) {
+        sentryService.setHasTrackingConsent(trackingConsent ?? false);
         try {
           await SplashScreen.hideAsync();
         } catch (error) {
-          SentryService.captureException(error, {
+          sentryService.captureException(error, {
             message: 'Failed to hide splash screen',
             source: 'AppLayout',
             level: 'error',
@@ -92,7 +89,7 @@ const App = () => {
     hideSplashScreen();
   }, [fontsLoaded, consentLoading, trackingConsent]);
 
-  if (!fontsLoaded || consentLoading) {
+  if (!isAppReadyToLoad(fontsLoaded, consentLoading)) {
     return null;
   }
 

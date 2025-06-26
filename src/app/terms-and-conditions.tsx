@@ -16,7 +16,7 @@ import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserConsents } from '@/hooks/useUserConsents';
-import { SentryService } from '@/services/sentryService';
+import sentryService from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 
 export function TermsAndConditionsScreen() {
@@ -37,9 +37,10 @@ export function TermsAndConditionsScreen() {
 
   const handleTrackingConsent = async (consent: boolean) => {
     try {
+      sentryService.setHasTrackingConsent(consent);
       await updateTrackingConsent(consent);
     } catch (error) {
-      SentryService.captureException(error, {
+      sentryService.captureException(error, {
         message: 'Failed to update tracking consent',
         source: 'TermsAndConditionsScreen',
         level: 'error',

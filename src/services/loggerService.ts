@@ -1,17 +1,17 @@
 import * as Sentry from '@sentry/react-native';
-// @ts-ignore: Access experimental logger API
-const SentryLogger = (Sentry as any).logger;
 
 /**
  * Logger wraps Sentry's structured logging APIs.
  * Provides methods for trace, debug, info, warn, error, and fatal logs.
  */
 export class Logger {
-  private static logger: any = SentryLogger;
+  private static getLogger() {
+    return (Sentry as any).logger;
+  }
 
   static trace(message: string, attributes?: Record<string, unknown>): void {
     try {
-      this.logger.trace(message, attributes);
+      Logger.getLogger().trace(message, attributes);
     } catch (err) {
       console.trace(`Logger.trace failed: ${err}`, message, attributes);
     }
@@ -19,7 +19,7 @@ export class Logger {
 
   static debug(message: string, attributes?: Record<string, unknown>): void {
     try {
-      this.logger.debug(message, attributes);
+      Logger.getLogger().debug(message, attributes);
     } catch (err) {
       console.debug(`Logger.debug failed: ${err}`, message, attributes);
     }
@@ -27,7 +27,7 @@ export class Logger {
 
   static info(message: string, attributes?: Record<string, unknown>): void {
     try {
-      this.logger.info(message, attributes);
+      Logger.getLogger().info(message, attributes);
     } catch (err) {
       console.info(`Logger.info failed: ${err}`, message, attributes);
     }
@@ -35,7 +35,7 @@ export class Logger {
 
   static warn(message: string, attributes?: Record<string, unknown>): void {
     try {
-      this.logger.warn(message, attributes);
+      Logger.getLogger().warn(message, attributes);
     } catch (err) {
       console.warn(`Logger.warn failed: ${err}`, message, attributes);
     }
@@ -43,7 +43,7 @@ export class Logger {
 
   static error(message: string, attributes?: Record<string, unknown>): void {
     try {
-      this.logger.error(message, attributes);
+      Logger.getLogger().error(message, attributes);
     } catch (err) {
       console.error(`Logger.error failed: ${err}`, message, attributes);
     }
@@ -51,9 +51,9 @@ export class Logger {
 
   static fatal(message: string, attributes?: Record<string, unknown>): void {
     try {
-      this.logger.fatal(message, attributes);
+      Logger.getLogger().fatal(message, attributes);
     } catch (err) {
       console.error(`Logger.fatal failed: ${err}`, message, attributes);
     }
   }
-} 
+}

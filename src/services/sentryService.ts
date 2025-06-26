@@ -3,22 +3,17 @@ import * as Sentry from '@sentry/react-native';
 import { isRunningInExpoGo } from 'expo';
 import { Logger } from './loggerService';
 
-export class SentryService {
-  static initializeBeforeConsent(): void {
-    Sentry.init({
-      dsn: '',
-      defaultIntegrations: false,
-      enabled: false,
-    });
+class SentryService {
+  private hasTrackingConsent: boolean;
+  constructor() {
+    this.hasTrackingConsent = false;
   }
 
-  static initialize(
-    consent: boolean
-  ): ReturnType<typeof Sentry.reactNavigationIntegration> | undefined {
-    if (!consent) {
-      return undefined;
-    }
+  setHasTrackingConsent(consent: boolean) {
+    this.hasTrackingConsent = consent;
+  }
 
+  initialize(): ReturnType<typeof Sentry.reactNavigationIntegration> {
     const navigationIntegration = Sentry.reactNavigationIntegration({
       enableTimeToInitialDisplay: !isRunningInExpoGo(),
     });
@@ -35,7 +30,61 @@ export class SentryService {
       enableAppStartTracking: true,
       enableCaptureFailedRequests: true,
       enableNativeFramesTracking: !isRunningInExpoGo(),
+      enableAutoSessionTracking: false,
       sendDefaultPii: true,
+      beforeSendSpan: span => {
+        console.log(
+          '[Sentry] beforeSendSpan called – consent is:',
+          this.hasTrackingConsent
+        );
+        if (!this.hasTrackingConsent) {
+          return null;
+        }
+        return span;
+      },
+      beforeScreenshot: () => {
+        console.log(
+          '[Sentry] beforeScreenshot called – consent is:',
+          this.hasTrackingConsent
+        );
+        if (!this.hasTrackingConsent) {
+          return false;
+        }
+        return true;
+      },
+      beforeSend: event => {
+        console.log(
+          '[Sentry] beforeSend called – consent is:',
+          this.hasTrackingConsent
+        );
+
+        if (!this.hasTrackingConsent) {
+          return null;
+        }
+        return event;
+      },
+      beforeBreadcrumb: breadcrumb => {
+        console.log(
+          '[Sentry] beforeBreadcrumb called – consent is:',
+          this.hasTrackingConsent
+        );
+
+        if (!this.hasTrackingConsent) {
+          return null;
+        }
+        return breadcrumb;
+      },
+      beforeSendTransaction: transaction => {
+        console.log(
+          '[Sentry] beforeSend called – consent is:',
+          this.hasTrackingConsent
+        );
+
+        if (!this.hasTrackingConsent) {
+          return null;
+        }
+        return transaction;
+      },
       integrations: [
         navigationIntegration,
         Sentry.mobileReplayIntegration({
@@ -57,7 +106,7 @@ export class SentryService {
   /**
    * Reports an exception to Sentry with optional extra context.
    */
-  static captureException(error: unknown, extras?: Record<string, any>): void {
+  captureException(error: unknown, extras?: Record<string, any>): void {
     try {
       Sentry.withScope(scope => {
         if (extras) {
@@ -68,18 +117,20 @@ export class SentryService {
         Sentry.captureException(error);
       });
     } catch (e) {
-      Logger.error('SentryService.captureException failed', { error: e });
+      Logger.error('sentryService.captureException failed', { error: e });
     }
   }
 
   /**
    * Sends a message to Sentry with optional severity.
    */
-  static captureMessage(message: string, level?: SeverityLevel): void {
+  captureMessage(message: string, level?: SeverityLevel): void {
     try {
       Sentry.captureMessage(message, level);
     } catch (e) {
-      Logger.error('SentryService.captureMessage failed', { error: e });
+      Logger.error('sentryService.captureMessage failed', { error: e });
     }
   }
 }
+
+export default new SentryService();

@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 
-import { SentryService } from '@/services/sentryService';
 import { DarkMaterialTheme, LightMaterialTheme } from './MaterialTheme';
 
 type ThemeMode = 'light' | 'dark' | 'system';
@@ -30,7 +29,10 @@ interface ThemeProviderProps {
   systemTheme?: 'light' | 'dark';
 }
 
-export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProviderProps) {
+export function AppThemeProvider({
+  children,
+  systemTheme = 'light',
+}: ThemeProviderProps) {
   const [themeMode, setThemeMode] = useState<ThemeMode>('system');
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -45,7 +47,7 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
         setThemeMode(savedThemeMode as ThemeMode);
       }
     } catch (error) {
-      SentryService.captureException(error, {
+      sentryService.captureException(error, {
         message: 'Failed to load theme mode',
         source: 'ThemeProvider',
         level: 'error',
@@ -60,7 +62,7 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
       await AsyncStorage.setItem(THEME_STORAGE_KEY, mode);
       setThemeMode(mode);
     } catch (error) {
-      SentryService.captureException(error, {
+      sentryService.captureException(error, {
         message: 'Failed to save theme mode',
         source: 'ThemeProvider',
         level: 'error',
@@ -68,7 +70,8 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
     }
   };
 
-  const isDark = themeMode === 'dark' || (themeMode === 'system' && systemTheme === 'dark');
+  const isDark =
+    themeMode === 'dark' || (themeMode === 'system' && systemTheme === 'dark');
   const theme = isDark ? DarkMaterialTheme : LightMaterialTheme;
 
   if (!isLoaded) {
@@ -77,10 +80,10 @@ export function AppThemeProvider({ children, systemTheme = 'light' }: ThemeProvi
   }
 
   return (
-    <ThemeContext.Provider value={{ themeMode, setThemeMode: handleSetThemeMode, isDark }}>
-      <PaperProvider theme={theme}>
-        {children}
-      </PaperProvider>
+    <ThemeContext.Provider
+      value={{ themeMode, setThemeMode: handleSetThemeMode, isDark }}
+    >
+      <PaperProvider theme={theme}>{children}</PaperProvider>
     </ThemeContext.Provider>
   );
-} 
+}
