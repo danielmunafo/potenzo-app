@@ -22,13 +22,13 @@ The app now uses **React Native Paper** (Material Design 3) for consistent themi
 
 ```tsx
 import { Button, Card, Text, useTheme } from 'react-native-paper';
-import { AppContainer } from '@/components/AppContainer';
+import { ScreenContainer } from '@/components/ScreenContainer';
 
 export default function MyScreen() {
   const theme = useTheme();
-  
+
   return (
-    <AppContainer padding="lg">
+    <ScreenContainer padding="lg">
       <Card elevation={2}>
         <Card.Content>
           <Text variant="headlineMedium">Hello World</Text>
@@ -40,7 +40,7 @@ export default function MyScreen() {
           </Button>
         </Card.Actions>
       </Card>
-    </AppContainer>
+    </ScreenContainer>
   );
 }
 ```
@@ -90,7 +90,11 @@ node scripts/import-figma-tokens.js path/to/material-theme-builder-tokens.json
 ### Step 3: Use in Components
 
 ```tsx
-import { getColorToken, getSpacingToken, getShadowToken } from '@/theme/FigmaTokens';
+import {
+  getColorToken,
+  getSpacingToken,
+  getShadowToken,
+} from '@/theme/FigmaTokens';
 
 const styles = StyleSheet.create({
   button: {
@@ -107,13 +111,15 @@ const styles = StyleSheet.create({
 ### Material Design 3 Colors
 
 #### Core Colors
+
 - `core-primary` - Primary brand color
-- `core-secondary` - Secondary brand color  
+- `core-secondary` - Secondary brand color
 - `core-tertiary` - Tertiary brand color
 - `core-error` - Error color
 - `extended-accent` - Extended accent color
 
 #### Light Theme Colors
+
 - `light-primary`, `light-onPrimary`
 - `light-primaryContainer`, `light-onPrimaryContainer`
 - `light-secondary`, `light-onSecondary`
@@ -130,6 +136,7 @@ const styles = StyleSheet.create({
 - `light-inverseSurface`, `light-inverseOnSurface`, `light-inversePrimary`
 
 #### Dark Theme Colors
+
 - `dark-primary`, `dark-onPrimary`
 - `dark-primaryContainer`, `dark-onPrimaryContainer`
 - `dark-secondary`, `dark-onSecondary`
@@ -146,17 +153,21 @@ const styles = StyleSheet.create({
 - `dark-inverseSurface`, `dark-inverseOnSurface`, `dark-inversePrimary`
 
 ### Spacing
+
 - `spacing-xs` (4px) to `spacing-3xl` (64px)
 
 ### Border Radius
+
 - `radius-none` to `radius-full`
 
 ### Shadows
+
 - `shadow-sm`, `shadow-md`, `shadow-lg`
 
 ## Material UI Components
 
 ### Text Components
+
 ```tsx
 <Text variant="headlineLarge">Large Headline</Text>
 <Text variant="titleMedium">Medium Title</Text>
@@ -165,6 +176,7 @@ const styles = StyleSheet.create({
 ```
 
 ### Button Components
+
 ```tsx
 <Button mode="contained" onPress={() => {}}>
   Primary Button
@@ -178,6 +190,7 @@ const styles = StyleSheet.create({
 ```
 
 ### Card Components
+
 ```tsx
 <Card elevation={2}>
   <Card.Cover source={{ uri: 'image-url' }} />
@@ -192,6 +205,7 @@ const styles = StyleSheet.create({
 ```
 
 ### Surface Components
+
 ```tsx
 <Surface elevation={4} style={styles.surface}>
   <Text>Content with elevation</Text>
@@ -207,18 +221,12 @@ import { useTheme } from '@/theme/ThemeProvider';
 
 function MyComponent() {
   const { themeMode, setThemeMode, isDark } = useTheme();
-  
+
   return (
     <View>
-      <Button onPress={() => setThemeMode('light')}>
-        Light Mode
-      </Button>
-      <Button onPress={() => setThemeMode('dark')}>
-        Dark Mode
-      </Button>
-      <Button onPress={() => setThemeMode('system')}>
-        System Default
-      </Button>
+      <Button onPress={() => setThemeMode('light')}>Light Mode</Button>
+      <Button onPress={() => setThemeMode('dark')}>Dark Mode</Button>
+      <Button onPress={() => setThemeMode('system')}>System Default</Button>
     </View>
   );
 }
@@ -247,11 +255,9 @@ const darkSurface = md3Colors.dark.surface;
 All components include `accessibilityLabel` props for proper tracking:
 
 ```tsx
-<AppContainer accessibilityLabel="my-screen-container">
-  <Button accessibilityLabel="my-button">
-    Click Me
-  </Button>
-</AppContainer>
+<ScreenContainer accessibilityLabel="my-screen-container">
+  <Button accessibilityLabel="my-button">Click Me</Button>
+</ScreenContainer>
 ```
 
 ## Customizing the Theme
@@ -259,6 +265,7 @@ All components include `accessibilityLabel` props for proper tracking:
 ### Adding Custom Colors
 
 1. Update `src/theme/FigmaTokens.ts`:
+
 ```tsx
 export const FigmaDesignTokens = {
   colors: {
@@ -269,6 +276,7 @@ export const FigmaDesignTokens = {
 ```
 
 2. Update `src/theme/MaterialTheme.ts`:
+
 ```tsx
 export const LightMaterialTheme: MD3Theme = {
   ...MD3LightTheme,
@@ -325,7 +333,7 @@ import { getMD3Colors } from '@/theme/FigmaTokens';
 function DebugTheme() {
   const { themeMode, isDark } = useTheme();
   const md3Colors = getMD3Colors();
-  
+
   console.log('Theme mode:', themeMode);
   console.log('Is dark:', isDark);
   console.log('MD3 colors:', md3Colors);
@@ -338,4 +346,4 @@ function DebugTheme() {
 - [React Native Paper Documentation](https://callstack.github.io/react-native-paper/)
 - [Material Design 3 Guidelines](https://m3.material.io/)
 - [Material Theme Builder Plugin](https://www.figma.com/community/plugin/1203065856768575535/Material-Theme-Builder)
-- [Material Design Color System](https://m3.material.io/foundations/color/overview) 
+- [Material Design Color System](https://m3.material.io/foundations/color/overview)

@@ -54,9 +54,9 @@ Join our community of developers creating universal apps.
 To contribute to this repository, follow these steps:
 
 ### Commiting
+
 Checkout a branch from `main`
 For commiting run: `yarn commit`
-
 
 ### Releasing to Main
 
@@ -67,3 +67,10 @@ For commiting run: `yarn commit`
 `yarn release`
 
 `git push --follow-tags origin main`
+
+### Install android on local device
+
+Connect the device on USB, make sure to have developer tools enabled in the device.
+`yarn android:dev-client`
+`adb install /Users/danieltostes/workspace/potenzo-app/build-****`
+`yarn start:local-device`

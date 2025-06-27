@@ -15,14 +15,16 @@ class SentryService {
     });
   }
 
-  setHasTrackingConsent(hasTrackingConsent: boolean) {
-    this.hasTrackingConsent = hasTrackingConsent;
-  }
+  initialize(hasTrackingConsent: boolean = true) {
+    if (!hasTrackingConsent) {
+      Sentry.init({
+        dsn: '',
+        enabled: false,
+      });
+      return;
+    }
 
-  initialize() {
     Sentry.init({
-      debug: true,
-      spotlight: true,
       dsn: 'https://a359a1f33b81485a82ec1fcf5dfe12a4@o4509550482817024.ingest.de.sentry.io/4509559563747408',
       enabled: true,
       replaysSessionSampleRate: 1.0,

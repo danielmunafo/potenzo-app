@@ -11,9 +11,9 @@ import {
   useTheme,
 } from 'react-native-paper';
 
-import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { ScreenContainer } from '@/components/ScreenContainer';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserConsents } from '@/hooks/useUserConsents';
 import sentryService from '@/services/sentryService';
@@ -38,7 +38,7 @@ export function TermsAndConditionsScreen() {
 
   useEffect(() => {
     if (!isTrackingModalVisible && trackingConsent !== undefined) {
-      sentryService.setHasTrackingConsent(trackingConsent);
+      sentryService.initialize(trackingConsent);
     }
   }, [trackingConsent, isTrackingModalVisible]);
 
@@ -55,7 +55,10 @@ export function TermsAndConditionsScreen() {
   };
 
   return (
-    <AppContainer accessibilityLabel="terms-screen-container">
+    <ScreenContainer
+      accessibilityLabel="terms-screen-container"
+      useSentryWrapper={false}
+    >
       <StatusBar hidden animated />
       <View
         accessibilityLabel="terms-screen-content-container"
@@ -256,7 +259,7 @@ export function TermsAndConditionsScreen() {
           </View>
         </Modal>
       </Portal>
-    </AppContainer>
+    </ScreenContainer>
   );
 }
 

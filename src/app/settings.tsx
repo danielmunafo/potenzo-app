@@ -5,11 +5,12 @@ import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Card, Text } from 'react-native-paper';
 
-import { AppContainer } from '@/components/AppContainer';
 import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { ScreenContainer } from '@/components/ScreenContainer';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+import sentryService from '../services/sentryService';
 
 const STORAGE_KEYS = {
   TERMS_ACCEPTED: 'terms_accepted',
@@ -68,7 +69,7 @@ export function SettingsScreen() {
   };
 
   return (
-    <AppContainer accessibilityLabel="settings-screen-container">
+    <ScreenContainer accessibilityLabel="settings-screen-container">
       <ScrollView
         accessibilityLabel="settings-screen-scroll-view"
         style={styles.container}
@@ -284,7 +285,7 @@ export function SettingsScreen() {
           {t('splash.description')}
         </Text>
       </ScrollView>
-    </AppContainer>
+    </ScreenContainer>
   );
 }
 

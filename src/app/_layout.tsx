@@ -1,5 +1,3 @@
-import * as Sentry from '@sentry/react-native';
-
 import {
   DarkTheme,
   DefaultTheme,
@@ -18,7 +16,6 @@ import sentryService from '@/services/sentryService';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
 import { useUserConsents } from '../hooks/useUserConsents';
 
-sentryService.initialize();
 SplashScreen.preventAutoHideAsync();
 
 const FONT_CONFIG = {
@@ -76,7 +73,7 @@ const App = () => {
     const hideSplashScreen = async () => {
       if (isAppReadyToLoad(fontsLoaded, consentLoading)) {
         if (trackingConsent !== undefined) {
-          sentryService.setHasTrackingConsent(trackingConsent);
+          sentryService.initialize(trackingConsent);
         }
         try {
           await SplashScreen.hideAsync();
@@ -125,6 +122,4 @@ const RootLayout: React.FC = () => {
   );
 };
 
-export default Sentry.wrap(RootLayout, {
-  touchEventBoundaryProps: { labelName: 'accessibilityLabel' },
-});
+export default RootLayout;
