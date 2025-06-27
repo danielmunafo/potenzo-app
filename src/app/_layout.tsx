@@ -12,9 +12,10 @@ import 'react-native-reanimated';
 
 import { ConsentProvider } from '@/contexts/ConsentContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useUserConsents } from '@/hooks/useUserConsents';
+import amplitudeService from '@/services/amplitudeService';
 import sentryService from '@/services/sentryService';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
-import { useUserConsents } from '../hooks/useUserConsents';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -74,6 +75,7 @@ const App = () => {
       if (isAppReadyToLoad(fontsLoaded, consentLoading)) {
         if (trackingConsent !== undefined) {
           sentryService.initialize(trackingConsent);
+          amplitudeService.updateConsent(trackingConsent);
         }
         try {
           await SplashScreen.hideAsync();
