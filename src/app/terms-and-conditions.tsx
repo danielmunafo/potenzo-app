@@ -16,10 +16,13 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserConsents } from '@/hooks/useUserConsents';
+import amplitudeService from '@/services/amplitudeService';
 import sentryService from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+import { useRouter } from 'expo-router';
 
 export function TermsAndConditionsScreen() {
+  const router = useRouter();
   const { t } = useTranslation();
   const theme = useTheme();
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
@@ -32,13 +35,21 @@ export function TermsAndConditionsScreen() {
 
   const handleGetStarted = async () => {
     if (isTermsAccepted) {
+      amplitudeService.track('user-journey-terms-and-conditions-finished');
       await updateTermsAccepted(isTermsAccepted);
+      router.replace('/settings');
     }
   };
 
   useEffect(() => {
+    amplitudeService.track('user-journey-terms-and-conditions-started');
+  }, []);
+
+  useEffect(() => {
     if (!isTrackingModalVisible && trackingConsent !== undefined) {
       sentryService.initialize(trackingConsent);
+      amplitudeService.updateConsent(trackingConsent);
+      amplitudeService.track('user-accepted-tracking-consent');
     }
   }, [trackingConsent, isTrackingModalVisible]);
 
