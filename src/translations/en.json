@@ -10,6 +10,11 @@
     "edit": "Edit",
     "close": "Close"
   },
+  "home": {
+    "banner": {
+      "title": "Personalized Workouts in 3 Steps"
+    }
+  },
   "splash": {
     "banner": {
       "title": "🚧 Potenzo in progress",
@@ -68,7 +73,30 @@
     "startWorkout": "Start Workout",
     "restDay": "Rest Day",
     "completed": "Completed",
-    "inProgress": "In Progress"
+    "inProgress": "In Progress",
+    "list": [
+      { "title": "Free Body Work" },
+      { "title": "Burn Machine" },
+      { "title": "HIIT All Summer" },
+      { "title": "Cali HIIT" },
+      { "title": "Morning Mobility" },
+      { "title": "Power Push" },
+      { "title": "Core Crusher" },
+      { "title": "Leg Day Express" },
+      { "title": "Full Body Blast" },
+      { "title": "Stretch & Flex" },
+      { "title": "Quick Sweat" },
+      { "title": "Park Power" },
+      { "title": "Sunrise HIIT" },
+      { "title": "Urban Cardio" },
+      { "title": "Zen Strength" }
+    ],
+    "time": "⏱️ {{minutes}} min",
+    "kcal": "🔥 ~{{kcal}} kcal",
+    "place": {
+      "anywhere": "🏡 Anywhere",
+      "park": "🌳 Park"
+    }
   },
   "nutrition": {
     "title": "Nutrition",

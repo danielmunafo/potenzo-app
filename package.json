@@ -19,7 +19,7 @@
     "start": "expo start",
     "start:local-device": "npx expo start --dev-client --tunnel",
     "reset-project": "node ./scripts/reset-project.js",
-    "build:clean": "expo prebuild --clean",
+    "build:preview": "npx expo prebuild --clean && eas build --profile preview --platform android --local",
     "android": "expo run:android",
     "android:dev-client": "eas build --profile development --platform android --local",
     "android:clean": "rm -rf android/app/build && expo run:android",

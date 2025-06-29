@@ -10,6 +10,11 @@
     "edit": "Editar",
     "close": "Fechar"
   },
+  "home": {
+    "banner": {
+      "title": "Treinos Personalizados em 3 Passos"
+    }
+  },
   "splash": {
     "banner": {
       "title": "🚧 Potenzo em desenvolvimento",
@@ -68,7 +73,31 @@
     "startWorkout": "Iniciar Treino",
     "restDay": "Dia de Descanso",
     "completed": "Concluído",
-    "inProgress": "Em Andamento"
+    "inProgress": "Em Andamento",
+    "list": [
+      { "title": "Free Body Work" },
+      { "title": "Burn Machine" },
+      { "title": "HIIT All Summer" },
+      { "title": "Cali HIIT" },
+      { "title": "Morning Mobility" },
+      { "title": "Power Push" },
+      { "title": "Core Crusher" },
+      { "title": "Leg Day Express" },
+      { "title": "Full Body Blast" },
+      { "title": "Stretch & Flex" },
+      { "title": "Quick Sweat" },
+      { "title": "Park Power" },
+      { "title": "Sunrise HIIT" },
+      { "title": "Urban Cardio" },
+      { "title": "Zen Strength" }
+    ],
+    "time": "{{minutes}} min",
+    "kcal": "~{{kcal}} kcal",
+    "place": {
+      "anywhere": "Qualquer lugar",
+      "park": "Parque",
+      "gym": "Academia"
+    }
   },
   "nutrition": {
     "title": "Nutrição",

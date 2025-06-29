@@ -68,9 +68,19 @@ For commiting run: `yarn commit`
 
 `git push --follow-tags origin main`
 
-### Install android on local device
+### Install on local device
 
+The devices and local development server have to be in the same network.
+
+**Android**
 Connect the device on USB, make sure to have developer tools enabled in the device.
 `yarn android:dev-client`
 `adb install /Users/danieltostes/workspace/potenzo-app/build-****`
 `yarn start:local-device`
+
+**iOS**
+The same for ios with exception that it should connect manually to the host and they have to be in the same network.
+`yarn ios:dev-client`
+
+> The generated build should be installed via Xcode->Window->Devices And Simulators-> + (find your .ipa) install
+> `yarn start:local-device`
