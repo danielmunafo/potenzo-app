@@ -17,6 +17,7 @@
     },
     "androidStatusBar": {
       "translucent": false,
+      "backgroundColor": "#ffffff"
     },
     "android": {
       "package": "com.potenzo.app",
@@ -58,6 +59,12 @@
       "eas": {
         "projectId": "00735ae6-3cdc-4aca-a8f9-f57843391a30"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/00735ae6-3cdc-4aca-a8f9-f57843391a30"
     }
   }
 }
