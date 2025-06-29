@@ -10,11 +10,6 @@
     "edit": "Edit",
     "close": "Close"
   },
-  "home": {
-    "banner": {
-      "title": "Personalized Workouts in 3 Steps"
-    }
-  },
   "splash": {
     "banner": {
       "title": "🚧 Potenzo in progress",
@@ -69,6 +64,10 @@
     "profile": "Profile"
   },
   "workouts": {
+    "banner": {
+      "title": "Personalized Workouts in 3 Steps",
+      "yesButton": "Yes!"
+    },
     "title": "Workouts",
     "startWorkout": "Start Workout",
     "restDay": "Rest Day",

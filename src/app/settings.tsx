@@ -9,8 +9,8 @@ import { ExternalLink } from '@/components/ExternalLink';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { useTranslation } from '@/hooks/useTranslation';
+import sentryService from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
-import sentryService from '../services/sentryService';
 
 const STORAGE_KEYS = {
   TERMS_ACCEPTED: 'terms_accepted',

@@ -10,11 +10,6 @@
     "edit": "Editar",
     "close": "Fechar"
   },
-  "home": {
-    "banner": {
-      "title": "Treinos Personalizados em 3 Passos"
-    }
-  },
   "splash": {
     "banner": {
       "title": "🚧 Potenzo em desenvolvimento",
@@ -69,6 +64,10 @@
     "profile": "Perfil"
   },
   "workouts": {
+    "banner": {
+      "title": "Treinos Personalizados em 3 Passos",
+      "yesButton": "Sim!"
+    },
     "title": "Treinos",
     "startWorkout": "Iniciar Treino",
     "restDay": "Dia de Descanso",
@@ -91,12 +90,12 @@
       { "title": "Urban Cardio" },
       { "title": "Zen Strength" }
     ],
-    "time": "{{minutes}} min",
-    "kcal": "~{{kcal}} kcal",
+    "time": "⏱️ {{minutes}} min",
+    "kcal": "🔥 ~{{kcal}} kcal",
     "place": {
-      "anywhere": "Qualquer lugar",
-      "park": "Parque",
-      "gym": "Academia"
+      "anywhere": "🏠 Qualquer lugar",
+      "park": "🌳 Parque",
+      "gym": "🏋️ Academia"
     }
   },
   "nutrition": {

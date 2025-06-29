@@ -57,18 +57,21 @@ export function WorkoutCardList() {
             <View style={styles.row}>
               <Text
                 style={styles.chip}
+                variant="bodySmall"
                 accessibilityLabel={`workout-card-${index}.time`}
               >
                 {t('workouts.time', { minutes: item.minutes })}
               </Text>
               <Text
                 style={styles.chip}
+                variant="bodySmall"
                 accessibilityLabel={`workout-card-${index}.kcal`}
               >
                 {t('workouts.kcal', { kcal: item.kcal })}
               </Text>
               <Text
                 style={styles.chip}
+                variant="bodySmall"
                 accessibilityLabel={`workout-card-${index}.place`}
               >
                 {t(`workouts.place.${item.place}`)}
@@ -111,7 +114,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontWeight: 'bold',
     marginBottom: getSpacingToken('spacing-sm'),
   },
   row: {
@@ -121,9 +123,11 @@ const styles = StyleSheet.create({
   chip: {
     backgroundColor: getColorToken('core-primary'),
     borderRadius: 8,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontFamily: 'OpenSans-Light',
     color: getColorToken('core-on-primary'),
     fontSize: 10,
-    fontWeight: '600',
     marginRight: getSpacingToken('spacing-xs'),
     paddingHorizontal: getSpacingToken('spacing-sm'),
     paddingVertical: getSpacingToken('spacing-xs'),

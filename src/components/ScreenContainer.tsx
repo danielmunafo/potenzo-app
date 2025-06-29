@@ -48,7 +48,11 @@ export function ScreenContainer({
           <SafeAreaView
             accessibilityLabel={`${accessibilityLabel}-safe-area-view`}
             edges={edges}
-            style={{ flex: 1, width: '100%', height: '100%' }}
+            style={{
+              flex: 1,
+              width: '100%',
+              height: '100%',
+            }}
           >
             {children}
           </SafeAreaView>

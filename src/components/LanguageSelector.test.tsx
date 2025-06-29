@@ -1,4 +1,9 @@
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react-native';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  waitFor,
+} from '@testing-library/react-native';
 import React from 'react';
 
 import { LanguageSelector } from '@/components/LanguageSelector';
@@ -86,8 +91,8 @@ describe('<LanguageSelector />', () => {
     await waitFor(() => {
       // Check that both language options are rendered in the menu
       const englishElements = getAllByText('🇺🇸 English');
-      expect(englishElements[0]).not.toBeUndefined()
-      expect(englishElements[1]).not.toBeUndefined()
+      expect(englishElements[0]).not.toBeUndefined();
+      expect(englishElements[1]).not.toBeUndefined();
       expect(getByText('🇧🇷 Português (BR)')).toBeTruthy();
     });
   });
@@ -106,8 +111,8 @@ describe('<LanguageSelector />', () => {
 
     await waitFor(() => {
       const englishElements = getAllByText('🇺🇸 English');
-      expect(englishElements[0]).not.toBeUndefined()
-      expect(englishElements[1]).not.toBeUndefined()
+      expect(englishElements[0]).not.toBeUndefined();
+      expect(englishElements[1]).not.toBeUndefined();
       expect(getByText('🇧🇷 Português (BR)')).toBeTruthy();
     });
   });
@@ -128,8 +133,8 @@ describe('<LanguageSelector />', () => {
       // The current language (English) should have a check icon
       // Note: This test might need adjustment based on how react-native-paper renders icons
       const englishElements = getAllByText('🇺🇸 English');
-      expect(englishElements[0]).not.toBeUndefined()
-      expect(englishElements[1]).not.toBeUndefined()
+      expect(englishElements[0]).not.toBeUndefined();
+      expect(englishElements[1]).not.toBeUndefined();
     });
   });
 
@@ -294,7 +299,6 @@ describe('<LanguageSelector />', () => {
         <LanguageSelector />
       </TestWrapper>
     );
-
 
     await waitFor(() => {
       const button = getByText('🇺🇸 English');

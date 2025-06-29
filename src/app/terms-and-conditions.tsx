@@ -1,7 +1,7 @@
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import React, { useEffect, useState } from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   Button,
   Checkbox,
@@ -20,6 +20,7 @@ import amplitudeService from '@/services/amplitudeService';
 import sentryService from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 export function TermsAndConditionsScreen() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export function TermsAndConditionsScreen() {
     if (isTermsAccepted) {
       amplitudeService.track('user-journey-terms-and-conditions-finished');
       await updateTermsAccepted(isTermsAccepted);
-      router.replace('/settings');
+      router.replace('/');
     }
   };
 
@@ -199,9 +200,12 @@ export function TermsAndConditionsScreen() {
           dismissable={false}
           contentContainerStyle={styles.modalOverlay}
         >
+          <View
+            style={[StyleSheet.absoluteFill, styles.modalOverlayBackground]}
+          />
           <BlurView
-            intensity={5}
-            tint="light"
+            intensity={10}
+            tint="dark"
             style={StyleSheet.absoluteFill}
           />
           <View
@@ -301,6 +305,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     justifyContent: 'center',
+    paddingVertical: getSpacingToken('spacing-md'),
+    paddingHorizontal: getSpacingToken('spacing-md'),
   },
   scrollableContent: {
     flex: 1,
@@ -330,6 +336,7 @@ const styles = StyleSheet.create({
   },
   getStartedButton: {
     marginTop: getSpacingToken('spacing-md'),
+    marginBottom: getSpacingToken('spacing-md'),
     width: '100%',
   },
   getStartedButtonDisabled: {
@@ -341,6 +348,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
+  },
+  modalOverlayBackground: {
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   modalContainer: {
     margin: getSpacingToken('spacing-lg'),

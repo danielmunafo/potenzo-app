@@ -4,6 +4,71 @@ import { getColorToken, getMD3Colors } from './FigmaTokens';
 // Get Material Design 3 colors
 const md3Colors = getMD3Colors();
 
+const fonts = {
+  ...MD3LightTheme.fonts,
+  // Configure custom fonts for different text variants
+  displayLarge: {
+    ...MD3LightTheme.fonts.displayLarge,
+    fontFamily: 'Exo2-Bold',
+  },
+  displayMedium: {
+    ...MD3LightTheme.fonts.displayMedium,
+    fontFamily: 'Exo2-Bold',
+  },
+  displaySmall: {
+    ...MD3LightTheme.fonts.displaySmall,
+    fontFamily: 'Exo2-Bold',
+  },
+  headlineLarge: {
+    ...MD3LightTheme.fonts.headlineLarge,
+    fontFamily: 'Exo2-Bold',
+  },
+  headlineMedium: {
+    ...MD3LightTheme.fonts.headlineMedium,
+    fontFamily: 'Exo2-Bold',
+  },
+  headlineSmall: {
+    ...MD3LightTheme.fonts.headlineSmall,
+    fontFamily: 'Exo2-Bold',
+  },
+  titleLarge: {
+    ...MD3LightTheme.fonts.titleLarge,
+    fontFamily: 'Exo2-Bold',
+  },
+  titleMedium: {
+    ...MD3LightTheme.fonts.titleMedium,
+    fontFamily: 'Exo2-Bold',
+  },
+  titleSmall: {
+    ...MD3LightTheme.fonts.titleSmall,
+    fontFamily: 'Exo2-Bold',
+  },
+  bodyLarge: {
+    ...MD3LightTheme.fonts.bodyLarge,
+    fontFamily: 'OpenSans-Regular',
+  },
+  bodyMedium: {
+    ...MD3LightTheme.fonts.bodyMedium,
+    fontFamily: 'OpenSans-Regular',
+  },
+  bodySmall: {
+    ...MD3LightTheme.fonts.bodySmall,
+    fontFamily: 'OpenSans-Regular',
+  },
+  labelLarge: {
+    ...MD3LightTheme.fonts.labelLarge,
+    fontFamily: 'OpenSans-Medium',
+  },
+  labelMedium: {
+    ...MD3LightTheme.fonts.labelMedium,
+    fontFamily: 'OpenSans-Medium',
+  },
+  labelSmall: {
+    ...MD3LightTheme.fonts.labelSmall,
+    fontFamily: 'OpenSans-Medium',
+  },
+};
+
 // Light Theme
 export const LightMaterialTheme: MD3Theme = {
   ...MD3LightTheme,
@@ -48,11 +113,7 @@ export const LightMaterialTheme: MD3Theme = {
       level5: getColorToken('light-surfaceContainerHighest'),
     },
   },
-  fonts: {
-    ...MD3LightTheme.fonts,
-    // Use default Material Design 3 fonts for now
-    // You can customize these later if needed
-  },
+  fonts,
 };
 
 // Dark Theme
@@ -99,7 +160,7 @@ export const DarkMaterialTheme: MD3Theme = {
       level5: getColorToken('dark-surfaceContainerHighest'),
     },
   },
-  fonts: LightMaterialTheme.fonts, // Use same fonts for dark theme
+  fonts,
 };
 
 // Export the MD3 colors for direct access if needed
