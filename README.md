@@ -84,3 +84,9 @@ The same for ios with exception that it should connect manually to the host and 
 
 > The generated build should be installed via Xcode->Window->Devices And Simulators-> + (find your .ipa) install
 > `yarn start:local-device`
+
+### Sentry
+
+Always run `eas-update` before trying to run a preview/production build and upload the source files properly with `npx sentry-expo-upload-sourcemaps dist` (to do that the environment variable `SENTRY_AUTH_TOKEN` has to be set in the terminal)
+Then run the build and be happy
+The best
