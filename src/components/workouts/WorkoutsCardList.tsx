@@ -1,12 +1,13 @@
 import { useTranslation } from '@/hooks/useTranslation';
-import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { Surface, Text } from 'react-native-paper';
 import {
   getBorderRadiusToken,
   getColorToken,
   getSpacingToken,
-} from '../../theme/FigmaTokens';
+} from '@/theme/FigmaTokens';
+import { router } from 'expo-router';
+import React from 'react';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { Surface, Text } from 'react-native-paper';
 
 const workoutData = [
   { minutes: 15, kcal: 150, place: 'anywhere', icon: '💪' },
@@ -29,6 +30,10 @@ const workoutData = [
 export function WorkoutCardList() {
   const { t } = useTranslation();
 
+  const handleCardPress = () => {
+    router.push('/workouts/preview');
+  };
+
   return (
     <FlatList
       accessibilityLabel="workouts-list"
@@ -39,57 +44,59 @@ export function WorkoutCardList() {
         paddingHorizontal: getSpacingToken('spacing-md'),
       }}
       renderItem={({ item, index }) => (
-        <Surface
-          accessibilityLabel={`workout-card-${index}.surface`}
-          style={styles.card}
-        >
-          <View
-            accessibilityLabel={`workout-card-${index}.text-container`}
-            style={styles.textContainer}
+        <Pressable onPress={handleCardPress}>
+          <Surface
+            accessibilityLabel={`workout-card-${index}.surface`}
+            style={styles.card}
           >
-            <Text
-              variant="titleMedium"
-              style={styles.title}
-              accessibilityLabel={`workout-card-${index}.title`}
+            <View
+              accessibilityLabel={`workout-card-${index}.text-container`}
+              style={styles.textContainer}
             >
-              {t(`workouts.list.${index}.title`)}
-            </Text>
-            <View style={styles.row}>
               <Text
-                style={styles.chip}
-                variant="bodySmall"
-                accessibilityLabel={`workout-card-${index}.time`}
+                variant="titleMedium"
+                style={styles.title}
+                accessibilityLabel={`workout-card-${index}.title`}
               >
-                {t('workouts.time', { minutes: item.minutes })}
+                {t(`workouts.list.${index}.title`)}
               </Text>
+              <View style={styles.row}>
+                <Text
+                  style={styles.chip}
+                  variant="bodySmall"
+                  accessibilityLabel={`workout-card-${index}.time`}
+                >
+                  {t('workouts.time', { minutes: item.minutes })}
+                </Text>
+                <Text
+                  style={styles.chip}
+                  variant="bodySmall"
+                  accessibilityLabel={`workout-card-${index}.kcal`}
+                >
+                  {t('workouts.kcal', { kcal: item.kcal })}
+                </Text>
+                <Text
+                  style={styles.chip}
+                  variant="bodySmall"
+                  accessibilityLabel={`workout-card-${index}.place`}
+                >
+                  {t(`workouts.place.${item.place}`)}
+                </Text>
+              </View>
+            </View>
+            <View
+              accessibilityLabel={`workout-card-${index}.icon-container`}
+              style={styles.iconContainer}
+            >
               <Text
-                style={styles.chip}
-                variant="bodySmall"
-                accessibilityLabel={`workout-card-${index}.kcal`}
+                style={styles.icon}
+                accessibilityLabel={`workout-card-${index}.icon`}
               >
-                {t('workouts.kcal', { kcal: item.kcal })}
-              </Text>
-              <Text
-                style={styles.chip}
-                variant="bodySmall"
-                accessibilityLabel={`workout-card-${index}.place`}
-              >
-                {t(`workouts.place.${item.place}`)}
+                {item.icon}
               </Text>
             </View>
-          </View>
-          <View
-            accessibilityLabel={`workout-card-${index}.icon-container`}
-            style={styles.iconContainer}
-          >
-            <Text
-              style={styles.icon}
-              accessibilityLabel={`workout-card-${index}.icon`}
-            >
-              {item.icon}
-            </Text>
-          </View>
-        </Surface>
+          </Surface>
+        </Pressable>
       )}
     />
   );

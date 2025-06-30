@@ -89,4 +89,3 @@ The same for ios with exception that it should connect manually to the host and 
 
 Always run `eas-update` before trying to run a preview/production build and upload the source files properly with `npx sentry-expo-upload-sourcemaps dist` (to do that the environment variable `SENTRY_AUTH_TOKEN` has to be set in the terminal)
 Then run the build and be happy
-The best

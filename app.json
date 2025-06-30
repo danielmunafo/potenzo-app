@@ -15,16 +15,11 @@
         "ITSAppUsesNonExemptEncryption": false
       }
     },
-    "androidStatusBar": {
-      "translucent": false,
-      "backgroundColor": "#ffffff"
-    },
     "android": {
       "package": "com.potenzo.app",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/icon.png"
-      },
-      "edgeToEdgeEnabled": true
+      }
     },
     "web": {
       "bundler": "metro",
@@ -48,6 +43,13 @@
           "url": "https://sentry.io/",
           "project": "app",
           "organization": "potenzo"
+        }
+      ],
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": false,
+          "supportsPictureInPicture": true
         }
       ]
     ],

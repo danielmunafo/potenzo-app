@@ -5,31 +5,20 @@ import { Surface, Text } from 'react-native-paper';
 
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { WorkoutCardList } from '@/components/workouts/WorkoutsCardList';
+import { useStatusBarStyle } from '@/hooks/useStatusBarStyle';
+import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useStatusBarStyle } from '../hooks/useStatusBarStyle';
 
 export function WorkoutsScreen() {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const statusBarStyle = useStatusBarStyle();
+  const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
 
   return (
     <ScreenContainer edges={['bottom']} accessibilityLabel="workouts-screen">
-      <StatusBar
-        backgroundColor={getColorToken('core-primary')}
-        style={statusBarStyle}
-        translucent
-        hidden={false}
-        animated
-      />
-      <Surface
-        style={[
-          styles.banner,
-          { paddingTop: insets.top + getSpacingToken('spacing-sm') },
-        ]}
-      >
+      <StatusBar style={statusBarStyle} animated translucent />
+      <Surface style={[styles.banner, containerPaddingStyle]}>
         <Text variant="titleMedium" style={styles.bannerText}>
           {t('workouts.banner.title')}
         </Text>
@@ -49,7 +38,6 @@ const styles = StyleSheet.create({
   bannerText: {
     color: getColorToken('core-on-primary'),
     textAlign: 'center',
-    fontFamily: 'Exo2-Bold',
   },
 });
 

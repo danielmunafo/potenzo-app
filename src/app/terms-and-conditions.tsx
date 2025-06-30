@@ -71,7 +71,7 @@ export function TermsAndConditionsScreen() {
       accessibilityLabel="terms-screen-container"
       useSentryWrapper={false}
     >
-      <StatusBar hidden animated />
+      <StatusBar animated translucent hidden />
       <View
         accessibilityLabel="terms-screen-content-container"
         style={styles.contentContainer}

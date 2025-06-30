@@ -94,7 +94,7 @@ const App = () => {
 
   return (
     <>
-      <StatusBar style={statusBarStyle} animated />
+      <StatusBar style={statusBarStyle} animated translucent />
       <AppThemeProvider systemTheme={systemTheme}>
         <ThemeProvider value={navigationTheme}>
           <Tabs
@@ -134,12 +134,18 @@ const App = () => {
               }}
             />
             <Tabs.Screen
-              name="workouts"
+              name="workouts/index"
               options={{
                 title: t('navigation.workouts'),
                 tabBarIcon: ({ color, size }) => (
                   <IconSymbol name="dumbbell" size={size} color={color} />
                 ),
+              }}
+            />
+            <Tabs.Screen
+              name="workouts/preview/index"
+              options={{
+                href: null,
               }}
             />
             <Tabs.Screen
