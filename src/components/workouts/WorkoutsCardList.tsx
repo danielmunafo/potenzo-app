@@ -10,21 +10,21 @@ import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 
 const workoutData = [
-  { minutes: 15, kcal: 150, place: 'anywhere', icon: '💪' },
-  { minutes: 15, kcal: 200, place: 'anywhere', icon: '🔥' },
-  { minutes: 30, kcal: 300, place: 'park', icon: '🌞' },
-  { minutes: 45, kcal: 450, place: 'park', icon: '🏋️' },
-  { minutes: 20, kcal: 120, place: 'anywhere', icon: '🌅' },
-  { minutes: 25, kcal: 180, place: 'anywhere', icon: '🏃' },
-  { minutes: 18, kcal: 110, place: 'anywhere', icon: '🧘' },
-  { minutes: 22, kcal: 160, place: 'park', icon: '🦵' },
-  { minutes: 30, kcal: 250, place: 'anywhere', icon: '💥' },
-  { minutes: 12, kcal: 90, place: 'anywhere', icon: '🤸' },
-  { minutes: 10, kcal: 80, place: 'anywhere', icon: '💦' },
-  { minutes: 35, kcal: 320, place: 'park', icon: '🌳' },
-  { minutes: 28, kcal: 210, place: 'park', icon: '🌄' },
-  { minutes: 16, kcal: 140, place: 'anywhere', icon: '🏙️' },
-  { minutes: 40, kcal: 350, place: 'anywhere', icon: '🧘‍♂️' },
+  { translationKey: 'workout1' },
+  { translationKey: 'workout2' },
+  { translationKey: 'workout3' },
+  { translationKey: 'workout4' },
+  { translationKey: 'workout5' },
+  { translationKey: 'workout6' },
+  { translationKey: 'workout7' },
+  { translationKey: 'workout8' },
+  { translationKey: 'workout9' },
+  { translationKey: 'workout10' },
+  { translationKey: 'workout11' },
+  { translationKey: 'workout12' },
+  { translationKey: 'workout13' },
+  { translationKey: 'workout14' },
+  { translationKey: 'workout15' },
 ];
 
 export function WorkoutCardList() {
@@ -58,7 +58,7 @@ export function WorkoutCardList() {
                 style={styles.title}
                 accessibilityLabel={`workout-card-${index}.title`}
               >
-                {t(`workouts.list.${index}.title`)}
+                {t(`workouts.${item.translationKey}.title`)}
               </Text>
               <View style={styles.row}>
                 <Text
@@ -66,21 +66,27 @@ export function WorkoutCardList() {
                   variant="bodySmall"
                   accessibilityLabel={`workout-card-${index}.time`}
                 >
-                  {t('workouts.time', { minutes: item.minutes })}
+                  {t('workouts.time', {
+                    minutes: t(`workouts.${item.translationKey}.minutes`),
+                  })}
                 </Text>
                 <Text
                   style={styles.chip}
                   variant="bodySmall"
                   accessibilityLabel={`workout-card-${index}.kcal`}
                 >
-                  {t('workouts.kcal', { kcal: item.kcal })}
+                  {t('workouts.kcal', {
+                    kcal: t(`workouts.${item.translationKey}.kcal`),
+                  })}
                 </Text>
                 <Text
                   style={styles.chip}
                   variant="bodySmall"
                   accessibilityLabel={`workout-card-${index}.place`}
                 >
-                  {t(`workouts.place.${item.place}`)}
+                  {t(
+                    `workouts.place.${t(`workouts.${item.translationKey}.place`)}`
+                  )}
                 </Text>
               </View>
             </View>
@@ -92,7 +98,7 @@ export function WorkoutCardList() {
                 style={styles.icon}
                 accessibilityLabel={`workout-card-${index}.icon`}
               >
-                {item.icon}
+                {t(`workouts.${item.translationKey}.icon`)}
               </Text>
             </View>
           </Surface>
