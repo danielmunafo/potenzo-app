@@ -19,6 +19,7 @@ import amplitudeService from '@/services/amplitudeService';
 import sentryService from '@/services/sentryService';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
 import { StatusBar } from 'expo-status-bar';
+import { WorkoutProvider } from '../contexts/WorkoutContext';
 import { useStatusBarStyle } from '../hooks/useStatusBarStyle';
 import { getColorToken, getSpacingToken } from '../theme/FigmaTokens';
 
@@ -167,7 +168,9 @@ const App = () => {
 const RootLayout: React.FC = () => {
   return (
     <ConsentProvider>
-      <App />
+      <WorkoutProvider>
+        <App />
+      </WorkoutProvider>
     </ConsentProvider>
   );
 };

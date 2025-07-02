@@ -1,21 +1,44 @@
+import { useWorkoutContext } from '@/contexts/WorkoutContext';
+import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
+import { useTranslation } from '@/hooks/useTranslation';
+import { getColorToken } from '@/theme/FigmaTokens';
+import { useEventListener } from 'expo';
 import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
-import { useVideoPlayer, VideoView } from 'expo-video';
+import { useVideoPlayer, VideoPlayerStatus, VideoView } from 'expo-video';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useContainerStyleWhenHiddenStatusBar } from '../../../hooks/useStyleWhenHiddenStatusBar';
-import { getColorToken } from '../../../theme/FigmaTokens';
+import { Exercise } from '../../../constants/types';
 
-export default function DemoWorkout() {
-  const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
-  const player = useVideoPlayer(
-    require('@/assets/videos/skipping-rope.mov'),
-    player => {
-      player.loop = true;
-      player.muted = true;
-      player.play();
-    }
+export default function WorkoutPreview() {
+  const { t } = useTranslation();
+  const { workout } = useWorkoutContext();
+  const [exercise, setExercise] = useState<Exercise | undefined>(
+    workout?.exercises[0] ?? undefined
   );
+  const [playerStatus, setPlayerStatus] =
+    useState<VideoPlayerStatus>('loading');
+  const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
+  const player = useVideoPlayer(exercise?.assetId, player => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
+
+  useEffect(() => {
+    if (workout) {
+      setExercise(workout.exercises[0]);
+    }
+  }, [workout]);
+
+  useEventListener(player, 'statusChange', ({ status, error }) => {
+    setPlayerStatus(status);
+  });
+
+  if (playerStatus === 'loading' || !exercise) {
+    return <Text variant="displayLarge">{t('common.loading')}</Text>;
+  }
 
   return (
     <View style={styles.container}>
@@ -28,7 +51,10 @@ export default function DemoWorkout() {
       />
       <View style={[styles.overlayContainer, containerPaddingStyle]}>
         <Text style={styles.text} variant="displayLarge">
-          Overlay Content
+          {t(`exercises.${exercise.name}.name`)}
+        </Text>
+        <Text style={styles.text} variant="bodyMedium">
+          {t(`exercises.${exercise.name}.description`)}
         </Text>
         <Image
           accessibilityLabel="preview-workout-icon"

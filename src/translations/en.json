@@ -73,111 +73,21 @@
     "restDay": "Rest Day",
     "completed": "Completed",
     "inProgress": "In Progress",
-    "workout1": {
-      "title": "Free Body Work",
-      "minutes": 15,
-      "kcal": 150,
-      "place": "anywhere",
-      "icon": "💪"
-    },
-    "workout2": {
-      "title": "Burn Machine",
-      "minutes": 15,
-      "kcal": 200,
-      "place": "anywhere",
-      "icon": "🔥"
-    },
-    "workout3": {
-      "title": "HIIT All Summer",
-      "minutes": 30,
-      "kcal": 300,
-      "place": "park",
-      "icon": "🌞"
-    },
-    "workout4": {
-      "title": "Cali HIIT",
-      "minutes": 45,
-      "kcal": 450,
-      "place": "park",
-      "icon": "🏋️"
-    },
-    "workout5": {
-      "title": "Morning Mobility",
-      "minutes": 20,
-      "kcal": 120,
-      "place": "anywhere",
-      "icon": "🌅"
-    },
-    "workout6": {
-      "title": "Power Push",
-      "minutes": 25,
-      "kcal": 180,
-      "place": "anywhere",
-      "icon": "🏃"
-    },
-    "workout7": {
-      "title": "Core Crusher",
-      "minutes": 18,
-      "kcal": 110,
-      "place": "anywhere",
-      "icon": "🧘"
-    },
-    "workout8": {
-      "title": "Leg Day Express",
-      "minutes": 22,
-      "kcal": 160,
-      "place": "park",
-      "icon": "🦵"
-    },
-    "workout9": {
-      "title": "Full Body Blast",
-      "minutes": 30,
-      "kcal": 250,
-      "place": "anywhere",
-      "icon": "💥"
-    },
-    "workout10": {
-      "title": "Stretch & Flex",
-      "minutes": 12,
-      "kcal": 90,
-      "place": "anywhere",
-      "icon": "🤸"
-    },
-    "workout11": {
-      "title": "Quick Sweat",
-      "minutes": 10,
-      "kcal": 80,
-      "place": "anywhere",
-      "icon": "💦"
-    },
-    "workout12": {
-      "title": "Park Power",
-      "minutes": 35,
-      "kcal": 320,
-      "place": "park",
-      "icon": "🌳"
-    },
-    "workout13": {
-      "title": "Sunrise HIIT",
-      "minutes": 28,
-      "kcal": 210,
-      "place": "park",
-      "icon": "🌄"
-    },
-    "workout14": {
-      "title": "Urban Cardio",
-      "minutes": 16,
-      "kcal": 140,
-      "place": "anywhere",
-      "icon": "🏙️"
-    },
-    "workout15": {
-      "title": "Zen Strength",
-      "minutes": 40,
-      "kcal": 350,
-      "place": "anywhere",
-      "icon": "🧘‍♂️"
-    },
+    "workout1": "Free Body Work",
+    "workout2": "Burn Machine",
+    "workout3": "HIIT All Summer",
+    "workout4": "Cali HIIT",
+    "workout5": "Morning Mobility",
+    "workout6": "Power Push",
+    "workout7": "Core Crusher",
+    "workout8": "Leg Day Express",
+    "workout9": "Full Body Blast",
+    "workout10": "Stretch & Flex",
+    "workout11": "Quick Sweat",
+    "workout12": "Park Power",
+    "workout13": "Sunrise HIIT",
+    "workout14": "Urban Cardio",
+    "workout15": "Zen Strength",
     "time": "⏱️ {{minutes}} min",
     "kcal": "🔥 ~{{kcal}} kcal",
     "place": {
@@ -207,5 +117,19 @@
     "theme": "Theme",
     "notifications": "Notifications",
     "about": "About"
+  },
+  "exercises": {
+    "skippingRope": {
+      "name": "Skipping Rope",
+      "description": "Jump rope exercise for cardio and coordination"
+    },
+    "humanFlag": {
+      "name": "Human Flag",
+      "description": "Advanced calisthenics move for core and upper body strength"
+    },
+    "pressToHandstand": {
+      "name": "Press to Handstand",
+      "description": "Dynamic movement to develop shoulder strength and balance"
+    }
   }
 }
