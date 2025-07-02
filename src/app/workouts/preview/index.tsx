@@ -7,19 +7,19 @@ import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
 import { useVideoPlayer, VideoPlayerStatus, VideoView } from 'expo-video';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { Exercise } from '../../../constants/types';
 
 export default function WorkoutPreview() {
   const { t } = useTranslation();
   const { workout } = useWorkoutContext();
-  const [exercise, setExercise] = useState<Exercise | undefined>(
-    workout?.exercises[0] ?? undefined
-  );
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [playerStatus, setPlayerStatus] =
     useState<VideoPlayerStatus>('loading');
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
+
+  const exercise = workout?.exercises[currentExerciseIndex];
+
   const player = useVideoPlayer(exercise?.assetId, player => {
     player.loop = true;
     player.muted = true;
@@ -28,9 +28,21 @@ export default function WorkoutPreview() {
 
   useEffect(() => {
     if (workout) {
-      setExercise(workout.exercises[0]);
+      setCurrentExerciseIndex(0);
     }
   }, [workout]);
+
+  const navigateToPrevious = () => {
+    if (workout && currentExerciseIndex > 0) {
+      setCurrentExerciseIndex(currentExerciseIndex - 1);
+    }
+  };
+
+  const navigateToNext = () => {
+    if (workout && currentExerciseIndex < workout.exercises.length - 1) {
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
+    }
+  };
 
   useEventListener(player, 'statusChange', ({ status, error }) => {
     setPlayerStatus(status);
@@ -49,6 +61,21 @@ export default function WorkoutPreview() {
         nativeControls={false}
         contentFit="cover"
       />
+
+      {/* Left navigation area */}
+      <TouchableOpacity
+        style={styles.leftNavigationArea}
+        onPress={navigateToPrevious}
+        activeOpacity={0.3}
+      />
+
+      {/* Right navigation area */}
+      <TouchableOpacity
+        style={styles.rightNavigationArea}
+        onPress={navigateToNext}
+        activeOpacity={0.3}
+      />
+
       <View style={[styles.overlayContainer, containerPaddingStyle]}>
         <Text style={styles.text} variant="displayLarge">
           {t(`exercises.${exercise.name}.name`)}
@@ -62,6 +89,10 @@ export default function WorkoutPreview() {
           style={styles.splashIcon}
           contentFit="contain"
         />
+        {/* Exercise counter */}
+        <Text style={styles.counterText} variant="bodySmall">
+          {currentExerciseIndex + 1} / {workout?.exercises.length}
+        </Text>
       </View>
     </View>
   );
@@ -83,9 +114,35 @@ const styles = StyleSheet.create({
     color: getColorToken('core-primary'),
     textAlignVertical: 'center',
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.15)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 4,
   },
   splashIcon: {
     width: 200,
     height: 200,
+  },
+  counterText: {
+    color: getColorToken('core-primary'),
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+  },
+  leftNavigationArea: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '30%',
+    height: '100%',
+    zIndex: 10,
+  },
+  rightNavigationArea: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: '30%',
+    height: '100%',
+    zIndex: 10,
   },
 });
