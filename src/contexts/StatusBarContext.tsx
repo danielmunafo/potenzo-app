@@ -17,10 +17,7 @@ export function StatusBarProvider({ children }: StatusBarProviderProps) {
 
   const value: StatusBarContextType = {
     isStatusBarVisible,
-    setIsStatusBarVisible: (v: boolean) => {
-      console.log('setIsStatusBarVisible', v);
-      setIsStatusBarVisible(v);
-    },
+    setIsStatusBarVisible,
   };
   return (
     <StatusBarContext.Provider value={value}>
