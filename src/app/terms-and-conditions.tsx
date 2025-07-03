@@ -20,7 +20,7 @@ import amplitudeService from '@/services/amplitudeService';
 import sentryService from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { useStatusBarContext } from '../contexts/StatusBarContext';
 
 export function TermsAndConditionsScreen() {
   const router = useRouter();
@@ -33,6 +33,7 @@ export function TermsAndConditionsScreen() {
     updateTrackingConsent,
     trackingConsent,
   } = useUserConsents();
+  const { setIsStatusBarVisible } = useStatusBarContext();
 
   const handleGetStarted = async () => {
     if (isTermsAccepted) {
@@ -43,6 +44,7 @@ export function TermsAndConditionsScreen() {
   };
 
   useEffect(() => {
+    setIsStatusBarVisible(false);
     amplitudeService.track('user-journey-terms-and-conditions-started');
   }, []);
 
@@ -71,7 +73,6 @@ export function TermsAndConditionsScreen() {
       accessibilityLabel="terms-screen-container"
       useSentryWrapper={false}
     >
-      <StatusBar animated translucent />
       <View
         accessibilityLabel="terms-screen-content-container"
         style={styles.contentContainer}

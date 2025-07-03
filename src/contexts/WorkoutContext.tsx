@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 interface WorkoutContextType {
   workout: Workout | undefined;
-  setWorkout: (w: Workout) => void;
+  setWorkout: (w: Workout | undefined) => void;
 }
 
 const WorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
