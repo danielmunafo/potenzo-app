@@ -1,20 +1,30 @@
 import { useWorkoutContext } from '@/contexts/WorkoutContext';
 import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
 import { useTranslation } from '@/hooks/useTranslation';
-import { getColorToken } from '@/theme/FigmaTokens';
+import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Button, IconButton, Text } from 'react-native-paper';
+import { useStatusBarContext } from '../../contexts/StatusBarContext';
+import { useTabsContext } from '../../contexts/TabsContext';
+import { ScreenContainer } from '../ScreenContainer';
 
 export default function WorkoutPreview() {
   const { t } = useTranslation();
-  const { workout } = useWorkoutContext();
+  const { workout, setWorkout } = useWorkoutContext();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
+  const { setIsTabsVisible } = useTabsContext();
+  const { setIsStatusBarVisible } = useStatusBarContext();
 
   const exercise = workout?.exercises[currentExerciseIndex];
+
+  useEffect(() => {
+    setIsStatusBarVisible(false);
+    setIsTabsVisible(false);
+  }, [setIsTabsVisible, setIsStatusBarVisible]);
 
   useEffect(() => {
     if (workout) {
@@ -34,15 +44,12 @@ export default function WorkoutPreview() {
     }
   };
 
-  if (!exercise) {
+  if (!exercise || !workout) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar translucent animated />
-
-      {/* Left navigation area */}
+    <ScreenContainer accessibilityLabel="preview-screen-container">
       <TouchableOpacity
         style={styles.leftNavigationArea}
         onPress={navigateToPrevious}
@@ -56,7 +63,13 @@ export default function WorkoutPreview() {
         activeOpacity={0.3}
       />
 
-      <View style={[styles.overlayContainer, containerPaddingStyle]}>
+      <View
+        style={[
+          StyleSheet.absoluteFill,
+          styles.overlayContainer,
+          containerPaddingStyle,
+        ]}
+      >
         <Text style={styles.text} variant="displayLarge">
           {t(`exercises.${exercise.name}.name`)}
         </Text>
@@ -69,12 +82,51 @@ export default function WorkoutPreview() {
           style={styles.splashIcon}
           contentFit="contain"
         />
-        {/* Exercise counter */}
-        <Text style={styles.counterText} variant="bodySmall">
-          {currentExerciseIndex + 1} / {workout?.exercises.length}
-        </Text>
       </View>
-    </View>
+      <View style={styles.bottomButtons}>
+        <IconButton
+          style={styles.overNavigationArea}
+          mode="contained"
+          containerColor={getColorToken('background')}
+          icon={() => (
+            <MaterialIcons
+              name="chevron-left"
+              size={24}
+              color={getColorToken('core-primary')}
+            />
+          )}
+          onPress={() => {
+            setWorkout(undefined);
+            setIsTabsVisible(true);
+            setIsStatusBarVisible(true);
+          }}
+        />
+        <Button
+          style={styles.overNavigationArea}
+          buttonColor={getColorToken('core-primary')}
+          mode="elevated"
+        >
+          {t('preview.start')}
+        </Button>
+        <IconButton
+          style={styles.overNavigationArea}
+          mode="contained"
+          containerColor={getColorToken('background')}
+          icon={() => (
+            <MaterialIcons
+              name="info"
+              size={24}
+              color={getColorToken('core-primary')}
+            />
+          )}
+          onPress={() => {
+            setWorkout(undefined);
+            setIsTabsVisible(true);
+            setIsStatusBarVisible(true);
+          }}
+        />
+      </View>
+    </ScreenContainer>
   );
 }
 
@@ -94,20 +146,14 @@ const styles = StyleSheet.create({
     color: getColorToken('core-primary'),
     textAlignVertical: 'center',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.15)',
+    textShadowColor: 'rgba(0, 0, 0, 0.05)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 4,
+    textShadowRadius: 1,
   },
   splashIcon: {
     width: 200,
     height: 200,
-  },
-  counterText: {
-    color: getColorToken('core-primary'),
-    textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
+    marginBottom: 80,
   },
   leftNavigationArea: {
     position: 'absolute',
@@ -124,5 +170,19 @@ const styles = StyleSheet.create({
     width: '30%',
     height: '100%',
     zIndex: 10,
+  },
+  overNavigationArea: {
+    zIndex: 11,
+  },
+  bottomButtons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'absolute',
+    height: 80,
+    padding: getSpacingToken('spacing-md'),
+    bottom: 0,
+    width: '100%',
   },
 });

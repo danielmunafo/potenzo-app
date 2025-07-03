@@ -5,7 +5,6 @@ import {
   getColorToken,
   getSpacingToken,
 } from '@/theme/FigmaTokens';
-import { router } from 'expo-router';
 import React, { memo, useCallback } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
@@ -271,7 +270,6 @@ export function WorkoutCardList() {
     (workout: Workout) => {
       if (workout) {
         setWorkout(workout);
-        router.push('/workouts/preview');
       }
     },
     [setWorkout]

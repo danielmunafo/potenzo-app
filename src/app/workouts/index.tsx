@@ -1,23 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { WorkoutCardList } from '@/components/workouts/WorkoutsCardList';
-import { useStatusBarStyle } from '@/hooks/useStatusBarStyle';
 import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+import WorkoutPreview from '../../components/workouts/WorkoutPreview';
+import { useWorkoutContext } from '../../contexts/WorkoutContext';
 
 export function WorkoutsScreen() {
   const { t } = useTranslation();
-  const statusBarStyle = useStatusBarStyle();
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
+  const { workout } = useWorkoutContext();
+
+  if (workout) {
+    return <WorkoutPreview />;
+  }
 
   return (
     <ScreenContainer edges={['bottom']} accessibilityLabel="workouts-screen">
-      <StatusBar style={statusBarStyle} animated translucent />
       <Surface style={[styles.banner, containerPaddingStyle]}>
         <Text variant="titleMedium" style={styles.bannerText}>
           {t('workouts.banner.title')}

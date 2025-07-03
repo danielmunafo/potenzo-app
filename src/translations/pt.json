@@ -132,5 +132,8 @@
       "name": "Pressão para Parada de Mão",
       "description": "Movimento dinâmico para desenvolver força dos ombros e equilíbrio"
     }
+  },
+  "preview": {
+    "start": "Começar!"
   }
 }
