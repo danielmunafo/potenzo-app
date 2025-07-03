@@ -2,10 +2,8 @@ import { useWorkoutContext } from '@/contexts/WorkoutContext';
 import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken } from '@/theme/FigmaTokens';
-import { useEventListener } from 'expo';
 import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
-import { useVideoPlayer, VideoPlayerStatus, VideoView } from 'expo-video';
 import { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
@@ -14,17 +12,9 @@ export default function WorkoutPreview() {
   const { t } = useTranslation();
   const { workout } = useWorkoutContext();
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [playerStatus, setPlayerStatus] =
-    useState<VideoPlayerStatus>('loading');
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
 
   const exercise = workout?.exercises[currentExerciseIndex];
-
-  const player = useVideoPlayer(exercise?.assetId, player => {
-    player.loop = true;
-    player.muted = true;
-    player.play();
-  });
 
   useEffect(() => {
     if (workout) {
@@ -44,23 +34,13 @@ export default function WorkoutPreview() {
     }
   };
 
-  useEventListener(player, 'statusChange', ({ status, error }) => {
-    setPlayerStatus(status);
-  });
-
-  if (playerStatus === 'loading' || !exercise) {
+  if (!exercise) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
   }
 
   return (
     <View style={styles.container}>
       <StatusBar translucent animated />
-      <VideoView
-        style={StyleSheet.absoluteFill}
-        player={player}
-        nativeControls={false}
-        contentFit="cover"
-      />
 
       {/* Left navigation area */}
       <TouchableOpacity
