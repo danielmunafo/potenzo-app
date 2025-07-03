@@ -27,6 +27,7 @@ export function TermsAndConditionsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     shouldShowTrackingModal: isTrackingModalVisible,
     updateTermsAccepted,
@@ -37,6 +38,7 @@ export function TermsAndConditionsScreen() {
 
   const handleGetStarted = async () => {
     if (isTermsAccepted) {
+      setIsLoading(true);
       amplitudeService.track('user-journey-terms-and-conditions-finished');
       await updateTermsAccepted(isTermsAccepted);
       router.replace('/');
@@ -182,6 +184,7 @@ export function TermsAndConditionsScreen() {
           <Button
             mode="contained"
             onPress={handleGetStarted}
+            loading={isLoading}
             accessibilityLabel="terms-screen-get-started-button"
             style={[
               styles.getStartedButton,
