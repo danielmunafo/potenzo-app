@@ -91,49 +91,61 @@ export default function WorkoutPreview() {
       const isPaused = index !== activeIndex;
       return (
         <>
-          <Video
-            controls={false}
-            disableFocus
-            focusable={false}
-            hideShutterView={true}
-            playInBackground={false}
-            playWhenInactive={false}
-            key={`${item.assetId}+${workout?.id}`}
-            bufferingStrategy={BufferingStrategyType.DEPENDING_ON_MEMORY}
-            source={{
-              uri: item.assetId,
-              isNetwork: false,
-              isAsset: true,
-              isLocalAssetFile: true,
-              shouldCache: false,
-              metadata: { title: t(`exercises.${item.name}.name`) },
-            }}
-            resizeMode="stretch"
-            paused={isPaused}
-            style={[{ width: '100%', height: '100%' }]}
-            repeat={true}
-            onError={e => Logger.error('Video error', e)}
-            muted={true}
-          />
+          <View style={[StyleSheet.absoluteFill]}>
+            <Video
+              controls={false}
+              disableFocus
+              focusable={false}
+              hideShutterView={true}
+              playInBackground={false}
+              playWhenInactive={false}
+              key={`${item.assetId}+${workout?.id}`}
+              bufferingStrategy={BufferingStrategyType.DEPENDING_ON_MEMORY}
+              source={{
+                uri: item.assetId,
+                isNetwork: false,
+                isAsset: true,
+                isLocalAssetFile: true,
+                shouldCache: false,
+                metadata: { title: t(`exercises.${item.name}.name`) },
+              }}
+              resizeMode="stretch"
+              paused={isPaused}
+              style={[{ width: '100%', height: '100%' }]}
+              repeat={true}
+              onError={e => Logger.error('Video error', e)}
+              muted={true}
+            />
+          </View>
           <View
-            style={{
-              height: '100%',
-              width: '100%',
-              backgroundColor: 'red',
-              padding: getSpacingToken('spacing-md'),
-            }}
+            style={[
+              StyleSheet.absoluteFill,
+              styles.overlayContainer,
+              {
+                paddingTop:
+                  containerPaddingStyle.paddingTop +
+                  getSpacingToken('spacing-md'),
+                paddingHorizontal: getSpacingToken('spacing-md'),
+              },
+            ]}
           >
-            <Text style={styles.text} variant="displayLarge">
+            <Text style={styles.text} variant="displayMedium">
               {t(`exercises.${item.name}.name`)}
             </Text>
-            <Text style={styles.text} variant="titleLarge">
+            <Text
+              style={{
+                ...styles.text,
+                paddingTop: getSpacingToken('spacing-md'),
+              }}
+              variant="titleLarge"
+            >
               {t(`exercises.${item.name}.description`)}
             </Text>
           </View>
         </>
       );
     },
-    [workout, activeIndex, t]
+    [workout, activeIndex, t, containerPaddingStyle]
   );
 
   if (!workout) {
@@ -262,12 +274,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlayContainer: {
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.02)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
   },
   text: {
     color: getColorToken('core-primary'),
@@ -288,7 +297,7 @@ const styles = StyleSheet.create({
     top: 0,
     width: '15%',
     height: '100%',
-    zIndex: 20,
+    zIndex: 1,
   },
   rightNavigationArea: {
     position: 'absolute',
@@ -296,14 +305,14 @@ const styles = StyleSheet.create({
     top: 0,
     width: '15%',
     height: '100%',
-    zIndex: 20,
+    zIndex: 1,
   },
   touchArea: {
     width: '100%',
     height: '100%',
   },
   overNavigationArea: {
-    zIndex: 21,
+    zIndex: 2,
   },
   bottomArea: {
     flex: 1,
@@ -311,7 +320,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     bottom: 0,
-    zIndex: 21,
+    zIndex: 2,
   },
   bottomButtons: {
     flexDirection: 'column',
