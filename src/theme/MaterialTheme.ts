@@ -4,7 +4,7 @@ import { getColorToken, getMD3Colors } from './FigmaTokens';
 // Get Material Design 3 colors
 const md3Colors = getMD3Colors();
 
-const fonts = {
+export const typography = {
   ...MD3LightTheme.fonts,
   // Configure custom fonts for different text variants
   displayLarge: {
@@ -113,7 +113,7 @@ export const LightMaterialTheme: MD3Theme = {
       level5: getColorToken('light-surfaceContainerHighest'),
     },
   },
-  fonts,
+  fonts: typography,
 };
 
 // Dark Theme
@@ -160,7 +160,7 @@ export const DarkMaterialTheme: MD3Theme = {
       level5: getColorToken('dark-surfaceContainerHighest'),
     },
   },
-  fonts,
+  fonts: typography,
 };
 
 // Export the MD3 colors for direct access if needed

@@ -89,3 +89,19 @@ The same for ios with exception that it should connect manually to the host and 
 
 Always run `eas-update` before trying to run a preview/production build and upload the source files properly with `npx sentry-expo-upload-sourcemaps dist` (to do that the environment variable `SENTRY_AUTH_TOKEN` has to be set in the terminal)
 Then run the build and be happy
+
+### Video Conversion
+
+ffmpeg -i skipping-rope.mov \
+ -c:v libx264 \
+ -profile:v main \
+ -level 4.0 \
+ -pix_fmt yuv420p \
+ -crf 22 \
+ -preset medium \
+ -x264-params "keyint=60:min-keyint=30:scenecut=40" \
+ -vf "scale=-2:720" \
+ -c:a aac \
+ -b:a 128k \
+ -movflags +faststart \
+ skipping-rope.mp4

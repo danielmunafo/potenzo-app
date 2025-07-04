@@ -1,4 +1,5 @@
 export type Workout = {
+  id: string;
   title: string;
   minutes: number;
   kcal: number;
@@ -9,6 +10,7 @@ export type Workout = {
 };
 
 export type Exercise = {
+  id: string;
   name: string;
   assetId: any;
   duration: number;

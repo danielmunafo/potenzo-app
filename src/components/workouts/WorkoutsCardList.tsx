@@ -12,24 +12,27 @@ import { Exercise, Workout } from '../../constants/types';
 
 const exercises: Exercise[] = [
   {
+    id: `1`,
     name: 'skippingRope',
-    assetId: require('@/assets/gifs/skipping-rope.gif'),
+    assetId: require('@/assets/gifs/skipping-rope.mp4'),
     duration: 15,
     sets: 10,
     reps: 100,
     rest: 20,
   },
   {
+    id: `2`,
     name: 'humanFlag',
-    assetId: require('@/assets/gifs/human-flag.gif'),
+    assetId: require('@/assets/gifs/human-flag.mp4'),
     duration: 15,
     sets: 10,
     reps: 100,
     rest: 20,
   },
   {
+    id: `3`,
     name: 'pressToHandstand',
-    assetId: require('@/assets/gifs/press-to-handstand.gif'),
+    assetId: require('@/assets/gifs/press-to-handstand.mp4'),
     duration: 15,
     sets: 10,
     reps: 100,
@@ -56,6 +59,7 @@ const workoutPlaces = ['anywhere', 'park'];
 
 const workoutData: Workout[] = [
   {
+    id: 't1',
     title: 'workout1',
     minutes: 15,
     kcal: 150,
@@ -65,6 +69,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[0],
   },
   {
+    id: 't2',
     title: 'workout2',
     minutes: 15,
     kcal: 150,
@@ -74,6 +79,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[1],
   },
   {
+    id: 't3',
     title: 'workout3',
     minutes: 15,
     kcal: 150,
@@ -83,6 +89,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[2],
   },
   {
+    id: 't4',
     title: 'workout4',
     minutes: 15,
     kcal: 150,
@@ -92,6 +99,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[3],
   },
   {
+    id: 't5',
     title: 'workout5',
     minutes: 15,
     kcal: 150,
@@ -101,6 +109,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[4],
   },
   {
+    id: 't6',
     title: 'workout6',
     minutes: 15,
     kcal: 150,
@@ -110,6 +119,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[5],
   },
   {
+    id: 't7',
     title: 'workout7',
     minutes: 15,
     kcal: 150,
@@ -119,6 +129,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[6],
   },
   {
+    id: 't8',
     title: 'workout8',
     minutes: 15,
     kcal: 150,
@@ -128,6 +139,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[7],
   },
   {
+    id: 't9',
     title: 'workout9',
     minutes: 15,
     kcal: 150,
@@ -137,6 +149,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[8],
   },
   {
+    id: '10',
     title: 'workout10',
     minutes: 15,
     kcal: 150,
@@ -146,6 +159,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[9],
   },
   {
+    id: '11',
     title: 'workout11',
     minutes: 15,
     kcal: 150,
@@ -155,6 +169,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[10],
   },
   {
+    id: '12',
     title: 'workout12',
     minutes: 15,
     kcal: 150,
@@ -164,6 +179,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[9],
   },
   {
+    id: '13',
     title: 'workout13',
     minutes: 15,
     kcal: 150,
@@ -173,6 +189,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[8],
   },
   {
+    id: '14',
     title: 'workout14',
     minutes: 15,
     kcal: 150,
@@ -182,6 +199,7 @@ const workoutData: Workout[] = [
     icon: workoutIcons[7],
   },
   {
+    id: '15',
     title: 'workout15',
     minutes: 15,
     kcal: 150,
@@ -277,7 +295,12 @@ export function WorkoutCardList() {
 
   const renderItem = useCallback(
     ({ item, index }: { item: Workout; index: number }) => (
-      <WorkoutCard workout={item} index={index} onPress={handleCardPress} />
+      <WorkoutCard
+        key={item.id}
+        workout={item}
+        index={index}
+        onPress={handleCardPress}
+      />
     ),
     [handleCardPress]
   );
@@ -286,7 +309,6 @@ export function WorkoutCardList() {
     <FlatList
       accessibilityLabel="workouts-list"
       data={workoutData}
-      keyExtractor={(_, idx) => idx.toString()}
       contentContainerStyle={{
         paddingVertical: 0,
         paddingHorizontal: getSpacingToken('spacing-md'),

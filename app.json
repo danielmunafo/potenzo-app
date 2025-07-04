@@ -44,7 +44,8 @@
           "project": "app",
           "organization": "potenzo"
         }
-      ]
+      ],
+      "react-native-video"
     ],
     "experiments": {
       "typedRoutes": true
