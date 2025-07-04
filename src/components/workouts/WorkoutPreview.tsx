@@ -9,7 +9,12 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
+import {
+  BackHandler,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { Button, IconButton, Text } from 'react-native-paper';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, {
@@ -19,8 +24,6 @@ import Carousel, {
 import Video, { VideoRef } from 'react-native-video';
 import { Exercise } from '../../constants/types';
 import { ScreenContainer } from '../ScreenContainer';
-
-const { width, height } = Dimensions.get('window');
 
 export default function WorkoutPreview() {
   const { t } = useTranslation();
@@ -32,6 +35,7 @@ export default function WorkoutPreview() {
   const carouselRef = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const videoRefs = useRef<(VideoRef | null)[]>([]);
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     return () => {
@@ -117,28 +121,20 @@ export default function WorkoutPreview() {
       <Carousel
         ref={carouselRef}
         width={width}
-        height={height}
         data={workout.exercises}
         onProgressChange={progress}
         loop={true}
         onSnapToItem={idx => setActiveIndex(idx)}
         renderItem={({ item, index }) => (
-          <View
-            key={item.assetId}
-            style={[
-              StyleSheet.absoluteFill,
-              containerPaddingStyle,
-              styles.overlayContainer,
-            ]}
-          >
+          <>
             <Video
               ref={ref => {
                 videoRefs.current[index] = ref;
               }}
               key={`${item.assetId}+${workout.id}`}
               source={{ uri: item.assetId }}
-              resizeMode="cover"
-              style={StyleSheet.absoluteFill}
+              resizeMode="none"
+              style={[{ width: '100%', height: '100%' }]}
               paused={index !== activeIndex}
               repeat={true}
               onError={e => console.warn('Video error', e)}
@@ -155,11 +151,10 @@ export default function WorkoutPreview() {
                 {t(`exercises.${item.name}.description`)}
               </Text>
             </View>
-          </View>
+          </>
         )}
       />
 
-      {/* Add navigation touch areas */}
       <View style={styles.leftNavigationArea} pointerEvents="box-none">
         <View
           style={styles.touchArea}
@@ -299,7 +294,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     padding: getSpacingToken('spacing-md'),
-    bottom: getSpacingToken('spacing-xl'),
+    bottom: getSpacingToken('spacing-md'),
     width: '100%',
     minHeight: 120,
   },
