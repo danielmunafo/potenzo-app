@@ -4,8 +4,9 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import PagerView from 'react-native-pager-view';
 import { Button, IconButton, Text } from 'react-native-paper';
 import { useStatusBarContext } from '../../contexts/StatusBarContext';
 import { useTabsContext } from '../../contexts/TabsContext';
@@ -18,8 +19,7 @@ export default function WorkoutPreview() {
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
   const { setIsTabsVisible } = useTabsContext();
   const { setIsStatusBarVisible } = useStatusBarContext();
-
-  const exercise = workout?.exercises[currentExerciseIndex];
+  const pagerRef = useRef<PagerView>(null);
 
   useEffect(() => {
     setIsStatusBarVisible(false);
@@ -32,19 +32,24 @@ export default function WorkoutPreview() {
     }
   }, [workout]);
 
+  const handlePageSelected = (event: any) => {
+    const { position } = event.nativeEvent;
+    setCurrentExerciseIndex(position);
+  };
+
   const navigateToPrevious = () => {
     if (workout && currentExerciseIndex > 0) {
-      setCurrentExerciseIndex(currentExerciseIndex - 1);
+      pagerRef.current?.setPage(currentExerciseIndex - 1);
     }
   };
 
   const navigateToNext = () => {
     if (workout && currentExerciseIndex < workout.exercises.length - 1) {
-      setCurrentExerciseIndex(currentExerciseIndex + 1);
+      pagerRef.current?.setPage(currentExerciseIndex + 1);
     }
   };
 
-  if (!exercise || !workout) {
+  if (!workout) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
   }
 
@@ -56,33 +61,46 @@ export default function WorkoutPreview() {
         activeOpacity={0.3}
       />
 
-      {/* Right navigation area */}
       <TouchableOpacity
         style={styles.rightNavigationArea}
         onPress={navigateToNext}
         activeOpacity={0.3}
       />
 
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          styles.overlayContainer,
-          containerPaddingStyle,
-        ]}
+      <PagerView
+        ref={pagerRef}
+        style={styles.pagerView}
+        initialPage={0}
+        onPageSelected={handlePageSelected}
+        scrollEnabled={true}
+        orientation="horizontal"
       >
-        <Text style={styles.text} variant="displayLarge">
-          {t(`exercises.${exercise.name}.name`)}
-        </Text>
-        <Text style={styles.text} variant="bodyMedium">
-          {t(`exercises.${exercise.name}.description`)}
-        </Text>
-        <Image
-          accessibilityLabel="preview-workout-icon"
-          source={require('@/assets/images/splash-icon.png')}
-          style={styles.splashIcon}
-          contentFit="contain"
-        />
-      </View>
+        {workout.exercises.map((exercise, index) => (
+          <View key={index} style={styles.pageContainer} collapsable={false}>
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                styles.overlayContainer,
+                containerPaddingStyle,
+              ]}
+            >
+              <Text style={styles.text} variant="displayLarge">
+                {t(`exercises.${exercise.name}.name`)}
+              </Text>
+              <Text style={styles.text} variant="bodyMedium">
+                {t(`exercises.${exercise.name}.description`)}
+              </Text>
+              <Image
+                accessibilityLabel="preview-workout-icon"
+                source={require('@/assets/images/splash-icon.png')}
+                style={styles.splashIcon}
+                contentFit="contain"
+              />
+            </View>
+          </View>
+        ))}
+      </PagerView>
+
       <View style={styles.bottomButtons}>
         <IconButton
           style={styles.overNavigationArea}
@@ -134,6 +152,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  pagerView: {
+    flex: 1,
+  },
+  pageContainer: {
+    flex: 1,
+  },
   overlayContainer: {
     flex: 1,
     justifyContent: 'space-between',
@@ -159,7 +183,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
-    width: '30%',
+    width: '20%',
     height: '100%',
     zIndex: 10,
   },
@@ -167,7 +191,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    width: '30%',
+    width: '20%',
     height: '100%',
     zIndex: 10,
   },
