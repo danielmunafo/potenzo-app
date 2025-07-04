@@ -44,13 +44,6 @@
           "project": "app",
           "organization": "potenzo"
         }
-      ],
-      [
-        "expo-video",
-        {
-          "supportsBackgroundPlayback": false,
-          "supportsPictureInPicture": true
-        }
       ]
     ],
     "experiments": {

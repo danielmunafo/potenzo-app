@@ -69,7 +69,7 @@ export default function WorkoutPreview() {
 
       <PagerView
         ref={pagerRef}
-        style={styles.pagerView}
+        style={[styles.pagerView, StyleSheet.absoluteFill]}
         initialPage={0}
         onPageSelected={handlePageSelected}
         scrollEnabled={true}
@@ -77,6 +77,11 @@ export default function WorkoutPreview() {
       >
         {workout.exercises.map((exercise, index) => (
           <View key={index} style={styles.pageContainer} collapsable={false}>
+            <Image
+              source={exercise.assetId}
+              style={StyleSheet.absoluteFill}
+              contentFit="cover"
+            />
             <View
               style={[
                 StyleSheet.absoluteFill,
@@ -149,9 +154,6 @@ export default function WorkoutPreview() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   pagerView: {
     flex: 1,
   },
@@ -206,7 +208,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 80,
     padding: getSpacingToken('spacing-md'),
-    bottom: 0,
+    bottom: getSpacingToken('spacing-xl'),
     width: '100%',
   },
 });

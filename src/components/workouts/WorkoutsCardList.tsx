@@ -13,7 +13,7 @@ import { Exercise, Workout } from '../../constants/types';
 const exercises: Exercise[] = [
   {
     name: 'skippingRope',
-    assetId: require('@/assets/videos/skipping-rope.mov'),
+    assetId: require('@/assets/gifs/skipping-rope.gif'),
     duration: 15,
     sets: 10,
     reps: 100,
@@ -21,7 +21,7 @@ const exercises: Exercise[] = [
   },
   {
     name: 'humanFlag',
-    assetId: require('@/assets/videos/human-flag.mov'),
+    assetId: require('@/assets/gifs/human-flag.gif'),
     duration: 15,
     sets: 10,
     reps: 100,
@@ -29,7 +29,7 @@ const exercises: Exercise[] = [
   },
   {
     name: 'pressToHandstand',
-    assetId: require('@/assets/videos/press-to-handstand.mov'),
+    assetId: require('@/assets/gifs/press-to-handstand.gif'),
     duration: 15,
     sets: 10,
     reps: 100,
