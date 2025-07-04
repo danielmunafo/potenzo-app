@@ -73,23 +73,21 @@
     "restDay": "Rest Day",
     "completed": "Completed",
     "inProgress": "In Progress",
-    "list": [
-      { "title": "Free Body Work" },
-      { "title": "Burn Machine" },
-      { "title": "HIIT All Summer" },
-      { "title": "Cali HIIT" },
-      { "title": "Morning Mobility" },
-      { "title": "Power Push" },
-      { "title": "Core Crusher" },
-      { "title": "Leg Day Express" },
-      { "title": "Full Body Blast" },
-      { "title": "Stretch & Flex" },
-      { "title": "Quick Sweat" },
-      { "title": "Park Power" },
-      { "title": "Sunrise HIIT" },
-      { "title": "Urban Cardio" },
-      { "title": "Zen Strength" }
-    ],
+    "workout1": "Free Body Work",
+    "workout2": "Burn Machine",
+    "workout3": "HIIT All Summer",
+    "workout4": "Cali HIIT",
+    "workout5": "Morning Mobility",
+    "workout6": "Power Push",
+    "workout7": "Core Crusher",
+    "workout8": "Leg Day Express",
+    "workout9": "Full Body Blast",
+    "workout10": "Stretch & Flex",
+    "workout11": "Quick Sweat",
+    "workout12": "Park Power",
+    "workout13": "Sunrise HIIT",
+    "workout14": "Urban Cardio",
+    "workout15": "Zen Strength",
     "time": "⏱️ {{minutes}} min",
     "kcal": "🔥 ~{{kcal}} kcal",
     "place": {
@@ -119,5 +117,22 @@
     "theme": "Theme",
     "notifications": "Notifications",
     "about": "About"
+  },
+  "exercises": {
+    "skippingRope": {
+      "name": "Skipping Rope",
+      "description": "Jump rope exercise for cardio and coordination"
+    },
+    "humanFlag": {
+      "name": "Human Flag",
+      "description": "Advanced calisthenics move for core and upper body strength"
+    },
+    "pressToHandstand": {
+      "name": "Press to Handstand",
+      "description": "Dynamic movement to develop shoulder strength and balance"
+    }
+  },
+  "preview": {
+    "start": "Start!"
   }
 }

@@ -15,16 +15,11 @@
         "ITSAppUsesNonExemptEncryption": false
       }
     },
-    "androidStatusBar": {
-      "translucent": false,
-      "backgroundColor": "#ffffff"
-    },
     "android": {
       "package": "com.potenzo.app",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/icon.png"
-      },
-      "edgeToEdgeEnabled": true
+      }
     },
     "web": {
       "bundler": "metro",
@@ -49,7 +44,10 @@
           "project": "app",
           "organization": "potenzo"
         }
-      ]
+      ],
+      "react-native-video",
+      "expo-font",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

@@ -20,22 +20,25 @@ import amplitudeService from '@/services/amplitudeService';
 import sentryService from '@/services/sentryService';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { useStatusBarContext } from '../contexts/StatusBarContext';
 
 export function TermsAndConditionsScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const theme = useTheme();
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     shouldShowTrackingModal: isTrackingModalVisible,
     updateTermsAccepted,
     updateTrackingConsent,
     trackingConsent,
   } = useUserConsents();
+  const { setIsStatusBarVisible } = useStatusBarContext();
 
   const handleGetStarted = async () => {
     if (isTermsAccepted) {
+      setIsLoading(true);
       amplitudeService.track('user-journey-terms-and-conditions-finished');
       await updateTermsAccepted(isTermsAccepted);
       router.replace('/');
@@ -43,8 +46,9 @@ export function TermsAndConditionsScreen() {
   };
 
   useEffect(() => {
+    setIsStatusBarVisible(false);
     amplitudeService.track('user-journey-terms-and-conditions-started');
-  }, []);
+  }, [setIsStatusBarVisible]);
 
   useEffect(() => {
     if (!isTrackingModalVisible && trackingConsent !== undefined) {
@@ -71,7 +75,6 @@ export function TermsAndConditionsScreen() {
       accessibilityLabel="terms-screen-container"
       useSentryWrapper={false}
     >
-      <StatusBar hidden animated />
       <View
         accessibilityLabel="terms-screen-content-container"
         style={styles.contentContainer}
@@ -181,6 +184,7 @@ export function TermsAndConditionsScreen() {
           <Button
             mode="contained"
             onPress={handleGetStarted}
+            loading={isLoading}
             accessibilityLabel="terms-screen-get-started-button"
             style={[
               styles.getStartedButton,

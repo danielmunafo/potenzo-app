@@ -19,6 +19,12 @@ import amplitudeService from '@/services/amplitudeService';
 import sentryService from '@/services/sentryService';
 import { AppThemeProvider } from '@/theme/ThemeProvider';
 import { StatusBar } from 'expo-status-bar';
+import {
+  StatusBarProvider,
+  useStatusBarContext,
+} from '../contexts/StatusBarContext';
+import { TabsProvider, useTabsContext } from '../contexts/TabsContext';
+import { WorkoutProvider } from '../contexts/WorkoutContext';
 import { useStatusBarStyle } from '../hooks/useStatusBarStyle';
 import { getColorToken, getSpacingToken } from '../theme/FigmaTokens';
 
@@ -46,6 +52,8 @@ function isAppReadyToLoad(
 const App = () => {
   const userDeviceColorScheme = useColorScheme();
   const statusBarStyle = useStatusBarStyle();
+  const { isTabsVisible, setIsTabsVisible } = useTabsContext();
+  const { isStatusBarVisible } = useStatusBarContext();
   const {
     isLoading: consentLoading,
     needsTrackingDecision,
@@ -84,6 +92,10 @@ const App = () => {
     hideSplashScreen();
   }, [fontsLoaded, consentLoading, trackingConsent, needsTrackingDecision]);
 
+  useEffect(() => {
+    setIsTabsVisible(termsAccepted);
+  }, [termsAccepted, setIsTabsVisible]);
+
   if (!isAppReadyToLoad(fontsLoaded, consentLoading)) {
     return null;
   }
@@ -94,16 +106,19 @@ const App = () => {
 
   return (
     <>
-      <StatusBar style={statusBarStyle} animated />
+      <StatusBar
+        style={statusBarStyle}
+        hidden={!isStatusBarVisible}
+        animated
+        translucent
+      />
       <AppThemeProvider systemTheme={systemTheme}>
         <ThemeProvider value={navigationTheme}>
           <Tabs
             screenOptions={{
               tabBarStyle: {
-                borderTopWidth: 1,
-                borderTopColor: getColorToken('border-secondary'),
                 backgroundColor: getColorToken('background-primary'),
-                display: !termsAccepted ? 'none' : 'flex',
+                display: isTabsVisible ? 'flex' : 'none',
               },
               tabBarLabelStyle: {
                 marginTop: getSpacingToken('spacing-xs'),
@@ -134,7 +149,7 @@ const App = () => {
               }}
             />
             <Tabs.Screen
-              name="workouts"
+              name="workouts/index"
               options={{
                 title: t('navigation.workouts'),
                 tabBarIcon: ({ color, size }) => (
@@ -160,9 +175,15 @@ const App = () => {
 
 const RootLayout: React.FC = () => {
   return (
-    <ConsentProvider>
-      <App />
-    </ConsentProvider>
+    <StatusBarProvider>
+      <TabsProvider>
+        <ConsentProvider>
+          <WorkoutProvider>
+            <App />
+          </WorkoutProvider>
+        </ConsentProvider>
+      </TabsProvider>
+    </StatusBarProvider>
   );
 };
 
