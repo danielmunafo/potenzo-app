@@ -45,7 +45,9 @@
           "organization": "potenzo"
         }
       ],
-      "react-native-video"
+      "react-native-video",
+      "expo-font",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
