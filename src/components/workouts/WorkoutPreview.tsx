@@ -21,8 +21,9 @@ import Carousel, {
   ICarouselInstance,
   Pagination,
 } from 'react-native-reanimated-carousel';
-import Video, { VideoRef } from 'react-native-video';
+import Video, { BufferingStrategyType, VideoRef } from 'react-native-video';
 import { Exercise } from '../../constants/types';
+import { Logger } from '../../services/loggerService';
 import { ScreenContainer } from '../ScreenContainer';
 
 export default function WorkoutPreview() {
@@ -85,6 +86,56 @@ export default function WorkoutPreview() {
     }, [onBack])
   );
 
+  const renderCarouselItem = useCallback(
+    ({ item, index }: { item: Exercise; index: number }) => {
+      const isPaused = index !== activeIndex;
+      return (
+        <>
+          <Video
+            controls={false}
+            disableFocus
+            focusable={false}
+            hideShutterView={true}
+            playInBackground={false}
+            playWhenInactive={false}
+            key={`${item.assetId}+${workout?.id}`}
+            bufferingStrategy={BufferingStrategyType.DEPENDING_ON_MEMORY}
+            source={{
+              uri: item.assetId,
+              isNetwork: false,
+              isAsset: true,
+              isLocalAssetFile: true,
+              shouldCache: false,
+              metadata: { title: t(`exercises.${item.name}.name`) },
+            }}
+            resizeMode="stretch"
+            paused={isPaused}
+            style={[{ width: '100%', height: '100%' }]}
+            repeat={true}
+            onError={e => Logger.error('Video error', e)}
+            muted={true}
+          />
+          <View
+            style={{
+              height: '100%',
+              width: '100%',
+              backgroundColor: 'red',
+              padding: getSpacingToken('spacing-md'),
+            }}
+          >
+            <Text style={styles.text} variant="displayLarge">
+              {t(`exercises.${item.name}.name`)}
+            </Text>
+            <Text style={styles.text} variant="titleLarge">
+              {t(`exercises.${item.name}.description`)}
+            </Text>
+          </View>
+        </>
+      );
+    },
+    [workout, activeIndex, t]
+  );
+
   if (!workout) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
   }
@@ -121,42 +172,11 @@ export default function WorkoutPreview() {
       <Carousel
         ref={carouselRef}
         width={width}
-        data={workout.exercises}
+        data={[...workout.exercises]}
         onProgressChange={progress}
         loop={true}
         onSnapToItem={idx => setActiveIndex(idx)}
-        renderItem={({ item, index }) => (
-          <>
-            <Video
-              ref={ref => {
-                videoRefs.current[index] = ref;
-              }}
-              controls={false}
-              playInBackground={false}
-              playWhenInactive={false}
-              key={`${item.assetId}+${workout.id}`}
-              source={{ uri: item.assetId }}
-              resizeMode="cover"
-              style={[{ width: '100%', height: '100%' }]}
-              paused={index !== activeIndex}
-              repeat={true}
-              onError={e => console.warn('Video error', e)}
-              muted={true}
-            />
-            <View
-              style={{
-                padding: getSpacingToken('spacing-md'),
-              }}
-            >
-              <Text style={styles.text} variant="displayLarge">
-                {t(`exercises.${item.name}.name`)}
-              </Text>
-              <Text style={styles.text} variant="titleLarge">
-                {t(`exercises.${item.name}.description`)}
-              </Text>
-            </View>
-          </>
-        )}
+        renderItem={renderCarouselItem}
       />
 
       <View style={styles.leftNavigationArea} pointerEvents="box-none">
@@ -266,7 +286,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
-    width: '10%',
+    width: '15%',
     height: '100%',
     zIndex: 20,
   },
@@ -274,7 +294,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    width: '10%',
+    width: '15%',
     height: '100%',
     zIndex: 20,
   },
@@ -283,7 +303,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   overNavigationArea: {
-    zIndex: 11,
+    zIndex: 21,
   },
   bottomArea: {
     flex: 1,
@@ -291,6 +311,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     bottom: 0,
+    zIndex: 21,
   },
   bottomButtons: {
     flexDirection: 'column',

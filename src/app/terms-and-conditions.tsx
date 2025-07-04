@@ -48,7 +48,7 @@ export function TermsAndConditionsScreen() {
   useEffect(() => {
     setIsStatusBarVisible(false);
     amplitudeService.track('user-journey-terms-and-conditions-started');
-  }, []);
+  }, [setIsStatusBarVisible]);
 
   useEffect(() => {
     if (!isTrackingModalVisible && trackingConsent !== undefined) {
