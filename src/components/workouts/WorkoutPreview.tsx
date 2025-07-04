@@ -131,13 +131,17 @@ export default function WorkoutPreview() {
               ref={ref => {
                 videoRefs.current[index] = ref;
               }}
+              controls={false}
+              playInBackground={false}
+              playWhenInactive={false}
               key={`${item.assetId}+${workout.id}`}
               source={{ uri: item.assetId }}
-              resizeMode="none"
+              resizeMode="cover"
               style={[{ width: '100%', height: '100%' }]}
               paused={index !== activeIndex}
               repeat={true}
               onError={e => console.warn('Video error', e)}
+              muted={true}
             />
             <View
               style={{
