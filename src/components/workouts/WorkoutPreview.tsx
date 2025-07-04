@@ -1,3 +1,5 @@
+import { useStatusBarContext } from '@/contexts/StatusBarContext';
+import { useTabsContext } from '@/contexts/TabsContext';
 import { useWorkoutContext } from '@/contexts/WorkoutContext';
 import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -8,8 +10,6 @@ import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import { Button, IconButton, Text } from 'react-native-paper';
-import { useStatusBarContext } from '../../contexts/StatusBarContext';
-import { useTabsContext } from '../../contexts/TabsContext';
 import { ScreenContainer } from '../ScreenContainer';
 
 export default function WorkoutPreview() {

@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 
 import { ScreenContainer } from '@/components/ScreenContainer';
+import WorkoutPreview from '@/components/workouts/WorkoutPreview';
 import { WorkoutCardList } from '@/components/workouts/WorkoutsCardList';
+import { useStatusBarContext } from '@/contexts/StatusBarContext';
+import { useWorkoutContext } from '@/contexts/WorkoutContext';
 import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
-import WorkoutPreview from '../../components/workouts/WorkoutPreview';
-import { useWorkoutContext } from '../../contexts/WorkoutContext';
 
 export function WorkoutsScreen() {
   const { t } = useTranslation();
+  const { setIsStatusBarVisible } = useStatusBarContext();
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
   const { workout } = useWorkoutContext();
+
+  useEffect(() => {
+    setIsStatusBarVisible(true);
+  }, [setIsStatusBarVisible]);
 
   if (workout) {
     return <WorkoutPreview />;
