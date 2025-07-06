@@ -11,17 +11,27 @@ import { Image } from 'expo-image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BackHandler,
+  Platform,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
-import { Button, IconButton, Text } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  IconButton,
+  Text,
+} from 'react-native-paper';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, {
   ICarouselInstance,
   Pagination,
 } from 'react-native-reanimated-carousel';
-import Video, { BufferingStrategyType, VideoRef } from 'react-native-video';
+import Video, {
+  BufferingStrategyType,
+  ResizeMode,
+  VideoRef,
+} from 'react-native-video';
 import { Exercise } from '../../constants/types';
 import { Logger } from '../../services/loggerService';
 import { ScreenContainer } from '../ScreenContainer';
@@ -37,6 +47,7 @@ export default function WorkoutPreview() {
   const progress = useSharedValue<number>(0);
   const videoRefs = useRef<(VideoRef | null)[]>([]);
   const { width } = useWindowDimensions();
+  const [isReadyForDisplay, setIsReadyForDisplay] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -90,9 +101,29 @@ export default function WorkoutPreview() {
   const renderCarouselItem = useCallback(
     ({ item, index }: { item: Exercise; index: number }) => {
       const isPaused = index !== activeIndex;
+      const hiddenStyle =
+        Platform.OS === 'android'
+          ? {
+              display: (isReadyForDisplay ? 'flex' : 'none') as 'flex' | 'none',
+            }
+          : { opacity: isReadyForDisplay ? 1 : 0 };
       return (
         <>
-          <View style={[StyleSheet.absoluteFill]}>
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              { backgroundColor: getColorToken('dark-surface') },
+            ]}
+          >
+            {!isReadyForDisplay && (
+              <ActivityIndicator
+                animating={true}
+                size={50}
+                color={getColorToken('core-primary')}
+                style={{ flex: 1 }}
+              />
+            )}
+
             <Video
               controls={false}
               disableFocus
@@ -110,9 +141,16 @@ export default function WorkoutPreview() {
                 shouldCache: false,
                 metadata: { title: t(`exercises.${item.name}.name`) },
               }}
-              resizeMode="stretch"
+              onReadyForDisplay={() => setIsReadyForDisplay(true)}
+              resizeMode={ResizeMode.COVER}
               paused={isPaused}
-              style={[{ width: '100%', height: '100%' }]}
+              style={[
+                {
+                  width: '100%',
+                  height: '100%',
+                },
+                hiddenStyle,
+              ]}
               repeat={true}
               onError={e => Logger.error('Video error', e)}
               muted={true}

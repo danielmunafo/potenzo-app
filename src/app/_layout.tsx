@@ -1,3 +1,6 @@
+import 'react-native-gesture-handler';
+import 'react-native-reanimated';
+
 import {
   DarkTheme,
   DefaultTheme,
@@ -7,7 +10,6 @@ import { useFonts } from 'expo-font';
 import { Tabs, useNavigationContainerRef } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -110,12 +112,30 @@ const App = () => {
         style={statusBarStyle}
         hidden={!isStatusBarVisible}
         animated
+        hideTransitionAnimation="slide"
         translucent
       />
       <AppThemeProvider systemTheme={systemTheme}>
         <ThemeProvider value={navigationTheme}>
           <Tabs
             screenOptions={{
+              animation: 'fade',
+              tabBarVisibilityAnimationConfig: {
+                show: {
+                  animation: 'timing',
+                  config: { duration: 100 },
+                },
+                hide: {
+                  animation: 'timing',
+                  config: { duration: 100 },
+                },
+              },
+              transitionSpec: {
+                animation: 'timing',
+                config: {
+                  duration: 200,
+                },
+              },
               tabBarStyle: {
                 backgroundColor: getColorToken('background-primary'),
                 display: isTabsVisible ? 'flex' : 'none',

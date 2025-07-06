@@ -3,6 +3,7 @@ import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
+import Animated, { SlideInUp } from 'react-native-reanimated';
 import { useStatusBarContext } from '../../contexts/StatusBarContext';
 import { useTabsContext } from '../../contexts/TabsContext';
 import { useContainerStyleWhenHiddenStatusBar } from '../../hooks/useStyleWhenHiddenStatusBar';
@@ -22,11 +23,13 @@ export function WorkoutsList() {
 
   return (
     <ScreenContainer edges={['bottom']} accessibilityLabel="workouts-screen">
-      <Surface style={[styles.banner, containerPaddingStyle]}>
-        <Text variant="titleMedium" style={styles.bannerText}>
-          {t('workouts.banner.title')}
-        </Text>
-      </Surface>
+      <Animated.View entering={SlideInUp}>
+        <Surface style={[styles.banner, containerPaddingStyle]}>
+          <Text variant="titleMedium" style={styles.bannerText}>
+            {t('workouts.banner.title')}
+          </Text>
+        </Surface>
+      </Animated.View>
 
       <WorkoutCardList />
     </ScreenContainer>
