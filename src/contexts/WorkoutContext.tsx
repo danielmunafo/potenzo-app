@@ -4,6 +4,8 @@ import React, { createContext, useContext, useState } from 'react';
 interface WorkoutContextType {
   workout: Workout | undefined;
   setWorkout: (w: Workout | undefined) => void;
+  step: number;
+  setStep: (s: number) => void;
 }
 
 const WorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
@@ -13,10 +15,13 @@ interface WorkoutProviderProps {
 
 export function WorkoutProvider({ children }: WorkoutProviderProps) {
   const [workout, setWorkout] = useState<Workout | undefined>(undefined);
+  const [step, setStep] = useState<number>(0);
 
   const value: WorkoutContextType = {
     workout,
     setWorkout,
+    step,
+    setStep,
   };
   return (
     <WorkoutContext.Provider value={value}>{children}</WorkoutContext.Provider>

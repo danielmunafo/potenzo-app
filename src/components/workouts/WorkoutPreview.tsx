@@ -8,7 +8,7 @@ import { typography } from '@/theme/MaterialTheme';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
 import { Image } from 'expo-image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BackHandler,
   StyleSheet,
@@ -28,7 +28,7 @@ import { ScreenContainer } from '../ScreenContainer';
 
 export default function WorkoutPreview() {
   const { t } = useTranslation();
-  const { workout, setWorkout } = useWorkoutContext();
+  const { workout, setWorkout, setStep, step } = useWorkoutContext();
   const [activeIndex, setActiveIndex] = useState(0);
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
   const { setIsTabsVisible } = useTabsContext();
@@ -43,7 +43,7 @@ export default function WorkoutPreview() {
       setActiveIndex(-1);
       videoRefs.current = [];
     };
-  }, []);
+  }, [setWorkout]);
 
   const onPressPagination = (index: number) => {
     carouselRef.current?.scrollTo({
@@ -68,7 +68,8 @@ export default function WorkoutPreview() {
     setWorkout(undefined);
     setIsTabsVisible(true);
     setIsStatusBarVisible(true);
-  }, [setWorkout, setIsTabsVisible, setIsStatusBarVisible]);
+    setStep(step - 1);
+  }, [setWorkout, setIsTabsVisible, setIsStatusBarVisible, setStep, step]);
 
   useFocusEffect(
     useCallback(() => {
@@ -148,6 +149,67 @@ export default function WorkoutPreview() {
     [workout, activeIndex, t, containerPaddingStyle]
   );
 
+  const getReady = useCallback(() => setStep(step + 1), [setStep, step]);
+
+  const bottomButtons = useMemo(
+    () => (
+      <View style={styles.bottomButtons}>
+        <Image
+          accessibilityLabel="preview-workout-icon"
+          source={require('@/assets/images/splash-icon.png')}
+          style={styles.splashIcon}
+          contentFit="contain"
+        />
+        <View style={styles.bottomArea}>
+          <IconButton
+            style={styles.overNavigationArea}
+            mode="contained"
+            containerColor={'rgba(14, 14, 14, 0.5)'}
+            icon={() => (
+              <MaterialIcons
+                name="chevron-left"
+                size={24}
+                color={getColorToken('core-primary')}
+              />
+            )}
+            onPress={onBack}
+          />
+          <Button
+            onPress={getReady}
+            style={[
+              styles.overNavigationArea,
+              { flex: 1, marginHorizontal: getSpacingToken('spacing-md') },
+            ]}
+            buttonColor={getColorToken('core-primary')}
+            labelStyle={{
+              ...typography.titleMedium,
+              lineHeight: 28,
+              fontSize: 20,
+              color: getColorToken('onPrimary'),
+            }}
+            mode="elevated"
+          >
+            {t('preview.getReady')}
+          </Button>
+          <IconButton
+            style={styles.overNavigationArea}
+            mode="contained"
+            containerColor={'rgba(14, 14, 14, 0.5)'}
+            icon={() => (
+              <MaterialIcons
+                name="info"
+                size={24}
+                color={getColorToken('core-primary')}
+              />
+            )}
+            onPress={onBack}
+          />
+        </View>
+      </View>
+    ),
+    [t, onBack, getReady]
+  );
+
   if (!workout) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
   }
@@ -210,58 +272,7 @@ export default function WorkoutPreview() {
         />
       </View>
 
-      <View style={styles.bottomButtons}>
-        <Image
-          accessibilityLabel="preview-workout-icon"
-          source={require('@/assets/images/splash-icon.png')}
-          style={styles.splashIcon}
-          contentFit="contain"
-        />
-        <View style={styles.bottomArea}>
-          <IconButton
-            style={styles.overNavigationArea}
-            mode="contained"
-            containerColor={'rgba(14, 14, 14, 0.5)'}
-            icon={() => (
-              <MaterialIcons
-                name="chevron-left"
-                size={24}
-                color={getColorToken('core-primary')}
-              />
-            )}
-            onPress={onBack}
-          />
-          <Button
-            style={[
-              styles.overNavigationArea,
-              { flex: 1, marginHorizontal: getSpacingToken('spacing-md') },
-            ]}
-            buttonColor={getColorToken('core-primary')}
-            labelStyle={{
-              ...typography.titleMedium,
-              lineHeight: 28,
-              fontSize: 20,
-              color: getColorToken('onPrimary'),
-            }}
-            mode="elevated"
-          >
-            {t('preview.start')}
-          </Button>
-          <IconButton
-            style={styles.overNavigationArea}
-            mode="contained"
-            containerColor={'rgba(14, 14, 14, 0.5)'}
-            icon={() => (
-              <MaterialIcons
-                name="info"
-                size={24}
-                color={getColorToken('core-primary')}
-              />
-            )}
-            onPress={onBack}
-          />
-        </View>
-      </View>
+      {bottomButtons}
     </ScreenContainer>
   );
 }

@@ -1,53 +1,24 @@
-import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { Surface, Text } from 'react-native-paper';
+import React from 'react';
 
-import { ScreenContainer } from '@/components/ScreenContainer';
+import { WorkoutGetReady } from '@/components/workouts/WorkoutGetReady';
 import WorkoutPreview from '@/components/workouts/WorkoutPreview';
-import { WorkoutCardList } from '@/components/workouts/WorkoutsCardList';
-import { useStatusBarContext } from '@/contexts/StatusBarContext';
+import { WorkoutsList } from '@/components/workouts/WorkoutsList';
 import { useWorkoutContext } from '@/contexts/WorkoutContext';
-import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
-import { useTranslation } from '@/hooks/useTranslation';
-import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+
+interface WorkoutStep {
+  Component: React.ComponentType;
+}
+const steps = new Map<number, WorkoutStep>([
+  [0, { Component: WorkoutsList }],
+  [1, { Component: WorkoutPreview }],
+  [2, { Component: WorkoutGetReady }],
+]);
 
 export function WorkoutsScreen() {
-  const { t } = useTranslation();
-  const { setIsStatusBarVisible } = useStatusBarContext();
-  const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
-  const { workout } = useWorkoutContext();
+  const { step } = useWorkoutContext();
 
-  useEffect(() => {
-    setIsStatusBarVisible(true);
-  }, [setIsStatusBarVisible]);
-
-  if (workout) {
-    return <WorkoutPreview />;
-  }
-
-  return (
-    <ScreenContainer edges={['bottom']} accessibilityLabel="workouts-screen">
-      <Surface style={[styles.banner, containerPaddingStyle]}>
-        <Text variant="titleMedium" style={styles.bannerText}>
-          {t('workouts.banner.title')}
-        </Text>
-      </Surface>
-
-      <WorkoutCardList />
-    </ScreenContainer>
-  );
+  const Component = steps.get(step)?.Component ?? React.Fragment;
+  return <Component />;
 }
-
-const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: getColorToken('core-primary'),
-    padding: getSpacingToken('spacing-md'),
-    marginBottom: getSpacingToken('spacing-md'),
-  },
-  bannerText: {
-    color: getColorToken('core-on-primary'),
-    textAlign: 'center',
-  },
-});
 
 export default WorkoutsScreen;

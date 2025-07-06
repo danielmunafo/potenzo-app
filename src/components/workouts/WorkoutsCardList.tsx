@@ -282,15 +282,16 @@ const WorkoutCard = memo(({ workout, index, onPress }: WorkoutCardProps) => {
 WorkoutCard.displayName = 'WorkoutCard';
 
 export function WorkoutCardList() {
-  const { setWorkout } = useWorkoutContext();
+  const { setWorkout, step, setStep } = useWorkoutContext();
 
   const handleCardPress = useCallback(
     (workout: Workout) => {
       if (workout) {
         setWorkout(workout);
+        setStep(step + 1);
       }
     },
-    [setWorkout]
+    [setWorkout, step, setStep]
   );
 
   const renderItem = useCallback(
