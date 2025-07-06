@@ -135,5 +135,20 @@
   },
   "preview": {
     "getReady": "Pronto?"
+  },
+  "workoutGetReady": {
+    "title": "No seu relógio, inicie um dos seguintes treinos",
+    "aerobics": "Aeróbico",
+    "functional": "Funcional",
+    "other": "Outro",
+    "heartRatePrompt": "Tente manter esta média",
+    "heartRateValue": "{{value}} bpm",
+    "focusPrompt": "Este treino foca em",
+    "focusValue": "Corpo inteiro",
+    "sweatLevelPrompt": "Nível de suor:",
+    "sweatLevelValue": "Baixo",
+    "scienceBacking": "Base científica:",
+    "studiesPage": "Página de estudos",
+    "start": "Iniciar"
   }
 }

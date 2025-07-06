@@ -134,5 +134,20 @@
   },
   "preview": {
     "getReady": "Get Ready"
+  },
+  "workoutGetReady": {
+    "title": "On your watch start one of the following workouts",
+    "aerobics": "Aerobics",
+    "functional": "Functional",
+    "other": "Other",
+    "heartRatePrompt": "Try to keep this average",
+    "heartRateValue": "{{value}} bpm",
+    "focusPrompt": "This workout focuses on",
+    "focusValue": "Whole Body",
+    "sweatLevelPrompt": "Sweat level:",
+    "sweatLevelValue": "Low",
+    "scienceBacking": "Science backing:",
+    "studiesPage": "Studies Page",
+    "start": "Start"
   }
 }
