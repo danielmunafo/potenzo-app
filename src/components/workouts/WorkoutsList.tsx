@@ -3,7 +3,7 @@ import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
 import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
-import Animated, { SlideInUp } from 'react-native-reanimated';
+import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated';
 import { useStatusBarContext } from '../../contexts/StatusBarContext';
 import { useTabsContext } from '../../contexts/TabsContext';
 import { useContainerStyleWhenHiddenStatusBar } from '../../hooks/useStyleWhenHiddenStatusBar';
@@ -23,7 +23,7 @@ export function WorkoutsList() {
 
   return (
     <ScreenContainer edges={['bottom']} accessibilityLabel="workouts-screen">
-      <Animated.View entering={SlideInUp}>
+      <Animated.View entering={SlideInUp} exiting={SlideOutUp}>
         <Surface style={[styles.banner, containerPaddingStyle]}>
           <Text variant="titleMedium" style={styles.bannerText}>
             {t('workouts.banner.title')}
@@ -38,12 +38,11 @@ export function WorkoutsList() {
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: getColorToken('core-primary'),
+    backgroundColor: getColorToken('extended-accent'),
     padding: getSpacingToken('spacing-md'),
-    marginBottom: getSpacingToken('spacing-md'),
+    marginBottom: getSpacingToken('spacing-sm'),
   },
   bannerText: {
-    color: getColorToken('core-on-primary'),
     textAlign: 'center',
   },
 });

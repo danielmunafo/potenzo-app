@@ -1,4 +1,3 @@
-import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
 import {
@@ -10,6 +9,7 @@ import { useFonts } from 'expo-font';
 import { Tabs, useNavigationContainerRef } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -115,80 +115,81 @@ const App = () => {
         hideTransitionAnimation="slide"
         translucent
       />
-      <AppThemeProvider systemTheme={systemTheme}>
+      <GestureHandlerRootView>
         <ThemeProvider value={navigationTheme}>
-          <Tabs
-            screenOptions={{
-              animation: 'fade',
-              tabBarVisibilityAnimationConfig: {
-                show: {
+          <AppThemeProvider systemTheme={systemTheme}>
+            <Tabs
+              screenOptions={{
+                animation: 'fade',
+                tabBarVisibilityAnimationConfig: {
+                  show: {
+                    animation: 'timing',
+                    config: { duration: 100 },
+                  },
+                  hide: {
+                    animation: 'timing',
+                    config: { duration: 100 },
+                  },
+                },
+                transitionSpec: {
                   animation: 'timing',
-                  config: { duration: 100 },
+                  config: {
+                    duration: 200,
+                  },
                 },
-                hide: {
-                  animation: 'timing',
-                  config: { duration: 100 },
+                tabBarStyle: {
+                  display: isTabsVisible ? 'flex' : 'none',
                 },
-              },
-              transitionSpec: {
-                animation: 'timing',
-                config: {
-                  duration: 200,
+                tabBarLabelStyle: {
+                  marginTop: getSpacingToken('spacing-xs'),
+                  fontFamily: 'OpenSans',
+                  fontSize: 8,
                 },
-              },
-              tabBarStyle: {
-                backgroundColor: getColorToken('background-primary'),
-                display: isTabsVisible ? 'flex' : 'none',
-              },
-              tabBarLabelStyle: {
-                marginTop: getSpacingToken('spacing-xs'),
-                fontFamily: 'OpenSans-Bold',
-                fontSize: 10,
-              },
-              tabBarActiveTintColor: getColorToken('core-primary'),
-              headerShown: false,
-              tabBarButton: props => <HapticTab {...props} />,
-            }}
-          >
-            <Tabs.Screen
-              name="index"
-              options={{
-                href: null,
+                tabBarActiveTintColor: getColorToken('primary'),
+                headerShown: false,
+                tabBarButton: props => <HapticTab {...props} />,
               }}
-            />
-            <Tabs.Screen
-              name="terms-and-conditions"
-              options={{
-                href: null,
-              }}
-            />
-            <Tabs.Screen
-              name="+not-found"
-              options={{
-                href: null,
-              }}
-            />
-            <Tabs.Screen
-              name="workouts/index"
-              options={{
-                title: t('navigation.workouts'),
-                tabBarIcon: ({ color, size }) => (
-                  <IconSymbol name="dumbbell" size={size} color={color} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="settings"
-              options={{
-                title: t('navigation.profile'),
-                tabBarIcon: ({ color, size }) => (
-                  <IconSymbol name="gearshape" size={size} color={color} />
-                ),
-              }}
-            />
-          </Tabs>
+            >
+              <Tabs.Screen
+                name="index"
+                options={{
+                  href: null,
+                }}
+              />
+              <Tabs.Screen
+                name="terms-and-conditions"
+                options={{
+                  href: null,
+                }}
+              />
+              <Tabs.Screen
+                name="+not-found"
+                options={{
+                  href: null,
+                }}
+              />
+              <Tabs.Screen
+                name="workouts/index"
+                options={{
+                  title: t('navigation.workouts'),
+                  tabBarIcon: ({ color, size }) => (
+                    <IconSymbol name="dumbbell" size={size} color={color} />
+                  ),
+                }}
+              />
+              <Tabs.Screen
+                name="settings"
+                options={{
+                  title: t('navigation.profile'),
+                  tabBarIcon: ({ color, size }) => (
+                    <IconSymbol name="gearshape" size={size} color={color} />
+                  ),
+                }}
+              />
+            </Tabs>
+          </AppThemeProvider>
         </ThemeProvider>
-      </AppThemeProvider>
+      </GestureHandlerRootView>
     </>
   );
 };

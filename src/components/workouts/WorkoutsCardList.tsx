@@ -1,10 +1,6 @@
 import { useWorkoutContext } from '@/contexts/WorkoutContext';
 import { useTranslation } from '@/hooks/useTranslation';
-import {
-  getBorderRadiusToken,
-  getColorToken,
-  getSpacingToken,
-} from '@/theme/FigmaTokens';
+import { getBorderRadiusToken, getSpacingToken } from '@/theme/FigmaTokens';
 import React, { memo, useCallback } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
@@ -333,11 +329,7 @@ export function WorkoutCardList() {
 const styles = StyleSheet.create({
   card: {
     alignItems: 'stretch',
-    backgroundColor: getColorToken('surface'),
-    borderLeftColor: getColorToken('core-primary'),
-    borderLeftWidth: getSpacingToken('spacing-sm'),
     borderRadius: getBorderRadiusToken('radius-md'),
-    elevation: 2,
     flexDirection: 'row',
     marginBottom: getSpacingToken('spacing-md'),
     minHeight: 80,
@@ -356,20 +348,16 @@ const styles = StyleSheet.create({
     gap: getSpacingToken('spacing-xs'),
   },
   chip: {
-    backgroundColor: getColorToken('core-primary'),
     borderRadius: 8,
     textAlign: 'center',
     textAlignVertical: 'center',
     fontFamily: 'OpenSans-Light',
-    color: getColorToken('core-on-primary'),
     fontSize: 10,
     marginRight: getSpacingToken('spacing-xs'),
-    paddingHorizontal: getSpacingToken('spacing-sm'),
     paddingVertical: getSpacingToken('spacing-xs'),
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: getColorToken('core-primary'),
     borderBottomRightRadius: getBorderRadiusToken('radius-md'),
     borderTopRightRadius: getBorderRadiusToken('radius-md'),
     justifyContent: 'center',
@@ -377,6 +365,5 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 36,
-    color: getColorToken('core-on-primary'),
   },
 });

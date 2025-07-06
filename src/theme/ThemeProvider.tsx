@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 
+import sentryService from '../services/sentryService';
 import { DarkMaterialTheme, LightMaterialTheme } from './MaterialTheme';
 
 type ThemeMode = 'light' | 'dark' | 'system';

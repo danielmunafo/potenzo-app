@@ -48,6 +48,13 @@ export default function WorkoutPreview() {
   const videoRefs = useRef<(VideoRef | null)[]>([]);
   const { width } = useWindowDimensions();
   const [isReadyForDisplay, setIsReadyForDisplay] = useState(false);
+  const [videoLoadingStyle, setVideoLoadingStyle] = useState(
+    Platform.OS === 'android'
+      ? {
+          display: (isReadyForDisplay ? 'flex' : 'none') as 'flex' | 'none',
+        }
+      : { opacity: isReadyForDisplay ? 1 : 0 }
+  );
 
   useEffect(() => {
     return () => {
@@ -75,6 +82,16 @@ export default function WorkoutPreview() {
     }
   }, [workout]);
 
+  useEffect(() => {
+    setVideoLoadingStyle(
+      Platform.OS === 'android'
+        ? {
+            display: (isReadyForDisplay ? 'flex' : 'none') as 'flex' | 'none',
+          }
+        : { opacity: isReadyForDisplay ? 1 : 0 }
+    );
+  }, [isReadyForDisplay]);
+
   const onBack = useCallback(() => {
     setWorkout(undefined);
     setIsTabsVisible(true);
@@ -101,25 +118,14 @@ export default function WorkoutPreview() {
   const renderCarouselItem = useCallback(
     ({ item, index }: { item: Exercise; index: number }) => {
       const isPaused = index !== activeIndex;
-      const hiddenStyle =
-        Platform.OS === 'android'
-          ? {
-              display: (isReadyForDisplay ? 'flex' : 'none') as 'flex' | 'none',
-            }
-          : { opacity: isReadyForDisplay ? 1 : 0 };
       return (
         <>
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              { backgroundColor: getColorToken('dark-surface') },
-            ]}
-          >
+          <View style={[StyleSheet.absoluteFill]}>
             {!isReadyForDisplay && (
               <ActivityIndicator
                 animating={true}
                 size={50}
-                color={getColorToken('core-primary')}
+                color={getColorToken('extended-accent')}
                 style={{ flex: 1 }}
               />
             )}
@@ -149,7 +155,7 @@ export default function WorkoutPreview() {
                   width: '100%',
                   height: '100%',
                 },
-                hiddenStyle,
+                videoLoadingStyle,
               ]}
               repeat={true}
               onError={e => Logger.error('Video error', e)}
@@ -184,7 +190,14 @@ export default function WorkoutPreview() {
         </>
       );
     },
-    [workout, activeIndex, t, containerPaddingStyle]
+    [
+      workout,
+      activeIndex,
+      t,
+      containerPaddingStyle,
+      isReadyForDisplay,
+      videoLoadingStyle,
+    ]
   );
 
   const getReady = useCallback(() => setStep(step + 1), [setStep, step]);
@@ -202,14 +215,7 @@ export default function WorkoutPreview() {
           <IconButton
             style={styles.overNavigationArea}
             mode="contained"
-            containerColor={'rgba(14, 14, 14, 0.5)'}
-            icon={() => (
-              <MaterialIcons
-                name="chevron-left"
-                size={24}
-                color={getColorToken('core-primary')}
-              />
-            )}
+            icon={() => <MaterialIcons name="chevron-left" size={24} />}
             onPress={onBack}
           />
           <Button
@@ -218,7 +224,7 @@ export default function WorkoutPreview() {
               styles.overNavigationArea,
               { flex: 1, marginHorizontal: getSpacingToken('spacing-md') },
             ]}
-            buttonColor={getColorToken('core-primary')}
+            buttonColor={getColorToken('extended-accent')}
             labelStyle={{
               ...typography.titleMedium,
               lineHeight: 28,
@@ -232,14 +238,7 @@ export default function WorkoutPreview() {
           <IconButton
             style={styles.overNavigationArea}
             mode="contained"
-            containerColor={'rgba(14, 14, 14, 0.5)'}
-            icon={() => (
-              <MaterialIcons
-                name="info"
-                size={24}
-                color={getColorToken('core-primary')}
-              />
-            )}
+            icon={() => <MaterialIcons name="info" size={24} />}
             onPress={onBack}
           />
         </View>
@@ -266,7 +265,7 @@ export default function WorkoutPreview() {
         }}
         activeDotStyle={{
           overflow: 'hidden',
-          backgroundColor: getColorToken('core-primary'),
+          backgroundColor: getColorToken('extended-accent'),
         }}
         containerStyle={{
           gap: 4,
@@ -328,7 +327,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.15)',
   },
   text: {
-    color: getColorToken('core-primary'),
+    color: 'white',
     textAlignVertical: 'center',
     textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',

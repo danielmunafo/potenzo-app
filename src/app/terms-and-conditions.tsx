@@ -18,9 +18,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useUserConsents } from '@/hooks/useUserConsents';
 import amplitudeService from '@/services/amplitudeService';
 import sentryService from '@/services/sentryService';
-import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+
 import { useRouter } from 'expo-router';
 import { useStatusBarContext } from '../contexts/StatusBarContext';
+import { getSpacingToken } from '../theme/FigmaTokens';
 
 export function TermsAndConditionsScreen() {
   const router = useRouter();
@@ -152,7 +153,6 @@ export function TermsAndConditionsScreen() {
                   style={[
                     styles.termsText,
                     {
-                      color: getColorToken('core-primary'),
                       textDecorationLine: 'underline',
                     },
                   ]}
@@ -170,7 +170,6 @@ export function TermsAndConditionsScreen() {
                   style={[
                     styles.termsText,
                     {
-                      color: getColorToken('core-primary'),
                       textDecorationLine: 'underline',
                     },
                   ]}
@@ -190,7 +189,6 @@ export function TermsAndConditionsScreen() {
               styles.getStartedButton,
               !isTermsAccepted && styles.getStartedButtonDisabled,
             ]}
-            buttonColor={getColorToken('core-primary')}
             disabled={!isTermsAccepted}
           >
             {t('common.getStarted')}
@@ -242,7 +240,6 @@ export function TermsAndConditionsScreen() {
                   style={[
                     styles.modalText,
                     {
-                      color: getColorToken('core-primary'),
                       textDecorationLine: 'underline',
                     },
                   ]}
@@ -269,7 +266,6 @@ export function TermsAndConditionsScreen() {
                 mode="contained"
                 onPress={() => handleTrackingConsent(true)}
                 style={styles.modalButton}
-                buttonColor={getColorToken('core-primary')}
                 accessibilityLabel="tracking-allow-button"
               >
                 {t('tracking.allow')}
