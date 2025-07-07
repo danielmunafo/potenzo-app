@@ -52,7 +52,7 @@ function isAppReadyToLoad(
 }
 
 const App = () => {
-  const userDeviceColorScheme = useColorScheme();
+  const colorScheme = useColorScheme();
   const statusBarStyle = useStatusBarStyle();
   const { isTabsVisible, setIsTabsVisible } = useTabsContext();
   const { isStatusBarVisible } = useStatusBarContext();
@@ -102,7 +102,7 @@ const App = () => {
     return null;
   }
 
-  const isDark = userDeviceColorScheme === 'dark';
+  const isDark = colorScheme === 'dark';
   const navigationTheme = isDark ? DarkTheme : DefaultTheme;
   const systemTheme = isDark ? 'dark' : 'light';
 

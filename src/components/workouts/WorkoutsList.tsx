@@ -1,7 +1,8 @@
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
-import { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { useEffect, useMemo } from 'react';
+import { ColorSchemeName, StyleSheet } from 'react-native';
 import { Surface, Text } from 'react-native-paper';
 import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated';
 import { useStatusBarContext } from '../../contexts/StatusBarContext';
@@ -15,6 +16,7 @@ export function WorkoutsList() {
   const { setIsTabsVisible } = useTabsContext();
   const { setIsStatusBarVisible } = useStatusBarContext();
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
+  const styles = useStyles(useColorScheme());
 
   useEffect(() => {
     setIsStatusBarVisible(true);
@@ -36,13 +38,20 @@ export function WorkoutsList() {
   );
 }
 
-const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: getColorToken('extended-accent'),
-    padding: getSpacingToken('spacing-md'),
-    marginBottom: getSpacingToken('spacing-sm'),
-  },
-  bannerText: {
-    textAlign: 'center',
-  },
-});
+function useStyles(colorScheme: ColorSchemeName) {
+  return useMemo(
+    () =>
+      StyleSheet.create({
+        banner: {
+          backgroundColor: getColorToken('primary', colorScheme),
+          padding: getSpacingToken('spacing-md'),
+          marginBottom: getSpacingToken('spacing-sm'),
+        },
+        bannerText: {
+          color: getColorToken('onPrimary', colorScheme),
+          textAlign: 'center',
+        },
+      }),
+    [colorScheme]
+  );
+}
