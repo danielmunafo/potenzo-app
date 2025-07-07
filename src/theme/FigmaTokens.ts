@@ -1,6 +1,8 @@
 // Auto-generated from Material Theme Builder design tokens
 // Generated on: 2025-07-06T19:13:22.345Z
 
+import { ColorSchemeName } from 'react-native';
+
 export const FigmaDesignTokens = {
   colors: {
     'core-primary': {
@@ -868,7 +870,7 @@ export const FigmaDesignTokens = {
 // Utility functions to work with Figma tokens
 export function getColorToken(
   tokenName: string,
-  colorScheme?: 'light' | 'dark' | null
+  colorScheme?: ColorSchemeName
 ): string {
   const theme = colorScheme || 'light';
 
@@ -882,7 +884,7 @@ export function getColorToken(
   }
 
   // For core tokens or tokens without theme prefix, try to find the theme-specific variant
-  const themeSpecificTokenName = `${theme}-${tokenName} `;
+  const themeSpecificTokenName = `${theme}-${tokenName}`;
   const themeSpecificToken =
     FigmaDesignTokens.colors[
       themeSpecificTokenName as keyof typeof FigmaDesignTokens.colors
@@ -903,7 +905,7 @@ export function getColorToken(
 // Type-safe version for known tokens
 export function getColorTokenStrict(
   tokenName: keyof typeof FigmaDesignTokens.colors,
-  colorScheme?: 'light' | 'dark' | null
+  colorScheme?: ColorSchemeName
 ): string {
   return getColorToken(tokenName, colorScheme);
 }
@@ -912,32 +914,26 @@ export function getColorTokenStrict(
 export function getThemeColor(
   lightToken: keyof typeof FigmaDesignTokens.colors,
   darkToken: keyof typeof FigmaDesignTokens.colors,
-  colorScheme?: 'light' | 'dark' | null
+  colorScheme?: ColorSchemeName
 ): string {
   const theme = colorScheme || 'light';
   const tokenName = theme === 'dark' ? darkToken : lightToken;
   return getColorToken(tokenName);
 }
 
-export function getOnSurfaceColor(
-  colorScheme?: 'light' | 'dark' | null
-): string {
+export function getOnSurfaceColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('onSurface', colorScheme);
 }
 
-export function getOnBackgroundColor(
-  colorScheme?: 'light' | 'dark' | null
-): string {
+export function getOnBackgroundColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('onBackground', colorScheme);
 }
 
-export function getSurfaceColor(colorScheme?: 'light' | 'dark' | null): string {
+export function getSurfaceColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('surface', colorScheme);
 }
 
-export function getBackgroundColor(
-  colorScheme?: 'light' | 'dark' | null
-): string {
+export function getBackgroundColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('background', colorScheme);
 }
 
