@@ -8,6 +8,7 @@
     "scheme": "potenzoapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.potenzo.app",

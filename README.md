@@ -87,7 +87,7 @@ The same for ios with exception that it should connect manually to the host and 
 
 ### Sentry
 
-Always run `eas-update` before trying to run a preview/production build and upload the source files properly with `npx sentry-expo-upload-sourcemaps dist` (to do that the environment variable `SENTRY_AUTH_TOKEN` has to be set in the terminal)
+Always run `eas-update` before trying to run a preview/production build and upload the source files properly with `yarn build:sentry-source-maps` (to do that the environment variable `SENTRY_AUTH_TOKEN` has to be set in the terminal)
 Then run the build and be happy
 
 ### Video Conversion
@@ -105,3 +105,11 @@ ffmpeg -i skipping-rope.mov \
  -b:a 128k \
  -movflags +faststart \
  skipping-rope.mp4
+
+### Debugging
+
+To debug the app:
+`yarn build:source-maps` to create the source maps
+`yarn start` (after having at least a develop build `yarn android` | `yarn ios`)
+press `j`
+Happy debugging
