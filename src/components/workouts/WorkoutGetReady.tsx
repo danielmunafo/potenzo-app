@@ -9,7 +9,6 @@ import {
   getSpacingToken,
 } from '@/theme/FigmaTokens';
 import { typography } from '@/theme/MaterialTheme';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,13 +21,15 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Button, IconButton, Surface, Text } from 'react-native-paper';
+import { Button, Surface, Text } from 'react-native-paper';
 import Animated, {
   Easing,
   SlideInDown,
   SlideInRight,
   SlideOutDown,
   SlideOutRight,
+  useAnimatedStyle,
+  useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -43,16 +44,17 @@ export function WorkoutGetReady() {
   const styles = useStyles(useColorScheme());
   const { height: screenHeight } = Dimensions.get('window');
 
-  // Add countdown state
+  const [isStartEnabled, setIsStartEnabled] = useState(false);
   const [countdown, setCountdown] = useState(3);
   const [showCountdown, setShowCountdown] = useState(true);
+
+  const buttonScale = useSharedValue(1);
 
   useEffect(() => {
     setIsStatusBarVisible(false);
     setIsTabsVisible(false);
   }, [setIsTabsVisible, setIsStatusBarVisible]);
 
-  // Add countdown timer effect
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => {
@@ -60,19 +62,33 @@ export function WorkoutGetReady() {
       }, 1000);
       return () => clearTimeout(timer);
     } else if (countdown === 0) {
-      // Show "GO!" for 1 second when countdown reaches 0
       const goTimer = setTimeout(() => {
-        setCountdown(-1); // Use -1 to indicate we should hide
+        setCountdown(-1);
       }, 1000);
       return () => clearTimeout(goTimer);
     } else {
-      // countdown is -1, hide the overlay
       const hideTimer = setTimeout(() => {
         setShowCountdown(false);
-      }, 500); // Wait for fade out animation
+      }, 500);
       return () => clearTimeout(hideTimer);
     }
   }, [countdown]);
+
+  useEffect(() => {
+    if (!showCountdown && countdown === -1) {
+      buttonScale.value = withTiming(2, {
+        duration: 500,
+        easing: Easing.in(Easing.elastic(1)),
+      });
+      setIsStartEnabled(true);
+    }
+  }, [showCountdown, countdown, buttonScale]);
+
+  const animatedButtonStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: buttonScale.value }],
+    };
+  });
 
   const onBack = useCallback(() => {
     setStep(step - 1);
@@ -100,30 +116,22 @@ export function WorkoutGetReady() {
           exiting={SlideOutDown}
           style={styles.bottomArea}
         >
-          <IconButton
-            style={[styles.overNavigationArea, styles.iconButtonIcon]}
-            mode="outlined"
-            icon={() => (
-              <MaterialIcons
-                style={styles.iconButtonIcon}
-                name="chevron-left"
-                size={24}
-              />
-            )}
-            onPress={onBack}
-          />
-          <Button
-            onPress={() => console.log()}
-            style={[styles.overNavigationArea, styles.buttonStyle]}
-            labelStyle={styles.buttonLabelStyle}
-            mode="elevated"
-          >
-            {t('workoutGetReady.start')}
-          </Button>
+          <Animated.View style={[animatedButtonStyle, { flex: 1 }]}>
+            <Button
+              onPress={() => console.log()}
+              style={[styles.overNavigationArea, styles.buttonStyle]}
+              labelStyle={styles.buttonLabelStyle}
+              disabled={!isStartEnabled}
+              buttonColor={getColorToken('extended-accent')}
+              mode="elevated"
+            >
+              {t('workoutGetReady.start')}
+            </Button>
+          </Animated.View>
         </Animated.View>
       </View>
     ),
-    [t, styles, onBack]
+    [t, styles, animatedButtonStyle, isStartEnabled]
   );
 
   if (!workout) return <></>;
@@ -224,7 +232,7 @@ export function WorkoutGetReady() {
             variant="displayLarge"
             style={{
               marginTop: Platform.OS === 'android' ? -25 : undefined,
-              fontSize: countdown === 0 ? 120 : 200, // Smaller font for "GO!"
+              fontSize: countdown === 0 ? 120 : 200,
               color: getColorToken('extended-accent'),
               textShadowColor: 'rgba(0, 0, 0, 0.8)',
               textShadowOffset: { width: 0.5, height: 0.5 },
@@ -349,8 +357,6 @@ function useStyles(colorScheme: ColorSchemeName) {
           color: getColorToken('onPrimaryFixed'),
         },
         buttonStyle: {
-          flex: 1,
-          backgroundColor: getColorToken('extended-accent'),
           marginHorizontal: getSpacingToken('spacing-md'),
         },
         overNavigationArea: {
