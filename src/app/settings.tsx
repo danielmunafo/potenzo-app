@@ -10,7 +10,7 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { useTranslation } from '@/hooks/useTranslation';
 import sentryService from '@/services/sentryService';
-import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+import { getSpacingToken } from '../theme/FigmaTokens';
 
 const STORAGE_KEYS = {
   TERMS_ACCEPTED: 'terms_accepted',
@@ -184,10 +184,7 @@ export function SettingsScreen() {
               >
                 <Text
                   accessibilityLabel="settings-screen-website-card-item-link"
-                  style={[
-                    styles.websiteLink,
-                    { color: getColorToken('core-primary') },
-                  ]}
+                  style={[styles.websiteLink]}
                 >
                   potenzo.app
                 </Text>
@@ -211,10 +208,7 @@ export function SettingsScreen() {
               >
                 <Text
                   accessibilityLabel="settings-screen-website-card-item-link"
-                  style={[
-                    styles.websiteLink,
-                    { color: getColorToken('core-primary') },
-                  ]}
+                  style={[styles.websiteLink]}
                 >
                   support@potenzo.app
                 </Text>
@@ -238,10 +232,7 @@ export function SettingsScreen() {
               >
                 <Text
                   accessibilityLabel="settings-screen-website-card-item-link"
-                  style={[
-                    styles.websiteLink,
-                    { color: getColorToken('core-primary') },
-                  ]}
+                  style={[styles.websiteLink]}
                 >
                   {t('settings.website.termsLink')}
                 </Text>
@@ -265,10 +256,7 @@ export function SettingsScreen() {
               >
                 <Text
                   accessibilityLabel="settings-screen-website-card-item-link"
-                  style={[
-                    styles.websiteLink,
-                    { color: getColorToken('core-primary') },
-                  ]}
+                  style={[styles.websiteLink]}
                 >
                   {t('settings.website.privacyLink')}
                 </Text>
@@ -298,18 +286,15 @@ const styles = StyleSheet.create({
     marginBottom: getSpacingToken('spacing-md'),
   },
   title: {
-    fontFamily: 'Exo2-Bold',
     textAlign: 'center',
     marginBottom: getSpacingToken('spacing-sm'),
   },
   subtitle: {
-    fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     marginBottom: getSpacingToken('spacing-lg'),
     opacity: 0.7,
   },
   description: {
-    fontFamily: 'OpenSans-Regular',
     textAlign: 'center',
     marginTop: getSpacingToken('spacing-lg'),
     lineHeight: 24,
@@ -318,7 +303,6 @@ const styles = StyleSheet.create({
     marginBottom: getSpacingToken('spacing-lg'),
   },
   cardTitle: {
-    fontFamily: 'OpenSans-Bold',
     marginBottom: getSpacingToken('spacing-md'),
   },
   consentItem: {
@@ -328,12 +312,9 @@ const styles = StyleSheet.create({
     marginBottom: getSpacingToken('spacing-sm'),
   },
   consentLabel: {
-    fontFamily: 'OpenSans-Regular',
     flex: 1,
   },
-  consentValue: {
-    fontFamily: 'OpenSans-Bold',
-  },
+  consentValue: {},
   websiteCard: {
     marginBottom: getSpacingToken('spacing-lg'),
   },
@@ -344,11 +325,9 @@ const styles = StyleSheet.create({
     marginBottom: getSpacingToken('spacing-sm'),
   },
   websiteLabel: {
-    fontFamily: 'OpenSans-Regular',
     flex: 1,
   },
   websiteLink: {
-    fontFamily: 'OpenSans-Regular',
     textDecorationLine: 'underline',
   },
 });

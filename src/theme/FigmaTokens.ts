@@ -1,46 +1,52 @@
 // Auto-generated from Material Theme Builder design tokens
-// Generated on: 2025-06-20T08:55:39.408Z
+// Generated on: 2025-07-06T19:13:22.345Z
+
+import { ColorSchemeName } from 'react-native';
 
 export const FigmaDesignTokens = {
   colors: {
     'core-primary': {
-      value: '#2FFF00',
+      value: '#3CDA14',
       type: 'color',
     },
     'core-secondary': {
-      value: '#28D900',
+      value: '#22A700',
       type: 'color',
     },
     'core-tertiary': {
-      value: '#00C2A8',
+      value: '#5CD5DA',
       type: 'color',
     },
-    'core-error': {
-      value: '#E53935',
+    'core-neutral': {
+      value: '#D4D5CF',
+      type: 'color',
+    },
+    'core-neutralVariant': {
+      value: '#FFFFFF',
       type: 'color',
     },
     'extended-accent': {
-      value: '#FF8800',
+      value: '#2FFF00',
       type: 'color',
     },
     'light-primary': {
-      value: '#416835',
+      value: '#416834',
       type: 'color',
     },
     'light-surfaceTint': {
-      value: '#416835',
+      value: '#416834',
       type: 'color',
     },
     'light-onPrimary': {
-      value: '#000000',
+      value: '#FFFFFF',
       type: 'color',
     },
     'light-primaryContainer': {
-      value: '#C1EFAF',
+      value: '#C2EFAE',
       type: 'color',
     },
     'light-onPrimaryContainer': {
-      value: '#294F1F',
+      value: '#2A4F1F',
       type: 'color',
     },
     'light-secondary': {
@@ -52,7 +58,7 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-secondaryContainer': {
-      value: '#C1EFAF',
+      value: '#C2EFAE',
       type: 'color',
     },
     'light-onSecondaryContainer': {
@@ -60,7 +66,7 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-tertiary': {
-      value: '#046B5C',
+      value: '#00696D',
       type: 'color',
     },
     'light-onTertiary': {
@@ -68,15 +74,15 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-tertiaryContainer': {
-      value: '#A0F2DF',
+      value: '#9CF1F4',
       type: 'color',
     },
     'light-onTertiaryContainer': {
-      value: '#005045',
+      value: '#004F52',
       type: 'color',
     },
     'light-error': {
-      value: '#904A44',
+      value: '#BA1A1A',
       type: 'color',
     },
     'light-onError': {
@@ -88,11 +94,11 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-onErrorContainer': {
-      value: '#73332E',
+      value: '#93000A',
       type: 'color',
     },
     'light-background': {
-      value: '#F8FBF0',
+      value: '#F8FAF0',
       type: 'color',
     },
     'light-onBackground': {
@@ -100,7 +106,7 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-surface': {
-      value: '#F8FBF0',
+      value: '#F7FBF1',
       type: 'color',
     },
     'light-onSurface': {
@@ -108,19 +114,19 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-surfaceVariant': {
-      value: '#DFE4D7',
+      value: '#DBE4E6',
       type: 'color',
     },
     'light-onSurfaceVariant': {
-      value: '#43483F',
+      value: '#3F484A',
       type: 'color',
     },
     'light-outline': {
-      value: '#73796E',
+      value: '#6F797A',
       type: 'color',
     },
     'light-outlineVariant': {
-      value: '#C3C8BC',
+      value: '#BFC8CA',
       type: 'color',
     },
     'light-shadow': {
@@ -132,35 +138,35 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-inverseSurface': {
-      value: '#2E322B',
+      value: '#2D322C',
       type: 'color',
     },
     'light-inverseOnSurface': {
-      value: '#EFF2E8',
+      value: '#EFF2E9',
       type: 'color',
     },
     'light-inversePrimary': {
-      value: '#A6D395',
+      value: '#A7D394',
       type: 'color',
     },
     'light-primaryFixed': {
-      value: '#C1EFAF',
+      value: '#C2EFAE',
       type: 'color',
     },
     'light-onPrimaryFixed': {
-      value: '#022100',
+      value: '#032100',
       type: 'color',
     },
     'light-primaryFixedDim': {
-      value: '#A6D395',
+      value: '#A7D394',
       type: 'color',
     },
     'light-onPrimaryFixedVariant': {
-      value: '#294F1F',
+      value: '#2A4F1F',
       type: 'color',
     },
     'light-secondaryFixed': {
-      value: '#C1EFAF',
+      value: '#C2EFAE',
       type: 'color',
     },
     'light-onSecondaryFixed': {
@@ -176,27 +182,27 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-tertiaryFixed': {
-      value: '#A0F2DF',
+      value: '#9CF1F4',
       type: 'color',
     },
     'light-onTertiaryFixed': {
-      value: '#00201B',
+      value: '#002021',
       type: 'color',
     },
     'light-tertiaryFixedDim': {
-      value: '#84D6C3',
+      value: '#80D4D8',
       type: 'color',
     },
     'light-onTertiaryFixedVariant': {
-      value: '#005045',
+      value: '#004F52',
       type: 'color',
     },
     'light-surfaceDim': {
-      value: '#D8DBD1',
+      value: '#D8DBD2',
       type: 'color',
     },
     'light-surfaceBright': {
-      value: '#F8FBF0',
+      value: '#F7FBF1',
       type: 'color',
     },
     'light-surfaceContainerLowest': {
@@ -204,39 +210,39 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'light-surfaceContainerLow': {
-      value: '#F2F5EB',
+      value: '#F1F5EB',
       type: 'color',
     },
     'light-surfaceContainer': {
-      value: '#ECEFE5',
+      value: '#ECEFE6',
       type: 'color',
     },
     'light-surfaceContainerHigh': {
-      value: '#E6E9DF',
+      value: '#E6E9E0',
       type: 'color',
     },
     'light-surfaceContainerHighest': {
-      value: '#E1E4DA',
+      value: '#E0E4DB',
       type: 'color',
     },
     'dark-primary': {
-      value: '#A6D395',
+      value: '#A7D394',
       type: 'color',
     },
     'dark-surfaceTint': {
-      value: '#A6D395',
+      value: '#A7D394',
       type: 'color',
     },
     'dark-onPrimary': {
-      value: '#12380A',
+      value: '#13380A',
       type: 'color',
     },
     'dark-primaryContainer': {
-      value: '#294F1F',
+      value: '#2A4F1F',
       type: 'color',
     },
     'dark-onPrimaryContainer': {
-      value: '#C1EFAF',
+      value: '#C2EFAE',
       type: 'color',
     },
     'dark-secondary': {
@@ -252,35 +258,35 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'dark-onSecondaryContainer': {
-      value: '#C1EFAF',
+      value: '#C2EFAE',
       type: 'color',
     },
     'dark-tertiary': {
-      value: '#84D6C3',
+      value: '#80D4D8',
       type: 'color',
     },
     'dark-onTertiary': {
-      value: '#00382F',
+      value: '#003739',
       type: 'color',
     },
     'dark-tertiaryContainer': {
-      value: '#005045',
+      value: '#004F52',
       type: 'color',
     },
     'dark-onTertiaryContainer': {
-      value: '#A0F2DF',
+      value: '#9CF1F4',
       type: 'color',
     },
     'dark-error': {
-      value: '#FFB4AC',
+      value: '#FFB4AB',
       type: 'color',
     },
     'dark-onError': {
-      value: '#561E1A',
+      value: '#690005',
       type: 'color',
     },
     'dark-errorContainer': {
-      value: '#73332E',
+      value: '#93000A',
       type: 'color',
     },
     'dark-onErrorContainer': {
@@ -296,27 +302,27 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'dark-surface': {
-      value: '#11140F',
+      value: '#10140F',
       type: 'color',
     },
     'dark-onSurface': {
-      value: '#E1E4DA',
+      value: '#E0E4DB',
       type: 'color',
     },
     'dark-surfaceVariant': {
-      value: '#43483F',
+      value: '#3F484A',
       type: 'color',
     },
     'dark-onSurfaceVariant': {
-      value: '#C3C8BC',
+      value: '#BFC8CA',
       type: 'color',
     },
     'dark-outline': {
-      value: '#8D9387',
+      value: '#899294',
       type: 'color',
     },
     'dark-outlineVariant': {
-      value: '#43483F',
+      value: '#3F484A',
       type: 'color',
     },
     'dark-shadow': {
@@ -328,35 +334,35 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'dark-inverseSurface': {
-      value: '#E1E4DA',
+      value: '#E0E4DB',
       type: 'color',
     },
     'dark-inverseOnSurface': {
-      value: '#2E322B',
+      value: '#2D322C',
       type: 'color',
     },
     'dark-inversePrimary': {
-      value: '#416835',
+      value: '#416834',
       type: 'color',
     },
     'dark-primaryFixed': {
-      value: '#C1EFAF',
+      value: '#C2EFAE',
       type: 'color',
     },
     'dark-onPrimaryFixed': {
-      value: '#022100',
+      value: '#032100',
       type: 'color',
     },
     'dark-primaryFixedDim': {
-      value: '#A6D395',
+      value: '#A7D394',
       type: 'color',
     },
     'dark-onPrimaryFixedVariant': {
-      value: '#294F1F',
+      value: '#2A4F1F',
       type: 'color',
     },
     'dark-secondaryFixed': {
-      value: '#C1EFAF',
+      value: '#C2EFAE',
       type: 'color',
     },
     'dark-onSecondaryFixed': {
@@ -372,31 +378,31 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'dark-tertiaryFixed': {
-      value: '#A0F2DF',
+      value: '#9CF1F4',
       type: 'color',
     },
     'dark-onTertiaryFixed': {
-      value: '#00201B',
+      value: '#002021',
       type: 'color',
     },
     'dark-tertiaryFixedDim': {
-      value: '#84D6C3',
+      value: '#80D4D8',
       type: 'color',
     },
     'dark-onTertiaryFixedVariant': {
-      value: '#005045',
+      value: '#004F52',
       type: 'color',
     },
     'dark-surfaceDim': {
-      value: '#11140F',
+      value: '#10140F',
       type: 'color',
     },
     'dark-surfaceBright': {
-      value: '#373A34',
+      value: '#363A34',
       type: 'color',
     },
     'dark-surfaceContainerLowest': {
-      value: '#0C0F0A',
+      value: '#0B0F0A',
       type: 'color',
     },
     'dark-surfaceContainerLow': {
@@ -412,7 +418,7 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'dark-surfaceContainerHighest': {
-      value: '#32362F',
+      value: '#323630',
       type: 'color',
     },
     'palette-primary-0': {
@@ -424,59 +430,59 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'palette-primary-10': {
-      value: '#022100',
+      value: '#032100',
       type: 'color',
     },
     'palette-primary-15': {
-      value: '#032D00',
+      value: '#042D00',
       type: 'color',
     },
     'palette-primary-20': {
-      value: '#053900',
+      value: '#073900',
       type: 'color',
     },
     'palette-primary-25': {
-      value: '#074600',
+      value: '#0A4600',
       type: 'color',
     },
     'palette-primary-30': {
-      value: '#095300',
+      value: '#0E5300',
       type: 'color',
     },
     'palette-primary-35': {
-      value: '#0C6000',
+      value: '#126000',
       type: 'color',
     },
     'palette-primary-40': {
-      value: '#106E00',
+      value: '#166E00',
       type: 'color',
     },
     'palette-primary-50': {
-      value: '#168A00',
+      value: '#1D8A00',
       type: 'color',
     },
     'palette-primary-60': {
-      value: '#1DA800',
+      value: '#25A700',
       type: 'color',
     },
     'palette-primary-70': {
-      value: '#23C600',
+      value: '#2EC600',
       type: 'color',
     },
     'palette-primary-80': {
-      value: '#2AE500',
+      value: '#47E422',
       type: 'color',
     },
     'palette-primary-90': {
-      value: '#79FF5B',
+      value: '#79FF57',
       type: 'color',
     },
     'palette-primary-95': {
-      value: '#CBFFB7',
+      value: '#CBFFB5',
       type: 'color',
     },
     'palette-primary-98': {
-      value: '#EDFFE1',
+      value: '#EDFFE0',
       type: 'color',
     },
     'palette-primary-99': {
@@ -500,47 +506,47 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'palette-secondary-15': {
-      value: '#032D00',
+      value: '#042D00',
       type: 'color',
     },
     'palette-secondary-20': {
-      value: '#053900',
+      value: '#063900',
       type: 'color',
     },
     'palette-secondary-25': {
-      value: '#074600',
+      value: '#094600',
       type: 'color',
     },
     'palette-secondary-30': {
-      value: '#0A5300',
+      value: '#0C5300',
       type: 'color',
     },
     'palette-secondary-35': {
-      value: '#0D6000',
+      value: '#106000',
       type: 'color',
     },
     'palette-secondary-40': {
-      value: '#106E00',
+      value: '#136E00',
       type: 'color',
     },
     'palette-secondary-50': {
-      value: '#178A00',
+      value: '#1B8A00',
       type: 'color',
     },
     'palette-secondary-60': {
-      value: '#1DA800',
+      value: '#23A701',
       type: 'color',
     },
     'palette-secondary-70': {
-      value: '#24C600',
+      value: '#45C429',
       type: 'color',
     },
     'palette-secondary-80': {
-      value: '#39E41A',
+      value: '#62E145',
       type: 'color',
     },
     'palette-secondary-90': {
-      value: '#79FF5B',
+      value: '#7FFE5F',
       type: 'color',
     },
     'palette-secondary-95': {
@@ -548,7 +554,7 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'palette-secondary-98': {
-      value: '#EDFFE1',
+      value: '#EDFFE0',
       type: 'color',
     },
     'palette-secondary-99': {
@@ -564,67 +570,67 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'palette-tertiary-5': {
-      value: '#001410',
+      value: '#001415',
       type: 'color',
     },
     'palette-tertiary-10': {
-      value: '#00201B',
+      value: '#002021',
       type: 'color',
     },
     'palette-tertiary-15': {
-      value: '#002C24',
+      value: '#002B2D',
       type: 'color',
     },
     'palette-tertiary-20': {
-      value: '#00382F',
+      value: '#003739',
       type: 'color',
     },
     'palette-tertiary-25': {
-      value: '#00443A',
+      value: '#004345',
       type: 'color',
     },
     'palette-tertiary-30': {
-      value: '#005045',
+      value: '#004F52',
       type: 'color',
     },
     'palette-tertiary-35': {
-      value: '#005E50',
+      value: '#005C5F',
       type: 'color',
     },
     'palette-tertiary-40': {
-      value: '#006B5C',
+      value: '#00696D',
       type: 'color',
     },
     'palette-tertiary-50': {
-      value: '#008674',
+      value: '#008489',
       type: 'color',
     },
     'palette-tertiary-60': {
-      value: '#00A38D',
+      value: '#01A1A6',
       type: 'color',
     },
     'palette-tertiary-70': {
-      value: '#00C1A7',
+      value: '#3DBCC1',
       type: 'color',
     },
     'palette-tertiary-80': {
-      value: '#41DDC2',
+      value: '#5FD8DD',
       type: 'color',
     },
     'palette-tertiary-90': {
-      value: '#65FADE',
+      value: '#7EF4F9',
       type: 'color',
     },
     'palette-tertiary-95': {
-      value: '#B6FFED',
+      value: '#BBFCFF',
       type: 'color',
     },
     'palette-tertiary-98': {
-      value: '#E5FFF7',
+      value: '#E5FEFF',
       type: 'color',
     },
     'palette-tertiary-99': {
-      value: '#F3FFFA',
+      value: '#F1FFFF',
       type: 'color',
     },
     'palette-tertiary-100': {
@@ -636,67 +642,67 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'palette-neutral-5': {
-      value: '#0F120E',
+      value: '#111111',
       type: 'color',
     },
     'palette-neutral-10': {
-      value: '#1A1C18',
+      value: '#1C1B1B',
       type: 'color',
     },
     'palette-neutral-15': {
-      value: '#242622',
+      value: '#262625',
       type: 'color',
     },
     'palette-neutral-20': {
-      value: '#2F312D',
+      value: '#313030',
       type: 'color',
     },
     'palette-neutral-25': {
-      value: '#3A3C38',
+      value: '#3C3B3B',
       type: 'color',
     },
     'palette-neutral-30': {
-      value: '#454743',
+      value: '#484646',
       type: 'color',
     },
     'palette-neutral-35': {
-      value: '#51534E',
+      value: '#535251',
       type: 'color',
     },
     'palette-neutral-40': {
-      value: '#5D5F5A',
+      value: '#5F5E5D',
       type: 'color',
     },
     'palette-neutral-50': {
-      value: '#767872',
+      value: '#787776',
       type: 'color',
     },
     'palette-neutral-60': {
-      value: '#90918C',
+      value: '#92908F',
       type: 'color',
     },
     'palette-neutral-70': {
-      value: '#ABACA6',
+      value: '#ADABAA',
       type: 'color',
     },
     'palette-neutral-80': {
-      value: '#C6C7C1',
+      value: '#C9C6C5',
       type: 'color',
     },
     'palette-neutral-90': {
-      value: '#E2E3DC',
+      value: '#E5E2E1',
       type: 'color',
     },
     'palette-neutral-95': {
-      value: '#F1F1EA',
+      value: '#F4F0EF',
       type: 'color',
     },
     'palette-neutral-98': {
-      value: '#FAFAF3',
+      value: '#FCF8F7',
       type: 'color',
     },
     'palette-neutral-99': {
-      value: '#FCFDF6',
+      value: '#F6FFF0',
       type: 'color',
     },
     'palette-neutral-100': {
@@ -708,67 +714,67 @@ export const FigmaDesignTokens = {
       type: 'color',
     },
     'palette-neutral-variant-5': {
-      value: '#0D120B',
+      value: '#111111',
       type: 'color',
     },
     'palette-neutral-variant-10': {
-      value: '#181D15',
+      value: '#1C1B1B',
       type: 'color',
     },
     'palette-neutral-variant-15': {
-      value: '#22271F',
+      value: '#262625',
       type: 'color',
     },
     'palette-neutral-variant-20': {
-      value: '#2C3229',
+      value: '#313030',
       type: 'color',
     },
     'palette-neutral-variant-25': {
-      value: '#373D34',
+      value: '#3C3B3B',
       type: 'color',
     },
     'palette-neutral-variant-30': {
-      value: '#43483F',
+      value: '#474646',
       type: 'color',
     },
     'palette-neutral-variant-35': {
-      value: '#4E544A',
+      value: '#535252',
       type: 'color',
     },
     'palette-neutral-variant-40': {
-      value: '#5A6056',
+      value: '#5F5E5E',
       type: 'color',
     },
     'palette-neutral-variant-50': {
-      value: '#73796E',
+      value: '#787776',
       type: 'color',
     },
     'palette-neutral-variant-60': {
-      value: '#8D9387',
+      value: '#929090',
       type: 'color',
     },
     'palette-neutral-variant-70': {
-      value: '#A7ADA1',
+      value: '#ADABAA',
       type: 'color',
     },
     'palette-neutral-variant-80': {
-      value: '#C3C8BC',
+      value: '#C9C6C5',
       type: 'color',
     },
     'palette-neutral-variant-90': {
-      value: '#DFE4D7',
+      value: '#E5E2E1',
       type: 'color',
     },
     'palette-neutral-variant-95': {
-      value: '#EDF3E5',
+      value: '#F3F0EF',
       type: 'color',
     },
     'palette-neutral-variant-98': {
-      value: '#F6FBEE',
+      value: '#FCF8F8',
       type: 'color',
     },
     'palette-neutral-variant-99': {
-      value: '#F9FEF1',
+      value: '#F6FEFF',
       type: 'color',
     },
     'palette-neutral-variant-100': {
@@ -864,7 +870,7 @@ export const FigmaDesignTokens = {
 // Utility functions to work with Figma tokens
 export function getColorToken(
   tokenName: string,
-  colorScheme?: 'light' | 'dark' | null
+  colorScheme?: ColorSchemeName
 ): string {
   const theme = colorScheme || 'light';
 
@@ -899,7 +905,7 @@ export function getColorToken(
 // Type-safe version for known tokens
 export function getColorTokenStrict(
   tokenName: keyof typeof FigmaDesignTokens.colors,
-  colorScheme?: 'light' | 'dark' | null
+  colorScheme?: ColorSchemeName
 ): string {
   return getColorToken(tokenName, colorScheme);
 }
@@ -908,32 +914,26 @@ export function getColorTokenStrict(
 export function getThemeColor(
   lightToken: keyof typeof FigmaDesignTokens.colors,
   darkToken: keyof typeof FigmaDesignTokens.colors,
-  colorScheme?: 'light' | 'dark' | null
+  colorScheme?: ColorSchemeName
 ): string {
   const theme = colorScheme || 'light';
   const tokenName = theme === 'dark' ? darkToken : lightToken;
   return getColorToken(tokenName);
 }
 
-export function getOnSurfaceColor(
-  colorScheme?: 'light' | 'dark' | null
-): string {
+export function getOnSurfaceColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('onSurface', colorScheme);
 }
 
-export function getOnBackgroundColor(
-  colorScheme?: 'light' | 'dark' | null
-): string {
+export function getOnBackgroundColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('onBackground', colorScheme);
 }
 
-export function getSurfaceColor(colorScheme?: 'light' | 'dark' | null): string {
+export function getSurfaceColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('surface', colorScheme);
 }
 
-export function getBackgroundColor(
-  colorScheme?: 'light' | 'dark' | null
-): string {
+export function getBackgroundColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('background', colorScheme);
 }
 

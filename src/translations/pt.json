@@ -134,6 +134,21 @@
     }
   },
   "preview": {
-    "start": "Começar!"
+    "getReady": "Pronto?"
+  },
+  "workoutGetReady": {
+    "title": "⌚️ Inicie um treino no smartwatch",
+    "aerobics": "🫁 Aeróbico",
+    "functional": "🤸 Funcional",
+    "other": "🏋️‍♀️ Outro",
+    "heartRatePrompt": "🫀 Tente manter esta média",
+    "heartRateValue": "{{{value}} bpm",
+    "focusPrompt": "🎯 Este treino foca em",
+    "focusValue": "🦵💪 Corpo inteiro",
+    "sweatLevelPrompt": "💧 Nível de suor:",
+    "sweatLevelValue": "⬇️ Baixo",
+    "scienceBacking": "🔬 Base científica:",
+    "studiesPage": "📚 Página de estudos",
+    "start": "Iniciar 🚀"
   }
 }

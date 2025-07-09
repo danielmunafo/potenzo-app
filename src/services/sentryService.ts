@@ -40,30 +40,27 @@ class SentryService {
       enableAutoSessionTracking: true,
       sendDefaultPii: true,
       beforeSendSpan: span => {
-        console.log(
-          '[Sentry] beforeSendSpan called – consent is:',
-          this.hasTrackingConsent
-        );
+        Logger.debug('[Sentry] beforeSendSpan called – consent is:', {
+          hasTrackingConsent: this.hasTrackingConsent,
+        });
         if (!this.hasTrackingConsent) {
           return null;
         }
         return span;
       },
       beforeScreenshot: () => {
-        console.log(
-          '[Sentry] beforeScreenshot called – consent is:',
-          this.hasTrackingConsent
-        );
+        Logger.debug('[Sentry] beforeScreenshot called – consent is:', {
+          hasTrackingConsent: this.hasTrackingConsent,
+        });
         if (!this.hasTrackingConsent) {
           return false;
         }
         return true;
       },
       beforeSend: event => {
-        console.log(
-          '[Sentry] beforeSend called – consent is:',
-          this.hasTrackingConsent
-        );
+        Logger.debug('[Sentry] beforeSend called – consent is:', {
+          hasTrackingConsent: this.hasTrackingConsent,
+        });
 
         if (!this.hasTrackingConsent) {
           return null;
@@ -71,10 +68,9 @@ class SentryService {
         return event;
       },
       beforeBreadcrumb: breadcrumb => {
-        console.log(
-          '[Sentry] beforeBreadcrumb called – consent is:',
-          this.hasTrackingConsent
-        );
+        Logger.debug('[Sentry] beforeBreadcrumb called – consent is:', {
+          hasTrackingConsent: this.hasTrackingConsent,
+        });
 
         if (!this.hasTrackingConsent) {
           return null;
@@ -82,10 +78,9 @@ class SentryService {
         return breadcrumb;
       },
       beforeSendTransaction: transaction => {
-        console.log(
-          '[Sentry] beforeSend called – consent is:',
-          this.hasTrackingConsent
-        );
+        Logger.debug('[Sentry] beforeSendTransaction called – consent is:', {
+          hasTrackingConsent: this.hasTrackingConsent,
+        });
 
         if (!this.hasTrackingConsent) {
           return null;

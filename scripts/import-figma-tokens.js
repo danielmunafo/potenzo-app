@@ -2,15 +2,15 @@
 
 /**
  * Figma Design Tokens Import Script
- * 
+ *
  * This script helps import design tokens from Figma and convert them to the format
  * used in the React Native app.
- * 
+ *
  * Usage:
  * 1. Export tokens from Figma using plugins like "Figma Tokens" or "Design Tokens"
  * 2. Save the exported JSON file
  * 3. Run this script to convert and update the tokens
- * 
+ *
  * Example:
  * node scripts/import-figma-tokens.js path/to/figma-tokens.json
  */
@@ -44,7 +44,7 @@ function convertMaterialThemeBuilderTokens(figmaTokens) {
 
   // Convert extended colors
   if (figmaTokens.extendedColors) {
-    figmaTokens.extendedColors.forEach((color) => {
+    figmaTokens.extendedColors.forEach(color => {
       convertedTokens.colors[`extended-${color.name.toLowerCase()}`] = {
         value: color.color,
         type: 'color',
@@ -158,70 +158,97 @@ function generateTokensFile(convertedTokens) {
   const tokensContent = `// Auto-generated from Material Theme Builder design tokens
 // Generated on: ${new Date().toISOString()}
 
+import { ColorSchemeName } from 'react-native';
+
 export const FigmaDesignTokens = ${JSON.stringify(convertedTokens, null, 2)};
 
 // Utility functions to work with Figma tokens
-export function getColorToken(tokenName: string, colorScheme?: 'light' | 'dark' | null): string {
+export function getColorToken(
+  tokenName: string,
+  colorScheme?: ColorSchemeName
+): string {
   const theme = colorScheme || 'light';
 
   // Check if the token name already includes a theme prefix
   if (tokenName.startsWith('light-') || tokenName.startsWith('dark-')) {
-    const token = FigmaDesignTokens.colors[tokenName as keyof typeof FigmaDesignTokens.colors];
+    const token =
+      FigmaDesignTokens.colors[
+        tokenName as keyof typeof FigmaDesignTokens.colors
+      ];
     return token?.value || '#000000';
   }
 
   // For core tokens or tokens without theme prefix, try to find the theme-specific variant
-  const themeSpecificTokenName = \`\${theme}-\${tokenName} \`;
-  const themeSpecificToken = FigmaDesignTokens.colors[themeSpecificTokenName as keyof typeof FigmaDesignTokens.colors];
+  const themeSpecificTokenName = \`\${theme}-\${tokenName}\`;
+  const themeSpecificToken =
+    FigmaDesignTokens.colors[
+      themeSpecificTokenName as keyof typeof FigmaDesignTokens.colors
+    ];
 
   if (themeSpecificToken) {
     return themeSpecificToken.value;
   }
 
   // Fallback to the original token name
-  const token = FigmaDesignTokens.colors[tokenName as keyof typeof FigmaDesignTokens.colors];
+  const token =
+    FigmaDesignTokens.colors[
+      tokenName as keyof typeof FigmaDesignTokens.colors
+    ];
   return token?.value || '#000000';
 }
 
 // Type-safe version for known tokens
-export function getColorTokenStrict(tokenName: keyof typeof FigmaDesignTokens.colors, colorScheme?: 'light' | 'dark' | null): string {
+export function getColorTokenStrict(
+  tokenName: keyof typeof FigmaDesignTokens.colors,
+  colorScheme?: ColorSchemeName
+): string {
   return getColorToken(tokenName, colorScheme);
 }
 
 // Legacy theme-aware color getters (keeping for backward compatibility)
-export function getThemeColor(lightToken: keyof typeof FigmaDesignTokens.colors, darkToken: keyof typeof FigmaDesignTokens.colors, colorScheme?: 'light' | 'dark' | null): string {
+export function getThemeColor(
+  lightToken: keyof typeof FigmaDesignTokens.colors,
+  darkToken: keyof typeof FigmaDesignTokens.colors,
+  colorScheme?: ColorSchemeName
+): string {
   const theme = colorScheme || 'light';
   const tokenName = theme === 'dark' ? darkToken : lightToken;
   return getColorToken(tokenName);
 }
 
-export function getOnSurfaceColor(colorScheme?: 'light' | 'dark' | null): string {
+export function getOnSurfaceColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('onSurface', colorScheme);
 }
 
-export function getOnBackgroundColor(colorScheme?: 'light' | 'dark' | null): string {
+export function getOnBackgroundColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('onBackground', colorScheme);
 }
 
-export function getSurfaceColor(colorScheme?: 'light' | 'dark' | null): string {
+export function getSurfaceColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('surface', colorScheme);
 }
 
-export function getBackgroundColor(colorScheme?: 'light' | 'dark' | null): string {
+export function getBackgroundColor(colorScheme?: ColorSchemeName): string {
   return getColorToken('background', colorScheme);
 }
 
-export function getSpacingToken(tokenName: keyof typeof FigmaDesignTokens.spacing): number {
+export function getSpacingToken(
+  tokenName: keyof typeof FigmaDesignTokens.spacing
+): number {
   const token = FigmaDesignTokens.spacing[tokenName];
   return token?.value || 0;
 }
 
-export function getBorderRadiusToken(tokenName: keyof typeof FigmaDesignTokens.borderRadius): number {
+export function getBorderRadiusToken(
+  tokenName: keyof typeof FigmaDesignTokens.borderRadius
+): number {
   const token = FigmaDesignTokens.borderRadius[tokenName];
   return token?.value || 0;
 }
 
-export function getShadowToken(tokenName: keyof typeof FigmaDesignTokens.shadows) {
+export function getShadowToken(
+  tokenName: keyof typeof FigmaDesignTokens.shadows
+) {
   const token = FigmaDesignTokens.shadows[tokenName];
   if (!token) return null;
 
@@ -348,17 +375,27 @@ function main() {
   const args = process.argv.slice(2);
 
   if (args.length === 0) {
-    console.log('Usage: node scripts/import-figma-tokens.js <path-to-figma-tokens.json>');
+    console.log(
+      'Usage: node scripts/import-figma-tokens.js <path-to-figma-tokens.json>'
+    );
     console.log('');
     console.log('Example:');
     console.log('  node scripts/import-figma-tokens.js ./figma-tokens.json');
     console.log('');
-    console.log('This will generate/update src/theme/FigmaTokens.ts with the imported tokens.');
+    console.log(
+      'This will generate/update src/theme/FigmaTokens.ts with the imported tokens.'
+    );
     return;
   }
 
   const inputFile = args[0];
-  const outputFile = path.join(__dirname, '..', 'src', 'theme', 'FigmaTokens.ts');
+  const outputFile = path.join(
+    __dirname,
+    '..',
+    'src',
+    'theme',
+    'FigmaTokens.ts'
+  );
 
   try {
     // Read the Figma tokens file
@@ -379,24 +416,41 @@ function main() {
     console.log('');
     console.log('📊 Token summary:');
     console.log(`  Colors: ${Object.keys(convertedTokens.colors).length}`);
-    console.log(`  Typography: ${Object.keys(convertedTokens.typography).length}`);
+    console.log(
+      `  Typography: ${Object.keys(convertedTokens.typography).length}`
+    );
     console.log(`  Spacing: ${Object.keys(convertedTokens.spacing).length}`);
-    console.log(`  Border Radius: ${Object.keys(convertedTokens.borderRadius).length}`);
+    console.log(
+      `  Border Radius: ${Object.keys(convertedTokens.borderRadius).length}`
+    );
     console.log(`  Shadows: ${Object.keys(convertedTokens.shadows).length}`);
     console.log('');
     console.log('🎨 Color breakdown:');
-    console.log(`  Core colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('core-')).length}`);
-    console.log(`  Extended colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('extended-')).length}`);
-    console.log(`  Light theme colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('light-')).length}`);
-    console.log(`  Dark theme colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('dark-')).length}`);
-    console.log(`  Palette colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('palette-')).length}`);
+    console.log(
+      `  Core colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('core-')).length}`
+    );
+    console.log(
+      `  Extended colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('extended-')).length}`
+    );
+    console.log(
+      `  Light theme colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('light-')).length}`
+    );
+    console.log(
+      `  Dark theme colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('dark-')).length}`
+    );
+    console.log(
+      `  Palette colors: ${Object.keys(convertedTokens.colors).filter(k => k.startsWith('palette-')).length}`
+    );
     console.log('');
     console.log('🔄 Next steps:');
     console.log('  1. Review the generated tokens in src/theme/FigmaTokens.ts');
-    console.log('  2. Update your Material UI theme in src/theme/MaterialTheme.ts if needed');
+    console.log(
+      '  2. Update your Material UI theme in src/theme/MaterialTheme.ts if needed'
+    );
     console.log('  3. Test the app to ensure all tokens are working correctly');
-    console.log('  4. Use getMD3Colors() function for Material Design 3 specific colors');
-
+    console.log(
+      '  4. Use getMD3Colors() function for Material Design 3 specific colors'
+    );
   } catch (error) {
     console.error('❌ Error importing Figma tokens:', error.message);
     process.exit(1);
@@ -406,4 +460,4 @@ function main() {
 // Check if this is the main module (ES module equivalent of require.main === module)
 if (import.meta.url === `file://${process.argv[1]}`) {
   main();
-} 
+}

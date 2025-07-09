@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Menu, Text } from 'react-native-paper';
 
 import { useTranslation } from '@/hooks/useTranslation';
-import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+import { getSpacingToken } from '../theme/FigmaTokens';
 
 type LanguageSelectorProps = {
   hasLabel?: boolean;
@@ -18,7 +18,9 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
     { code: 'pt', name: 'Português (BR)', flag: '🇧🇷' },
   ] as const;
 
-  const currentLanguageData = languages.find(lang => lang.code === currentLanguage);
+  const currentLanguageData = languages.find(
+    lang => lang.code === currentLanguage
+  );
 
   const openMenu = () => {
     setMenuVisible(true);
@@ -34,10 +36,19 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
   };
 
   return (
-    <View accessibilityLabel="language-selector-container" style={styles.container}>
-      {hasLabel && <Text accessibilityLabel="language-selector-title" variant="titleMedium" style={styles.title}>
-        {t('profile.language')}
-      </Text>}
+    <View
+      accessibilityLabel="language-selector-container"
+      style={styles.container}
+    >
+      {hasLabel && (
+        <Text
+          accessibilityLabel="language-selector-title"
+          variant="titleMedium"
+          style={styles.title}
+        >
+          {t('profile.language')}
+        </Text>
+      )}
 
       <Menu
         visible={menuVisible}
@@ -52,11 +63,13 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
             labelStyle={styles.buttonLabel}
             icon="chevron-down"
           >
-            {currentLanguageData ? `${currentLanguageData.flag} ${currentLanguageData.name}` : 'Select Language'}
+            {currentLanguageData
+              ? `${currentLanguageData.flag} ${currentLanguageData.name}`
+              : 'Select Language'}
           </Button>
         }
       >
-        {languages.map((language) => (
+        {languages.map(language => (
           <Menu.Item
             key={language.code}
             onPress={() => handleLanguageSelect(language.code)}
@@ -64,9 +77,11 @@ export function LanguageSelector({ hasLabel = false }: LanguageSelectorProps) {
             title={`${language.flag} ${language.name}`}
             titleStyle={[
               styles.menuItemTitle,
-              currentLanguage === language.code && styles.selectedMenuItem
+              currentLanguage === language.code && styles.selectedMenuItem,
             ]}
-            leadingIcon={currentLanguage === language.code ? 'check' : undefined}
+            leadingIcon={
+              currentLanguage === language.code ? 'check' : undefined
+            }
           />
         ))}
       </Menu>
@@ -86,7 +101,6 @@ const styles = StyleSheet.create({
   },
   dropdownButton: {
     borderRadius: getSpacingToken('spacing-sm'),
-    borderColor: getColorToken('core-primary'),
   },
   buttonContent: {
     flexDirection: 'row',
@@ -102,7 +116,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedMenuItem: {
-    color: getColorToken('core-primary'),
     fontFamily: 'OpenSans-SemiBold',
   },
-}); 
+});

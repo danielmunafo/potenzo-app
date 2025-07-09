@@ -1,12 +1,6 @@
-import * as Sentry from '@sentry/react-native';
-
-/**
- * Logger wraps Sentry's structured logging APIs.
- * Provides methods for trace, debug, info, warn, error, and fatal logs.
- */
 export class Logger {
   private static getLogger() {
-    return (Sentry as any).logger;
+    return { ...console, debug: (a1: unknown, ...a2: unknown[]) => {} };
   }
 
   static trace(message: string, attributes?: Record<string, unknown>): void {
@@ -51,7 +45,7 @@ export class Logger {
 
   static fatal(message: string, attributes?: Record<string, unknown>): void {
     try {
-      Logger.getLogger().fatal(message, attributes);
+      Logger.getLogger().error(message, attributes);
     } catch (err) {
       console.error(`Logger.fatal failed: ${err}`, message, attributes);
     }
