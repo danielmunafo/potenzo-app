@@ -3,14 +3,24 @@ import { useTabsContext } from '@/contexts/TabsContext';
 import { useWorkoutContext } from '@/contexts/WorkoutContext';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { useContainerStyleWhenHiddenStatusBar } from '@/hooks/useStyleWhenHiddenStatusBar';
-import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
+import {
+  getBorderRadiusToken,
+  getColorToken,
+  getSpacingToken,
+} from '@/theme/FigmaTokens';
 import { typography } from '@/theme/MaterialTheme';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BackHandler, ColorSchemeName, StyleSheet, View } from 'react-native';
-import { Button, IconButton, Text } from 'react-native-paper';
+import {
+  BackHandler,
+  ColorSchemeName,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Button, IconButton, Surface, Text } from 'react-native-paper';
 import Animated, {
   SlideInDown,
   SlideInRight,
@@ -87,68 +97,77 @@ export function WorkoutGetReady() {
   if (!workout) return <></>;
 
   return (
-    <ScreenContainer edges={[]} accessibilityLabel="preview-screen-container">
+    <ScreenContainer
+      enableGestureUpDownGestureHandling
+      edges={[]}
+      accessibilityLabel="preview-screen-container"
+    >
       <Animated.View
         entering={SlideInRight}
         exiting={SlideOutRight}
         style={[styles.container, containerStyle]}
       >
-        <View style={styles.rowContainer}>
-          <Text variant="titleLarge">{t('workoutGetReady.title')}</Text>
-          <View style={styles.row}>
-            <Text style={styles.chip} variant="bodyLarge">
-              {t('workoutGetReady.aerobics')}
-            </Text>
-            <Text style={styles.chip} variant="bodyLarge">
-              {t('workoutGetReady.functional')}
-            </Text>
-            <Text style={styles.chip} variant="bodyLarge">
-              {t('workoutGetReady.other')}
-            </Text>
-          </View>
-        </View>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+        >
+          <Surface mode="flat" style={styles.rowContainer}>
+            <Text variant="titleLarge">{t('workoutGetReady.title')}</Text>
+            <View style={styles.row}>
+              <Text style={styles.chip} variant="bodyLarge">
+                {t('workoutGetReady.aerobics')}
+              </Text>
+              <Text style={styles.chip} variant="bodyLarge">
+                {t('workoutGetReady.functional')}
+              </Text>
+              <Text style={styles.chip} variant="bodyLarge">
+                {t('workoutGetReady.other')}
+              </Text>
+            </View>
+          </Surface>
 
-        <View style={styles.rowContainer}>
-          <Text variant="titleLarge">
-            {t('workoutGetReady.heartRatePrompt')}
-          </Text>
-          <View style={styles.row}>
-            <Text style={styles.chip} variant="bodyLarge">
-              {t('workoutGetReady.heartRateValue', { value: 120 })}
+          <Surface mode="flat" style={styles.rowContainer}>
+            <Text variant="titleLarge">
+              {t('workoutGetReady.heartRatePrompt')}
             </Text>
-          </View>
-        </View>
+            <View style={styles.row}>
+              <Text style={styles.chip} variant="bodyLarge">
+                {t('workoutGetReady.heartRateValue', { value: 120 })}
+              </Text>
+            </View>
+          </Surface>
 
-        <View style={styles.rowContainer}>
-          <Text variant="titleLarge">{t('workoutGetReady.focusPrompt')}</Text>
-          <View style={styles.row}>
-            <Text style={styles.chip} variant="bodyLarge">
-              {t('workoutGetReady.focusValue')}
-            </Text>
-          </View>
-        </View>
+          <Surface mode="flat" style={styles.rowContainer}>
+            <Text variant="titleLarge">{t('workoutGetReady.focusPrompt')}</Text>
+            <View style={styles.row}>
+              <Text style={styles.chip} variant="bodyLarge">
+                {t('workoutGetReady.focusValue')}
+              </Text>
+            </View>
+          </Surface>
 
-        <View style={styles.rowContainer}>
-          <Text variant="titleLarge">
-            {t('workoutGetReady.sweatLevelPrompt')}
-          </Text>
-          <View style={styles.row}>
-            <Text style={styles.chip} variant="bodyLarge">
-              {t('workoutGetReady.sweatLevelValue')}
+          <Surface mode="flat" style={styles.rowContainer}>
+            <Text variant="titleLarge">
+              {t('workoutGetReady.sweatLevelPrompt')}
             </Text>
-          </View>
-        </View>
+            <View style={styles.row}>
+              <Text style={styles.chip} variant="bodyLarge">
+                {t('workoutGetReady.sweatLevelValue')}
+              </Text>
+            </View>
+          </Surface>
 
-        <View style={styles.rowContainer}>
-          <Text variant="titleLarge">
-            {t('workoutGetReady.scienceBacking')}{' '}
-          </Text>
-          <View style={styles.row}>
-            <Text style={styles.chip} variant="bodyLarge">
-              {t('workoutGetReady.studiesPage')}
+          <Surface mode="flat" style={styles.rowContainer}>
+            <Text variant="titleLarge">
+              {t('workoutGetReady.scienceBacking')}{' '}
             </Text>
-          </View>
-        </View>
+            <View style={styles.row}>
+              <Text style={styles.chip} variant="bodyLarge">
+                {t('workoutGetReady.studiesPage')}
+              </Text>
+            </View>
+          </Surface>
+        </ScrollView>
       </Animated.View>
       {bottomButtons}
     </ScreenContainer>
@@ -161,10 +180,11 @@ function useStyles(colorScheme: ColorSchemeName) {
       StyleSheet.create({
         container: {
           flex: 1,
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
           paddingHorizontal: getSpacingToken('spacing-md'),
-          marginBottom: 120,
+          marginBottom: 108,
+        },
+        scrollView: {
+          flex: 1,
         },
         bottomArea: {
           flex: 1,
@@ -204,14 +224,19 @@ function useStyles(colorScheme: ColorSchemeName) {
           color: getColorToken('neutral', colorScheme),
         },
         rowContainer: {
+          backgroundColor: getColorToken('surface', colorScheme),
           flex: 1,
           alignItems: 'flex-start',
-          justifyContent: 'center',
+          justifyContent: 'space-evenly',
           flexDirection: 'column',
-          paddingBottom: getSpacingToken('spacing-md'),
+          borderRadius: getBorderRadiusToken('radius-md'),
+          padding: getSpacingToken('spacing-md'),
+          marginBottom: getSpacingToken('spacing-md'),
+          width: '100%',
         },
         row: {
           flexDirection: 'row',
+          paddingTop: getSpacingToken('spacing-sm'),
           gap: getSpacingToken('spacing-xs'),
         },
         chip: {

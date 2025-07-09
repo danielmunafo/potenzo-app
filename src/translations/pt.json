@@ -137,7 +137,7 @@
     "getReady": "Pronto?"
   },
   "workoutGetReady": {
-    "title": "⌚️ No seu relógio, inicie um dos seguintes treinos",
+    "title": "⌚️ Inicie um treino no smartwatch",
     "aerobics": "🫁 Aeróbico",
     "functional": "🤸 Funcional",
     "other": "🏋️‍♀️ Outro",
@@ -149,6 +149,6 @@
     "sweatLevelValue": "⬇️ Baixo",
     "scienceBacking": "🔬 Base científica:",
     "studiesPage": "📚 Página de estudos",
-    "start": "Iniciar"
+    "start": "Iniciar 🚀"
   }
 }
