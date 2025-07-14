@@ -18,3 +18,11 @@ export type Exercise = {
   reps: number;
   rest: number;
 };
+
+export type CarouselPreviewExercise = Exercise & {
+  overlayContent: React.ReactNode;
+};
+
+export type CarouselExecuteExercise = Exercise & {
+  overlayContent: React.ReactNode;
+};

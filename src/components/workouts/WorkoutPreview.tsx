@@ -9,104 +9,29 @@ import { typography } from '@/theme/MaterialTheme';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
-import { Image } from 'expo-image';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  BackHandler,
-  ColorSchemeName,
-  Platform,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
-import { Pressable } from 'react-native-gesture-handler';
-import {
-  ActivityIndicator,
-  Button,
-  IconButton,
-  Text,
-} from 'react-native-paper';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInDown,
-  SlideInUp,
-  SlideOutDown,
-  SlideOutUp,
-  useSharedValue,
-} from 'react-native-reanimated';
-import Carousel, {
-  ICarouselInstance,
-  Pagination,
-} from 'react-native-reanimated-carousel';
-import Video, {
-  BufferingStrategyType,
-  ResizeMode,
-  VideoRef,
-} from 'react-native-video';
-import { Exercise } from '../../constants/types';
-import { Logger } from '../../services/loggerService';
-import { OVERLAY_COLOR, SHADOW_COLOR } from '../../theme/CustomColorTokens';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { BackHandler, ColorSchemeName, StyleSheet, View } from 'react-native';
+import { Button, IconButton, Text } from 'react-native-paper';
+import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import { CarouselPreviewExercise } from '../../constants/types';
+import { SHADOW_COLOR } from '../../theme/CustomColorTokens';
 import { ScreenContainer } from '../ScreenContainer';
+import WorkoutCarousel from './WorkoutCarousel';
 
 export default function WorkoutPreview() {
   const { t } = useTranslation();
   const { workout, setWorkout, setStep, step } = useWorkoutContext();
-  const [activeIndex, setActiveIndex] = useState(0);
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
   const { setIsTabsVisible } = useTabsContext();
   const { setIsStatusBarVisible } = useStatusBarContext();
-  const carouselRef = useRef<ICarouselInstance>(null);
-  const progress = useSharedValue<number>(0);
-  const videoRefs = useRef<(VideoRef | null)[]>([]);
-  const { width } = useWindowDimensions();
-  const [isReadyForDisplay, setIsReadyForDisplay] = useState(false);
-  const [videoLoadingStyle, setVideoLoadingStyle] = useState(
-    Platform.OS === 'android'
-      ? {
-          display: (isReadyForDisplay ? 'flex' : 'none') as 'flex' | 'none',
-        }
-      : { opacity: isReadyForDisplay ? 1 : 0 }
-  );
   const styles = useStyles(useColorScheme());
   const [isOverlayHidden, setIsOverlayHidden] = useState(false);
   const [isDisplayingVideoOnly, setIsDisplayingVideoOnly] = useState(false);
 
   useEffect(() => {
-    return () => {
-      setActiveIndex(-1);
-      videoRefs.current = [];
-    };
-  }, [setWorkout]);
-
-  const onPressPagination = (index: number) => {
-    carouselRef.current?.scrollTo({
-      count: index - progress.value,
-      animated: true,
-    });
-  };
-
-  useEffect(() => {
     setIsStatusBarVisible(false);
     setIsTabsVisible(false);
   }, [setIsTabsVisible, setIsStatusBarVisible]);
-
-  useEffect(() => {
-    if (workout) {
-      setActiveIndex(0);
-      videoRefs.current = [];
-    }
-  }, [workout]);
-
-  useEffect(() => {
-    setVideoLoadingStyle(
-      Platform.OS === 'android'
-        ? {
-            display: (isReadyForDisplay ? 'flex' : 'none') as 'flex' | 'none',
-          }
-        : { opacity: isReadyForDisplay ? 1 : 0 }
-    );
-  }, [isReadyForDisplay]);
 
   const onBack = useCallback(() => {
     setWorkout(undefined);
@@ -129,105 +54,6 @@ export default function WorkoutPreview() {
 
       return () => subscription.remove();
     }, [onBack])
-  );
-
-  const renderCarouselItem = useCallback(
-    ({ item, index }: { item: Exercise; index: number }) => {
-      const isPaused = index !== activeIndex;
-      return (
-        <>
-          <View style={[StyleSheet.absoluteFill, styles.videoWrapper]}>
-            <Pressable
-              onLongPress={() => setIsDisplayingVideoOnly(true)}
-              onPressOut={() => setIsDisplayingVideoOnly(false)}
-            >
-              {!isReadyForDisplay && (
-                <ActivityIndicator
-                  animating={true}
-                  size={24}
-                  color={getColorToken('extended-accent')}
-                  style={{ flex: 1 }}
-                />
-              )}
-              <Animated.View entering={FadeIn} pointerEvents="none">
-                <Video
-                  controls={false}
-                  disableFocus
-                  focusable={false}
-                  hideShutterView={true}
-                  playInBackground={false}
-                  playWhenInactive={false}
-                  key={`${item.assetId}+${workout?.id}`}
-                  bufferingStrategy={BufferingStrategyType.DEPENDING_ON_MEMORY}
-                  source={{
-                    uri: item.assetId,
-                    isNetwork: false,
-                    isAsset: true,
-                    isLocalAssetFile: true,
-                    shouldCache: false,
-                    metadata: { title: t(`exercises.${item.name}.name`) },
-                  }}
-                  onReadyForDisplay={() => setIsReadyForDisplay(true)}
-                  resizeMode={ResizeMode.COVER}
-                  paused={isPaused}
-                  style={[
-                    {
-                      width: '100%',
-                      height: '100%',
-                    },
-                    videoLoadingStyle,
-                  ]}
-                  repeat={true}
-                  onError={e => Logger.error('Video error', e)}
-                  muted={true}
-                />
-              </Animated.View>
-            </Pressable>
-          </View>
-          {!isOverlayHidden && !isDisplayingVideoOnly && (
-            <Animated.View
-              pointerEvents="none"
-              entering={FadeIn}
-              exiting={FadeOut}
-              style={[
-                StyleSheet.absoluteFill,
-                styles.overlayContainer,
-                {
-                  paddingTop:
-                    containerPaddingStyle.paddingTop +
-                    getSpacingToken('spacing-md'),
-                  paddingHorizontal: getSpacingToken('spacing-md'),
-                },
-              ]}
-            >
-              <Text style={styles.text} variant="displayMedium">
-                {t(`exercises.${item.name}.name`)}
-              </Text>
-              <Text
-                style={{
-                  ...styles.text,
-                  paddingTop: getSpacingToken('spacing-md'),
-                }}
-                variant="titleLarge"
-              >
-                {t(`exercises.${item.name}.description`)}
-              </Text>
-            </Animated.View>
-          )}
-        </>
-      );
-    },
-    [
-      workout,
-      activeIndex,
-      t,
-      containerPaddingStyle,
-      isReadyForDisplay,
-      videoLoadingStyle,
-      styles,
-      isOverlayHidden,
-      isDisplayingVideoOnly,
-    ]
   );
 
   const getReady = useCallback(() => setStep(step + 1), [setStep, step]);
@@ -266,9 +92,17 @@ export default function WorkoutPreview() {
               mode="outlined"
               icon={() =>
                 isOverlayHidden ? (
-                  <Ionicons name="eye-off-outline" size={24} />
+                  <Ionicons
+                    name="eye-off-outline"
+                    color={styles.iconButtonIcon.color}
+                    size={24}
+                  />
                 ) : (
-                  <Ionicons name="eye-outline" size={24} />
+                  <Ionicons
+                    name="eye-outline"
+                    color={styles.iconButtonIcon.color}
+                    size={24}
+                  />
                 )
               }
               onPress={() => setIsOverlayHidden(!isOverlayHidden)}
@@ -280,138 +114,52 @@ export default function WorkoutPreview() {
     [t, onBack, getReady, styles, isOverlayHidden, isDisplayingVideoOnly]
   );
 
+  const carouselExercises = useMemo((): CarouselPreviewExercise[] | null => {
+    if (!workout) return null;
+
+    return workout.exercises.map(exercise => ({
+      ...exercise,
+      overlayContent: (
+        <>
+          <Text style={styles.text} variant="displayMedium">
+            {t(`exercises.${exercise.name}.name`)}
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              paddingTop: getSpacingToken('spacing-md'),
+            }}
+            variant="titleLarge"
+          >
+            {t(`exercises.${exercise.name}.description`)}
+          </Text>
+        </>
+      ),
+    }));
+  }, [workout, styles, t]);
+
   if (!workout) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
   }
 
   return (
     <ScreenContainer edges={[]} accessibilityLabel="preview-screen-container">
-      {!isOverlayHidden && !isDisplayingVideoOnly && (
-        <Animated.View
-          style={{
-            zIndex: 2,
-          }}
-          pointerEvents="none"
-          entering={SlideInUp}
-          exiting={SlideOutUp}
-        >
-          <Pagination.Basic<Exercise>
-            progress={progress}
-            data={workout.exercises}
-            dotStyle={{
-              ...styles.paginationDotStyle,
-              width:
-                width / workout.exercises.length -
-                getSpacingToken('spacing-md'),
-            }}
-            activeDotStyle={styles.paginationActiveDotStyle}
-            containerStyle={[
-              styles.paginationContainerStyle,
-              containerPaddingStyle,
-            ]}
-            horizontal
-            onPress={onPressPagination}
-          />
-        </Animated.View>
-      )}
-
-      <Carousel
-        ref={carouselRef}
-        width={width}
-        data={[...workout.exercises]}
-        onProgressChange={progress}
-        loop={true}
-        onSnapToItem={idx => setActiveIndex(idx)}
-        renderItem={renderCarouselItem}
+      <WorkoutCarousel
+        isOverlayHidden={isOverlayHidden}
+        isDisplayingVideoOnly={isDisplayingVideoOnly}
+        containerPaddingStyle={containerPaddingStyle}
+        setIsDisplayingVideoOnly={setIsDisplayingVideoOnly}
+        exercises={carouselExercises}
       />
-
-      <View style={styles.leftNavigationArea} pointerEvents="box-none">
-        <View
-          style={styles.touchArea}
-          onTouchEnd={() => {
-            carouselRef.current?.scrollTo({ count: -1, animated: true });
-          }}
-          accessibilityLabel="previous-item-area"
-        />
-      </View>
-      <View style={styles.rightNavigationArea} pointerEvents="box-none">
-        <View
-          style={styles.touchArea}
-          onTouchEnd={() => {
-            carouselRef.current?.scrollTo({ count: 1, animated: true });
-          }}
-          accessibilityLabel="next-item-area"
-        />
-      </View>
-      {!isOverlayHidden && !isDisplayingVideoOnly && (
-        <Animated.View
-          pointerEvents="none"
-          style={styles.splashIconContainer}
-          entering={FadeIn}
-          exiting={FadeOut}
-        >
-          <Image
-            accessibilityLabel="preview-workout-icon"
-            source={require('@/assets/images/splash-icon.png')}
-            style={styles.splashIcon}
-            contentFit="contain"
-          />
-        </Animated.View>
-      )}
 
       {bottomButtons}
     </ScreenContainer>
   );
 }
-
 function useStyles(colorScheme: ColorSchemeName) {
   return useMemo(
     () =>
       StyleSheet.create({
-        pagerView: {
-          flex: 1,
-        },
-        pageContainer: {
-          flex: 1,
-        },
-        overlayContainer: {
-          width: '100%',
-          height: '100%',
-          backgroundColor: OVERLAY_COLOR,
-        },
-        text: {
-          color: getColorToken('palette-primary-100', colorScheme),
-          textAlignVertical: 'center',
-          textAlign: 'center',
-          textShadowColor: SHADOW_COLOR,
-          textShadowOffset: { width: 1, height: 1 },
-          textShadowRadius: 5,
-        },
-        splashIcon: {
-          width: 200,
-          height: 200,
-          marginBottom: 80,
-        },
-        leftNavigationArea: {
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: '15%',
-          height: '100%',
-          zIndex: 1,
-        },
-        rightNavigationArea: {
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          width: '15%',
-          height: '100%',
-          zIndex: 1,
-        },
-        touchArea: {
-          width: '100%',
-          height: '100%',
-        },
         overNavigationArea: {
           zIndex: 2,
         },
@@ -435,8 +183,8 @@ function useStyles(colorScheme: ColorSchemeName) {
           minHeight: 120,
         },
         iconButtonIcon: {
-          borderColor: getColorToken('neutral', colorScheme),
-          color: getColorToken('neutral', colorScheme),
+          color: getColorToken('palette-primary-100', colorScheme),
+          borderColor: getColorToken('palette-primary-100', colorScheme),
         },
         buttonLabelStyle: {
           ...typography.titleMedium,
@@ -449,34 +197,13 @@ function useStyles(colorScheme: ColorSchemeName) {
           backgroundColor: getColorToken('extended-accent'),
           marginHorizontal: getSpacingToken('spacing-md'),
         },
-        splashIconContainer: {
-          position: 'absolute',
-          width: 200,
-          height: 200,
-          top: '50%',
-          left: '50%',
-          transform: [{ translateX: -100 }, { translateY: -100 }],
-          zIndex: 2,
-        },
-        paginationDotStyle: {
-          height: 4,
-          backgroundColor: getColorToken('neutral'),
-          borderRadius: 4,
-        },
-        paginationActiveDotStyle: {
-          overflow: 'hidden',
-          backgroundColor: getColorToken('extended-accent'),
-        },
-        paginationContainerStyle: {
-          gap: 4,
-          width: '95%',
-          flex: 1,
-          zIndex: 50,
-          position: 'absolute',
-          top: 0,
-        },
-        videoWrapper: {
-          backgroundColor: getColorToken('surface', colorScheme),
+        text: {
+          color: getColorToken('palette-primary-100', colorScheme),
+          textAlignVertical: 'center',
+          textAlign: 'center',
+          textShadowColor: SHADOW_COLOR,
+          textShadowOffset: { width: 1, height: 1 },
+          textShadowRadius: 5,
         },
       }),
     [colorScheme]

@@ -19,7 +19,7 @@
     "start": "expo start",
     "start:local-device": "npx expo start --dev-client --tunnel",
     "reset-project": "node ./scripts/reset-project.js",
-    "build:source-maps": "npx expo export",
+    "build:source-maps": "npx expo export --dump-sourcemap",
     "build:sentry-source-maps": "npx sentry-expo-upload-sourcemaps dist",
     "build:preview": "npx expo prebuild --clean && eas build --profile preview --local",
     "android": "expo run:android",
