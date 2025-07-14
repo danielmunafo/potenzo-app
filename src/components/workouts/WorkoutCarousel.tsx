@@ -43,6 +43,7 @@ interface WorkoutCarouselProps {
   containerPaddingStyle: { paddingTop: number };
   setIsDisplayingVideoOnly: (value: boolean) => void;
   exercises: CarouselPreviewExercise[] | CarouselExecuteExercise[] | null;
+  showLogo?: boolean;
 }
 
 type CarouselRenderParams = {
@@ -56,6 +57,7 @@ export default function WorkoutCarousel({
   containerPaddingStyle,
   setIsDisplayingVideoOnly,
   exercises,
+  showLogo = true,
 }: WorkoutCarouselProps) {
   const { t } = useTranslation();
   const { workout } = useWorkoutContext();
@@ -247,7 +249,7 @@ export default function WorkoutCarousel({
           accessibilityLabel="next-item-area"
         />
       </View>
-      {!isOverlayHidden && !isDisplayingVideoOnly && (
+      {showLogo && !isOverlayHidden && !isDisplayingVideoOnly && (
         <Animated.View
           pointerEvents="none"
           style={styles.splashIconContainer}

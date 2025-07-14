@@ -118,7 +118,7 @@ export function WorkoutGetReady() {
         >
           <Animated.View style={[animatedButtonStyle, { flex: 1 }]}>
             <Button
-              onPress={() => console.log()}
+              onPress={() => setStep(step + 1)}
               style={[styles.overNavigationArea, styles.buttonStyle]}
               labelStyle={styles.buttonLabelStyle}
               disabled={!isStartEnabled}
@@ -131,7 +131,7 @@ export function WorkoutGetReady() {
         </Animated.View>
       </View>
     ),
-    [t, styles, animatedButtonStyle, isStartEnabled]
+    [t, styles, animatedButtonStyle, isStartEnabled, setStep, step]
   );
 
   if (!workout) return <></>;
