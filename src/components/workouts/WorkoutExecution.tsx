@@ -25,6 +25,7 @@ import Animated, {
 import { CarouselExecuteExercise } from '../../constants/types';
 import { SHADOW_COLOR } from '../../theme/CustomColorTokens';
 import { ScreenContainer } from '../ScreenContainer';
+import AnimatedTimer from './AnimatedTimer';
 import WorkoutCarousel from './WorkoutCarousel';
 
 export default function WorkoutExecution() {
@@ -33,7 +34,8 @@ export default function WorkoutExecution() {
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
   const { setIsTabsVisible } = useTabsContext();
   const { setIsStatusBarVisible } = useStatusBarContext();
-  const styles = useStyles(useColorScheme(), containerPaddingStyle);
+  const colorScheme = useColorScheme();
+  const styles = useStyles(colorScheme, containerPaddingStyle);
   const [isDisplayingVideoOnly, setIsDisplayingVideoOnly] = useState(false);
 
   useEffect(() => {
@@ -138,21 +140,37 @@ export default function WorkoutExecution() {
         <Animated.View
           entering={FadeIn}
           exiting={FadeOut}
-          style={styles.upperCounterWrapper}
+          style={[styles.upperCounterWrapper, styles.overNavigationArea]}
         >
-          <View style={styles.upperCounter}>
-            <Text style={styles.text} variant="displaySmall">
-              {'00:01:20.234'}
-            </Text>
+          <View style={[styles.upperCounter, styles.overNavigationArea]}>
             <IconButton
               style={[styles.overNavigationArea, styles.iconButtonIcon]}
-              size={30}
+              size={16}
+              mode="outlined"
+              onPress={() => setIsDisplayingVideoOnly(!isDisplayingVideoOnly)}
+              icon={() => (
+                <FontAwesome
+                  name="pause"
+                  size={12}
+                  color={styles.iconButtonIcon.color}
+                />
+              )}
+            />
+            <AnimatedTimer
+              colorScheme={colorScheme}
+              variant="displaySmall"
+              isRunning={true}
+              startTime={0}
+            />
+            <IconButton
+              style={[styles.overNavigationArea, styles.iconButtonIcon]}
+              size={16}
               mode="outlined"
               onPress={() => setIsDisplayingVideoOnly(!isDisplayingVideoOnly)}
               icon={() => (
                 <FontAwesome
                   name="flag-checkered"
-                  size={24}
+                  size={12}
                   color={styles.iconButtonIcon.color}
                 />
               )}
@@ -173,7 +191,7 @@ function useStyles(
     () =>
       StyleSheet.create({
         overNavigationArea: {
-          zIndex: 2,
+          zIndex: 4,
         },
         bottomArea: {
           flex: 1,
@@ -211,15 +229,18 @@ function useStyles(
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
+          paddingHorizontal: getSpacingToken('spacing-md'),
         },
         upperCounter: {
+          paddingHorizontal: getSpacingToken('spacing-md'),
           flex: 1,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-evenly',
-          width: '80%',
           height: 60,
           backgroundColor: '#00000086',
+          borderWidth: 4,
+          borderColor: '#000000AB',
           borderRadius: getBorderRadiusToken('radius-full'),
           marginHorizontal: getSpacingToken('spacing-md'),
         },
