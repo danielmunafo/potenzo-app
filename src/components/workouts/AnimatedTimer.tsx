@@ -1,5 +1,5 @@
 import { getColorToken, getSpacingToken } from '@/theme/FigmaTokens';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColorSchemeName, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import Animated, {
@@ -41,13 +41,22 @@ export default function AnimatedTimer({
   });
 
   const [prevDigits, setPrevDigits] = useState<TimeDigits>(currentDigits);
-  const mountTimeRef = useRef<number>(Date.now());
+  const [canAnimate, setCanAnimate] = useState(false);
 
   // Individual digit animations
   const minutesTensAnimation = useSharedValue(0);
   const minutesUnitsAnimation = useSharedValue(0);
   const secondsTensAnimation = useSharedValue(0);
   const secondsUnitsAnimation = useSharedValue(0);
+
+  // Enable animations after 1 second delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCanAnimate(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const formatTimeToDigits = useCallback((elapsed: number): TimeDigits => {
     const totalMs = Math.max(0, Math.floor(elapsed));
@@ -78,14 +87,12 @@ export default function AnimatedTimer({
 
   useEffect(() => {
     const newDigits = formatTimeToDigits(elapsedTime);
-    const timeSinceMount = Date.now() - mountTimeRef.current;
-    const shouldAnimate = timeSinceMount > 1000; // Prevent animations for first 1000ms
 
     setCurrentDigits(prevDigits => {
       setPrevDigits(prevDigits);
 
       // Only animate digits that actually changed and after initial delay
-      if (shouldAnimate) {
+      if (canAnimate) {
         requestAnimationFrame(() => {
           if (prevDigits.minutesTens !== newDigits.minutesTens) {
             triggerAnimation(minutesTensAnimation);
@@ -106,6 +113,7 @@ export default function AnimatedTimer({
     });
   }, [
     elapsedTime,
+    canAnimate,
     formatTimeToDigits,
     triggerAnimation,
     minutesTensAnimation,

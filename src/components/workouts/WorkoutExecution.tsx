@@ -30,7 +30,7 @@ import WorkoutCarousel from './WorkoutCarousel';
 
 export default function WorkoutExecution() {
   const { t } = useTranslation();
-  const { workout, setStep, step } = useWorkoutContext();
+  const { workout, setStep, step, exercise } = useWorkoutContext();
   const containerPaddingStyle = useContainerStyleWhenHiddenStatusBar();
   const { setIsTabsVisible } = useTabsContext();
   const { setIsStatusBarVisible } = useStatusBarContext();
@@ -39,14 +39,14 @@ export default function WorkoutExecution() {
   const [isDisplayingVideoOnly, setIsDisplayingVideoOnly] = useState(false);
 
   // Timer state management
-  const [startTime] = useState(Date.now());
+  const startTimeRef = useRef(Date.now());
   const [elapsedTime, setElapsedTime] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Timer effect
   useEffect(() => {
     intervalRef.current = setInterval(() => {
-      setElapsedTime(Date.now() - startTime);
+      setElapsedTime(Date.now() - startTimeRef.current);
     }, 100) as any;
 
     return () => {
@@ -54,7 +54,7 @@ export default function WorkoutExecution() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [startTime]);
+  }, []);
 
   useEffect(() => {
     setIsStatusBarVisible(false);
@@ -97,7 +97,7 @@ export default function WorkoutExecution() {
                 style={{ ...styles.text, fontSize: 22, lineHeight: 30 }}
                 variant="displaySmall"
               >
-                {t('preview.getReady')}
+                {}
               </Text>
             </View>
             <IconButton
@@ -124,7 +124,7 @@ export default function WorkoutExecution() {
         )}
       </View>
     ),
-    [t, styles, isDisplayingVideoOnly]
+    [styles, isDisplayingVideoOnly]
   );
 
   const carouselExercises = useMemo((): CarouselExecuteExercise[] | null => {
@@ -138,7 +138,7 @@ export default function WorkoutExecution() {
         </>
       ),
     }));
-  }, [workout, styles, t]);
+  }, [workout]);
 
   if (!workout) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
@@ -148,9 +148,9 @@ export default function WorkoutExecution() {
     <ScreenContainer edges={[]} accessibilityLabel="preview-screen-container">
       <WorkoutCarousel
         isDisplayingVideoOnly={isDisplayingVideoOnly}
+        setIsDisplayingVideoOnly={setIsDisplayingVideoOnly}
         containerPaddingStyle={containerPaddingStyle}
         isOverlayHidden={isDisplayingVideoOnly}
-        setIsDisplayingVideoOnly={setIsDisplayingVideoOnly}
         exercises={carouselExercises}
         showLogo={false}
       />

@@ -60,7 +60,7 @@ export default function WorkoutCarousel({
   showLogo = true,
 }: WorkoutCarouselProps) {
   const { t } = useTranslation();
-  const { workout } = useWorkoutContext();
+  const { workout, setExercise } = useWorkoutContext();
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
@@ -91,11 +91,12 @@ export default function WorkoutCarousel({
   };
 
   useEffect(() => {
-    if (workout) {
+    if (workout && exercises) {
       setActiveIndex(0);
+      setExercise(exercises[0]);
       videoRefs.current = [];
     }
-  }, [workout]);
+  }, [workout, exercises, setExercise]);
 
   useEffect(() => {
     setVideoLoadingStyle(
@@ -227,7 +228,10 @@ export default function WorkoutCarousel({
         data={exercises}
         onProgressChange={progress}
         loop={true}
-        onSnapToItem={idx => setActiveIndex(idx)}
+        onSnapToItem={index => {
+          setActiveIndex(index);
+          setExercise(exercises[index]);
+        }}
         renderItem={renderCarouselItem}
       />
 
