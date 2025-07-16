@@ -13,7 +13,7 @@ import { typography } from '@/theme/MaterialTheme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BackHandler, ColorSchemeName, StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 import Animated, {
@@ -37,6 +37,24 @@ export default function WorkoutExecution() {
   const colorScheme = useColorScheme();
   const styles = useStyles(colorScheme, containerPaddingStyle);
   const [isDisplayingVideoOnly, setIsDisplayingVideoOnly] = useState(false);
+
+  // Timer state management
+  const [startTime] = useState(Date.now());
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Timer effect
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setElapsedTime(Date.now() - startTime);
+    }, 100) as any;
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [startTime]);
 
   useEffect(() => {
     setIsStatusBarVisible(false);
@@ -159,8 +177,7 @@ export default function WorkoutExecution() {
             <AnimatedTimer
               colorScheme={colorScheme}
               variant="displaySmall"
-              isRunning={true}
-              startTime={0}
+              elapsedTime={elapsedTime}
             />
             <IconButton
               style={[styles.overNavigationArea, styles.iconButtonIcon]}

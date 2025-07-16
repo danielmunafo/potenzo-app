@@ -15,8 +15,7 @@ interface AnimatedTimerProps {
   style?: any;
   colorScheme: ColorSchemeName;
   variant?: string;
-  isRunning?: boolean;
-  startTime?: number;
+  elapsedTime: number; // Time in milliseconds from parent
 }
 
 interface TimeDigits {
@@ -31,8 +30,7 @@ export default function AnimatedTimer({
   style,
   colorScheme,
   variant = 'displaySmall',
-  isRunning = true,
-  startTime = 0,
+  elapsedTime,
 }: AnimatedTimerProps) {
   const [currentDigits, setCurrentDigits] = useState<TimeDigits>({
     minutesTens: '0',
@@ -43,9 +41,7 @@ export default function AnimatedTimer({
   });
 
   const [prevDigits, setPrevDigits] = useState<TimeDigits>(currentDigits);
-
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const startTimeRef = useRef<number>(Date.now() - startTime);
+  const mountTimeRef = useRef<number>(Date.now());
 
   // Individual digit animations
   const minutesTensAnimation = useSharedValue(0);
@@ -81,24 +77,15 @@ export default function AnimatedTimer({
   }, []);
 
   useEffect(() => {
-    if (!isRunning) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      return;
-    }
+    const newDigits = formatTimeToDigits(elapsedTime);
+    const timeSinceMount = Date.now() - mountTimeRef.current;
+    const shouldAnimate = timeSinceMount > 1000; // Prevent animations for first 1000ms
 
-    startTimeRef.current = Date.now() - startTime;
+    setCurrentDigits(prevDigits => {
+      setPrevDigits(prevDigits);
 
-    (intervalRef as any).current = setInterval(() => {
-      const elapsed = Date.now() - startTimeRef.current;
-      const newDigits = formatTimeToDigits(elapsed);
-
-      setCurrentDigits(prevDigits => {
-        setPrevDigits(prevDigits);
-
-        // Only animate digits that actually changed
+      // Only animate digits that actually changed and after initial delay
+      if (shouldAnimate) {
         requestAnimationFrame(() => {
           if (prevDigits.minutesTens !== newDigits.minutesTens) {
             triggerAnimation(minutesTensAnimation);
@@ -113,19 +100,12 @@ export default function AnimatedTimer({
             triggerAnimation(secondsUnitsAnimation);
           }
         });
-
-        return newDigits;
-      });
-    }, 100);
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
       }
-    };
+
+      return newDigits;
+    });
   }, [
-    isRunning,
-    startTime,
+    elapsedTime,
     formatTimeToDigits,
     triggerAnimation,
     minutesTensAnimation,
@@ -135,7 +115,7 @@ export default function AnimatedTimer({
   ]);
 
   // Create styles for individual digits
-  const createDigitStyle = (
+  const useCreateDigitStyle = (
     animationValue: SharedValue<number>,
     isNext: boolean
   ) => {
@@ -206,12 +186,12 @@ export default function AnimatedTimer({
     <View style={[textStyles.container, style]}>
       {/* Minutes Tens */}
       <View style={textStyles.digitContainer}>
-        <Animated.View style={createDigitStyle(minutesTensAnimation, false)}>
+        <Animated.View style={useCreateDigitStyle(minutesTensAnimation, false)}>
           <Text style={textStyles.text} variant={variant as any}>
             {prevDigits.minutesTens}
           </Text>
         </Animated.View>
-        <Animated.View style={createDigitStyle(minutesTensAnimation, true)}>
+        <Animated.View style={useCreateDigitStyle(minutesTensAnimation, true)}>
           <Text style={textStyles.text} variant={variant as any}>
             {currentDigits.minutesTens}
           </Text>
@@ -220,12 +200,14 @@ export default function AnimatedTimer({
 
       {/* Minutes Units */}
       <View style={textStyles.digitContainer}>
-        <Animated.View style={createDigitStyle(minutesUnitsAnimation, false)}>
+        <Animated.View
+          style={useCreateDigitStyle(minutesUnitsAnimation, false)}
+        >
           <Text style={textStyles.text} variant={variant as any}>
             {prevDigits.minutesUnits}
           </Text>
         </Animated.View>
-        <Animated.View style={createDigitStyle(minutesUnitsAnimation, true)}>
+        <Animated.View style={useCreateDigitStyle(minutesUnitsAnimation, true)}>
           <Text style={textStyles.text} variant={variant as any}>
             {currentDigits.minutesUnits}
           </Text>
@@ -240,12 +222,12 @@ export default function AnimatedTimer({
 
       {/* Seconds Tens */}
       <View style={textStyles.digitContainer}>
-        <Animated.View style={createDigitStyle(secondsTensAnimation, false)}>
+        <Animated.View style={useCreateDigitStyle(secondsTensAnimation, false)}>
           <Text style={textStyles.text} variant={variant as any}>
             {prevDigits.secondsTens}
           </Text>
         </Animated.View>
-        <Animated.View style={createDigitStyle(secondsTensAnimation, true)}>
+        <Animated.View style={useCreateDigitStyle(secondsTensAnimation, true)}>
           <Text style={textStyles.text} variant={variant as any}>
             {currentDigits.secondsTens}
           </Text>
@@ -254,12 +236,14 @@ export default function AnimatedTimer({
 
       {/* Seconds Units */}
       <View style={textStyles.digitContainer}>
-        <Animated.View style={createDigitStyle(secondsUnitsAnimation, false)}>
+        <Animated.View
+          style={useCreateDigitStyle(secondsUnitsAnimation, false)}
+        >
           <Text style={textStyles.text} variant={variant as any}>
             {prevDigits.secondsUnits}
           </Text>
         </Animated.View>
-        <Animated.View style={createDigitStyle(secondsUnitsAnimation, true)}>
+        <Animated.View style={useCreateDigitStyle(secondsUnitsAnimation, true)}>
           <Text style={textStyles.text} variant={variant as any}>
             {currentDigits.secondsUnits}
           </Text>
