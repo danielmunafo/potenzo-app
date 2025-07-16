@@ -125,35 +125,34 @@ export default function WorkoutExecution() {
   }, [workout]);
 
   const stopwatchRef = useRef<StopwatchTimerMethods>(null);
-  const [isTimerInitialized, setIsTimerInitialized] = useState(false);
-  const [isTimerPaused, setIsTimerPaused] = useState(false);
+  const [isStopwatchInitialized, setIsStopwatchInitialized] = useState(false);
+  const [isStopwatchPaused, setIsStopwatchPaused] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
 
   useEffect(() => {
-    if (stopwatchRef.current && !isTimerInitialized) {
+    if (stopwatchRef.current && !isStopwatchInitialized) {
       stopwatchRef.current.play();
-      setIsTimerInitialized(true);
-      setIsTimerPaused(false);
+      setIsStopwatchInitialized(true);
+      setIsStopwatchPaused(false);
     }
-  }, [stopwatchRef, setIsTimerInitialized, isTimerInitialized]);
+  }, [stopwatchRef, setIsStopwatchInitialized, isStopwatchInitialized]);
 
   const toggleDisplayVideoOnly = useCallback(
     (incIsDisplayingVideoOnly: boolean) => {
       if (incIsDisplayingVideoOnly && stopwatchRef.current) {
         setTimeElapsed(stopwatchRef.current.getSnapshot());
-        setIsTimerPaused(true);
       }
       setIsDisplayingVideoOnly(incIsDisplayingVideoOnly);
     },
-    [setIsDisplayingVideoOnly, setTimeElapsed, setIsTimerPaused]
+    [setIsDisplayingVideoOnly, setTimeElapsed]
   );
 
   useEffect(() => {
-    if (!isDisplayingVideoOnly && stopwatchRef.current) {
+    if (!isDisplayingVideoOnly && stopwatchRef.current && !isStopwatchPaused) {
       stopwatchRef.current.play();
-      setIsTimerPaused(false);
+      setIsStopwatchPaused(false);
     }
-  }, [isDisplayingVideoOnly, stopwatchRef]);
+  }, [isDisplayingVideoOnly, stopwatchRef, isStopwatchPaused]);
 
   if (!workout) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
@@ -180,13 +179,13 @@ export default function WorkoutExecution() {
               style={[
                 styles.overNavigationArea,
                 styles.iconButtonIcon,
-                { paddingLeft: isTimerPaused ? 2 : 0.5 },
+                { paddingLeft: isStopwatchPaused ? 2 : 0.5 },
               ]}
               size={16}
               mode="outlined"
               onPress={() => {
-                setIsTimerPaused(!isTimerPaused);
-                if (isTimerPaused) {
+                setIsStopwatchPaused(!isStopwatchPaused);
+                if (isStopwatchPaused) {
                   stopwatchRef.current?.play();
                 } else {
                   stopwatchRef.current?.pause();
@@ -194,7 +193,7 @@ export default function WorkoutExecution() {
               }}
               icon={() => (
                 <FontAwesome
-                  name={isTimerPaused ? 'play' : 'pause'}
+                  name={isStopwatchPaused ? 'play' : 'pause'}
                   size={12}
                   color={styles.iconButtonIcon.color}
                 />
