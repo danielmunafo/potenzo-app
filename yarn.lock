@@ -10407,6 +10407,13 @@ react-is@^19.0.0, react-is@^19.1.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-19.1.0.tgz"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
 
+react-native-animated-stopwatch-timer@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-animated-stopwatch-timer/-/react-native-animated-stopwatch-timer-1.3.0.tgz#8a8715d1224f240c5b21ef7e373e99bf1f9b89c3"
+  integrity sha512-avm3sc6BsK8MYq7LKak+yT97cgOLXPl5tj3yAV1ZY7LEOCthW3cfidC+tn0aLMTlJR7olennzdkAWxv8d+aYLw==
+  dependencies:
+    lodash.throttle "^4.1.1"
+
 react-native-edge-to-edge@1.6.0:
   version "1.6.0"
   resolved "https://registry.npmjs.org/react-native-edge-to-edge/-/react-native-edge-to-edge-1.6.0.tgz"

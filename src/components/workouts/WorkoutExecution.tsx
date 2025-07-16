@@ -15,6 +15,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BackHandler, ColorSchemeName, StyleSheet, View } from 'react-native';
+import StopwatchTimer, {
+  StopwatchTimerMethods,
+} from 'react-native-animated-stopwatch-timer';
 import { IconButton, Text } from 'react-native-paper';
 import Animated, {
   FadeIn,
@@ -25,7 +28,6 @@ import Animated, {
 import { CarouselExecuteExercise } from '../../constants/types';
 import { SHADOW_COLOR } from '../../theme/CustomColorTokens';
 import { ScreenContainer } from '../ScreenContainer';
-import AnimatedTimer from './AnimatedTimer';
 import WorkoutCarousel from './WorkoutCarousel';
 
 export default function WorkoutExecution() {
@@ -37,24 +39,6 @@ export default function WorkoutExecution() {
   const colorScheme = useColorScheme();
   const styles = useStyles(colorScheme, containerPaddingStyle);
   const [isDisplayingVideoOnly, setIsDisplayingVideoOnly] = useState(false);
-
-  // Timer state management
-  const startTimeRef = useRef(Date.now());
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Timer effect
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setElapsedTime(Date.now() - startTimeRef.current);
-    }, 100) as any;
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     setIsStatusBarVisible(false);
@@ -140,6 +124,37 @@ export default function WorkoutExecution() {
     }));
   }, [workout]);
 
+  const stopwatchRef = useRef<StopwatchTimerMethods>(null);
+  const [isTimerInitialized, setIsTimerInitialized] = useState(false);
+  const [isTimerPaused, setIsTimerPaused] = useState(false);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+
+  useEffect(() => {
+    if (stopwatchRef.current && !isTimerInitialized) {
+      stopwatchRef.current.play();
+      setIsTimerInitialized(true);
+      setIsTimerPaused(false);
+    }
+  }, [stopwatchRef, setIsTimerInitialized, isTimerInitialized]);
+
+  const toggleDisplayVideoOnly = useCallback(
+    (incIsDisplayingVideoOnly: boolean) => {
+      if (incIsDisplayingVideoOnly && stopwatchRef.current) {
+        setTimeElapsed(stopwatchRef.current.getSnapshot());
+        setIsTimerPaused(true);
+      }
+      setIsDisplayingVideoOnly(incIsDisplayingVideoOnly);
+    },
+    [setIsDisplayingVideoOnly, setTimeElapsed, setIsTimerPaused]
+  );
+
+  useEffect(() => {
+    if (!isDisplayingVideoOnly && stopwatchRef.current) {
+      stopwatchRef.current.play();
+      setIsTimerPaused(false);
+    }
+  }, [isDisplayingVideoOnly, stopwatchRef]);
+
   if (!workout) {
     return <Text variant="displayLarge">{t('common.loading')}</Text>;
   }
@@ -148,7 +163,7 @@ export default function WorkoutExecution() {
     <ScreenContainer edges={[]} accessibilityLabel="preview-screen-container">
       <WorkoutCarousel
         isDisplayingVideoOnly={isDisplayingVideoOnly}
-        setIsDisplayingVideoOnly={setIsDisplayingVideoOnly}
+        setIsDisplayingVideoOnly={toggleDisplayVideoOnly}
         containerPaddingStyle={containerPaddingStyle}
         isOverlayHidden={isDisplayingVideoOnly}
         exercises={carouselExercises}
@@ -162,22 +177,37 @@ export default function WorkoutExecution() {
         >
           <View style={[styles.upperCounter, styles.overNavigationArea]}>
             <IconButton
-              style={[styles.overNavigationArea, styles.iconButtonIcon]}
+              style={[
+                styles.overNavigationArea,
+                styles.iconButtonIcon,
+                { paddingLeft: isTimerPaused ? 2 : 0.5 },
+              ]}
               size={16}
               mode="outlined"
-              onPress={() => setIsDisplayingVideoOnly(!isDisplayingVideoOnly)}
+              onPress={() => {
+                setIsTimerPaused(!isTimerPaused);
+                if (isTimerPaused) {
+                  stopwatchRef.current?.play();
+                } else {
+                  stopwatchRef.current?.pause();
+                }
+              }}
               icon={() => (
                 <FontAwesome
-                  name="pause"
+                  name={isTimerPaused ? 'play' : 'pause'}
                   size={12}
                   color={styles.iconButtonIcon.color}
                 />
               )}
             />
-            <AnimatedTimer
-              colorScheme={colorScheme}
-              variant="displaySmall"
-              elapsedTime={elapsedTime}
+            <StopwatchTimer
+              ref={stopwatchRef}
+              containerStyle={styles.stopWatchContainer}
+              digitStyle={{ width: 24 }}
+              separatorStyle={{ width: 8 }}
+              textCharStyle={styles.stopWatchChar}
+              trailingZeros={2}
+              initialTimeInMs={timeElapsed}
             />
             <IconButton
               style={[styles.overNavigationArea, styles.iconButtonIcon]}
@@ -207,6 +237,28 @@ function useStyles(
   return useMemo(
     () =>
       StyleSheet.create({
+        stopWatchContainer: {
+          marginTop: -4,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: getSpacingToken('spacing-sm'),
+        },
+        buttonsContainer: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: 240,
+          paddingTop: 48,
+        },
+        stopWatchChar: {
+          fontFamily: 'Exo2-Bold',
+          fontSize: 36,
+          color: getColorToken('palette-primary-100', colorScheme),
+          textAlignVertical: 'center',
+          textAlign: 'center',
+          lineHeight: undefined,
+          includeFontPadding: false,
+        },
         overNavigationArea: {
           zIndex: 4,
         },
